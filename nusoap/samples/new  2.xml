@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<ns6932:ProcesarCompraDemo xmlns:ns6932="http://lms.com.mx/WebServices/Prepago/ProcesarCompraDemo">
+<programa_IntId xsi:type="xsd:int">1</programa_IntId>
+<cadena_intId xsi:type="xsd:int">999</cadena_intId>
+<sucursal_intId xsi:type="xsd:int">999</sucursal_intId>
+<terminal_intId xsi:type="xsd:int">1</terminal_intId>
+<usuario_strId xsi:type="xsd:string">ivan</usuario_strId>
+<tarjeta xsi:type="xsd:string">1129999998</tarjeta>
+<cantidad xsi:type="xsd:int">1</cantidad>
+<sku xsi:type="xsd:string">7501287688019</sku>
+</ns6932:ProcesarCompraDemo>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

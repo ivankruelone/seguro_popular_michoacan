@@ -1,0 +1,451 @@
+[08-Apr-2016 16:34:28 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[08-Apr-2016 16:34:38 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-08')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[12-Apr-2016 13:56:31 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[12-Apr-2016 16:51:09 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-12')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[12-Apr-2016 16:51:35 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-12')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[12-Apr-2016 17:09:42 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[18-Apr-2016 20:31:44 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-17', '2016-04-19')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[19-Apr-2016 10:51:34 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[19-Apr-2016 20:34:54 Etc/GMT] PHP Parse error:  syntax error, unexpected 'else' (T_ELSE) in /home/fenixtch/public_html/michoacan/application/views/movimiento/index.php on line 19
+[19-Apr-2016 20:36:17 Etc/GMT] PHP Parse error:  syntax error, unexpected '}' in /home/fenixtch/public_html/michoacan/application/views/movimiento/index.php on line 17
+[20-Apr-2016 20:26:10 Etc/GMT] PHP Parse error:  syntax error, unexpected ''</td>' (T_CONSTANT_ENCAPSED_STRING) in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 793
+[20-Apr-2016 20:31:29 Etc/GMT] PHP Parse error:  syntax error, unexpected ':' in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 805
+[22-Apr-2016 17:35:53 Etc/GMT] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home/fenixtch/public_html/michoacan/application/models/login_model.php on line 450
+[22-Apr-2016 18:09:51 Etc/GMT] PHP Fatal error:  Call to a member function getSucursalByClvsucursal() on a non-object in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 149
+[22-Apr-2016 18:13:26 Etc/GMT] PHP Fatal error:  Call to a member function getSucursalByClvsucursal() on a non-object in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 149
+[22-Apr-2016 21:11:25 Etc/GMT] PHP Parse error:  syntax error, unexpected '=>' (T_DOUBLE_ARROW), expecting ')' in /home/fenixtch/public_html/michoacan/application/views/administracion/sucursal_servicios.php on line 28
+[25-Apr-2016 12:11:09 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'SALIDA!N4 -> SALIDA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(299): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->salidas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#7 {ma in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[25-Apr-2016 18:49:42 Etc/GMT] PHP Fatal error:  Call to a member function num_rows() on a non-object in /home/fenixtch/public_html/michoacan/application/models/admin_model.php on line 206
+[25-Apr-2016 18:58:24 Etc/GMT] PHP Parse error:  syntax error, unexpected '<' in /home/fenixtch/public_html/michoacan/application/views/administracion/articulo.php on line 51
+[25-Apr-2016 18:58:45 Etc/GMT] PHP Parse error:  syntax error, unexpected '<' in /home/fenixtch/public_html/michoacan/application/views/administracion/articulo.php on line 51
+[26-Apr-2016 21:03:12 Etc/GMT] PHP Parse error:  syntax error, unexpected '}' in /home/fenixtch/public_html/michoacan/application/models/medico_model.php on line 270
+[27-Apr-2016 10:15:47 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-13', '2016-04-27')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:16:11 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-13', '2016-04-27')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:19:11 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-27')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:19:27 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-03-31', '2016-04-20')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:19:50 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:20:00 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:25:23 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-27')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:28:58 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'SALIDA!N4 -> SALIDA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(299): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->salidas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#7 {ma in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[27-Apr-2016 10:52:45 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:53:04 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(181): Reportes_model->getExcel(0, NULL, NULL)
+#3 [internal function]: Reportes->inventario_por_area()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 10:53:34 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-04-01', '2016-04-27')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:16:53 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-01', '2016-02-29')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:39:57 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(326): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:47:14 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(330): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:48:25 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(330): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:49:21 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(330): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:49:27 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(330): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:50:13 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(328): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel('2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:51:09 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(328): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel('2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:51:22 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(329): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel('2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 11:55:09 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(327): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 12:03:02 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(327): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 12:09:37 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(327): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-02-04', '2016-04-01')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 12:16:27 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(327): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, '2016-03-02', '2016-03-31')
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 12:19:36 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Exception' with message 'Invalid character found in sheet title' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php:430
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(802): PHPExcel_Worksheet::_checkSheetTitle(NULL)
+#1 /home/fenixtch/public_html/michoacan/application/models/reportes_model.php(327): PHPExcel_Worksheet->setTitle(NULL)
+#2 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(207): Reportes_model->getExcel(1, false, false)
+#3 [internal function]: Reportes->esi_submit()
+#4 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#5 /home/fenixtch/public_html/michoacan/index.php(206): require_once('/home/fenixtch/...')
+#6 {main}
+  thrown in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php on line 430
+[27-Apr-2016 17:18:34 America/Mexico_City] PHP Fatal error:  Call to undefined method Reportes_model::a() in /home/fenixtch/public_html/michoacan/application/controllers/reportes.php on line 2245
+[27-Apr-2016 17:24:21 America/Mexico_City] PHP Parse error:  syntax error, unexpected ''max'' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in /home/fenixtch/public_html/michoacan/application/views/administracion/buffer_edita.php on line 29
+[27-Apr-2016 17:24:37 America/Mexico_City] PHP Parse error:  syntax error, unexpected ''style'' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in /home/fenixtch/public_html/michoacan/application/views/administracion/buffer_edita.php on line 31
+[27-Apr-2016 17:24:41 America/Mexico_City] PHP Parse error:  syntax error, unexpected ''style'' (T_CONSTANT_ENCAPSED_STRING), expecting ')' in /home/fenixtch/public_html/michoacan/application/views/administracion/buffer_edita.php on line 31
+[27-Apr-2016 17:30:18 America/Mexico_City] PHP Fatal error:  Call to a member function result() on a non-object in /home/fenixtch/public_html/michoacan/application/views/reportes/rsu_submit.php on line 28
+[27-Apr-2016 17:31:24 America/Mexico_City] PHP Fatal error:  Call to a member function result() on a non-object in /home/fenixtch/public_html/michoacan/application/views/reportes/rsu_submit.php on line 28
+[27-Apr-2016 17:31:29 America/Mexico_City] PHP Fatal error:  Call to a member function result() on a non-object in /home/fenixtch/public_html/michoacan/application/views/reportes/rsu_submit.php on line 28
+[27-Apr-2016 18:11:54 America/Mexico_City] PHP Fatal error:  Call to undefined method Admin_model::getCountArticuloBuffer() in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 236
+[27-Apr-2016 18:12:46 America/Mexico_City] PHP Fatal error:  Call to undefined method Admin_model::getCountArticuloBuffer() in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 236
+[27-Apr-2016 18:12:48 America/Mexico_City] PHP Fatal error:  Call to undefined method Admin_model::getCountArticuloBuffer() in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 236
+[27-Apr-2016 18:12:48 America/Mexico_City] PHP Fatal error:  Call to undefined method Admin_model::getCountArticuloBuffer() in /home/fenixtch/public_html/michoacan/application/controllers/administracion.php on line 236
+[28-Apr-2016 11:38:01 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'SALIDA!N4 -> SALIDA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(299): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->salidas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(207): require_once('/home/fenixtch/...')
+#7 {ma in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[29-Apr-2016 13:50:20 America/Mexico_City] PHP Parse error:  syntax error, unexpected '}' in /home/fenixtch/public_html/michoacan/application/models/almacen_model.php on line 465
+[29-Apr-2016 16:43:01 America/Mexico_City] PHP Fatal error:  Call to a member function create_links() on a non-object in /home/fenixtch/public_html/michoacan/application/views/almacen/inventario_vs_buffer.php on line 4
+[03-May-2016 11:51:23 America/Mexico_City] PHP Fatal error:  Call to a member function result() on a non-object in /home/fenixtch/public_html/michoacan/application/views/almacen/transito.php on line 20
+[03-May-2016 11:52:23 America/Mexico_City] PHP Fatal error:  Call to a member function result() on a non-object in /home/fenixtch/public_html/michoacan/application/views/almacen/transito.php on line 20
+[04-May-2016 21:42:50 America/Mexico_City] PHP Parse error:  syntax error, unexpected '=', expecting ')' in /home/fenixtch/public_html/michoacan/application/controllers/almacen.php on line 347
+[05-May-2016 10:58:18 America/Mexico_City] PHP Parse error:  syntax error, unexpected '?>' in /home/fenixtch/public_html/michoacan/application/views/almacen/pedido.php on line 44
+[06-May-2016 14:25:33 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/controllers/facturacion.php on line 77
+[06-May-2016 16:30:09 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$query' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/models/captura_model.php on line 39
+[07-May-2016 21:32:45 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'ENTRADA!N4 -> ENTRADA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(272): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->entradas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(207): require_once('/home/fenixtch/...')
+#7  in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[07-May-2016 21:52:10 America/Mexico_City] PHP Parse error:  syntax error, unexpected '}' in /home/fenixtch/public_html/michoacan/application/models/admin_model.php on line 137
+[07-May-2016 22:01:48 America/Mexico_City] PHP Parse error:  syntax error, unexpected 'c' (T_STRING), expecting function (T_FUNCTION) in /home/fenixtch/public_html/michoacan/application/models/admin_model.php on line 144
+[09-May-2016 19:08:55 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'SALIDA!N4 -> SALIDA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(299): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->salidas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(207): require_once('/home/fenixtch/...')
+#7 {ma in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[11-May-2016 16:15:44 America/Mexico_City] PHP Parse error:  syntax error, unexpected ';' in /home/fenixtch/public_html/michoacan/application/models/admin_model.php on line 451
+[12-May-2016 20:25:13 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'ENTRADA!N4 -> ENTRADA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(272): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->entradas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(207): require_once('/home/fenixtch/...')
+#7  in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[12-May-2016 20:25:56 America/Mexico_City] PHP Fatal error:  Uncaught exception 'PHPExcel_Calculation_Exception' with message 'ENTRADA!N4 -> ENTRADA!N4 -> Cyclic Reference in Formula' in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php:298
+Stack trace:
+#0 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Worksheet.php(717): PHPExcel_Cell->getCalculatedValue()
+#1 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5/Worksheet.php(295): PHPExcel_Worksheet->calculateColumnWidths()
+#2 /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Writer/Excel5.php(187): PHPExcel_Writer_Excel5_Worksheet->close()
+#3 /home/fenixtch/public_html/michoacan/application/controllers/reportes.php(272): PHPExcel_Writer_Excel5->save('php://output')
+#4 [internal function]: Reportes->entradas_submit()
+#5 /home/fenixtch/public_html/michoacan/system/core/CodeIgniter.php(359): call_user_func_array(Array, Array)
+#6 /home/fenixtch/public_html/michoacan/index.php(207): require_once('/home/fenixtch/...')
+#7  in /home/fenixtch/public_html/michoacan/application/third_party/PHPExcel/Cell.php on line 298
+[12-May-2016 21:24:30 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$query' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/models/almacen_model.php on line 501
+[13-May-2016 10:23:30 America/Mexico_City] PHP Fatal error:  Call to a member function getInventarioGroupBySucursal() on a non-object in /home/fenixtch/public_html/michoacan/application/controllers/cliente.php on line 24
+[13-May-2016 10:54:23 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/controllers/reportes.php on line 6
+[13-May-2016 10:54:34 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/controllers/reportes.php on line 6
+[13-May-2016 10:56:35 America/Mexico_City] PHP Parse error:  syntax error, unexpected '$this' (T_VARIABLE) in /home/fenixtch/public_html/michoacan/application/controllers/cliente.php on line 6
+[13-May-2016 16:46:00 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:19 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:19 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:24 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:25 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:26 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:27 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:27 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:27 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:31 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:32 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:34 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:36 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:36 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:46:36 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:47:06 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:47:09 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 16:47:20 America/Mexico_City] PHP Fatal error:  Cannot redeclare Movimiento_model::getDetalleByMovimientoDetalle() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1771
+[13-May-2016 17:06:08 America/Mexico_City] PHP Parse error:  syntax error, unexpected ''mo' (T_ENCAPSED_AND_WHITESPACE), expecting ')' in /home/fenixtch/public_html/michoacan/application/controllers/movimiento.php on line 422
+[13-May-2016 17:29:24 America/Mexico_City] PHP Fatal error:  Call to undefined function getInventarioByIDandLoteandSucursal() in /home/fenixtch/public_html/michoacan/application/models/movimiento_model.php on line 1796
+[13-May-2016 20:13:49 America/Mexico_City] PHP Parse error:  syntax error, unexpected ';' in /home/fenixtch/public_html/michoacan/application/models/catalogosweb_model.php on line 391
+[14-May-2016 09:37:15 America/Mexico_City] PHP Parse error:  syntax error, unexpected '<' in /home/fenixtch/public_html/michoacan/application/views/movimiento/nuevo.php on line 109
