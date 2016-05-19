@@ -57,7 +57,7 @@ group by clvsucursal, nivelatencion, iva, tiporequerimiento, idprograma;";
 FROM receta r
 join receta_detalle d using(consecutivo)
 where remision = 0 and fecha between ? and ? and clvsucursal = ? and iva = ? and tiporequerimiento = ? and idprograma = ? and precio = 0;";
-		$query = $this->db->query($sql, array($remision, (string)$perini, (string)$perfin, (int)$clvsucursal, $iva, $tiporequerimiento, $idprograma));
+		$query = $this->db->query($sql, array((string)$perini, (string)$perfin, (int)$clvsucursal, $iva, $tiporequerimiento, $idprograma));
 
 		return $query->num_rows();
 

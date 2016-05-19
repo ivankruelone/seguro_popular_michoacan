@@ -6,7 +6,6 @@ $(document).on('ready', inicio);
 
 function inicio()
 {
-    
     $tipo = $("#tipo").html();
     if($tipo == 'captura')
     {
@@ -16,7 +15,7 @@ function inicio()
         var reqinicial = '<?php if(isset($receta->tiporequerimiento)){ echo $receta->tiporequerimiento; } ?>';
         reqinicial = reqinicial.trim();
         
-        if(reqinicial == '2')
+        if(reqinicial == '2' || reqinicial == '3')
         {
             tiporeq();
         }
@@ -159,7 +158,7 @@ function checkFecha(event)
 
 $('#tipoReq').on('change', tiporeq);
 function tiporeq(data){
-    var $tiporeq = $('#tipoReq').val()
+    var $tiporeq = parseInt($('#tipoReq').val());
     if ($tiporeq == 2 || $tiporeq == 3)
     {
        $("#expediente").attr('disabled', 'disabled');
@@ -168,12 +167,23 @@ function tiporeq(data){
        $("#pat").attr('disabled', 'disabled');
        $("#sexo").attr('disabled', 'disabled');
        $("#edad").attr('disabled', 'disabled');
-       $("#expediente").val('0');
-       $("#sexo").val('0');
-       $("#edad").val('0');
-       $("#nombre").val('COLECTIVO');
-       $("#mat").val('COLECTIVO');
-       $("#pat").val('COLECTIVO');
+
+       if($tiporeq == 2)
+       {
+           $("#expediente").val('COLECTIVO');
+           $("#sexo").val('0');
+           $("#edad").val('0');
+           $("#nombre").val('COLECTIVO');
+           $("#mat").val('COLECTIVO');
+           $("#pat").val('COLECTIVO');
+       }else if($tiporeq == 3){
+           $("#expediente").val('PAQUETE');
+           $("#sexo").val('0');
+           $("#edad").val('0');
+           $("#nombre").val('PAQUETE');
+           $("#mat").val('PAQUETE');
+           $("#pat").val('PAQUETE');
+       }
     }
     else
     {   

@@ -141,7 +141,7 @@ limit ? offset ?
     
     function getMovimientoByMovimientoID($movimientoID)
     {
-        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado
+        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -149,6 +149,7 @@ join movimiento_status a using(statusMovimiento)
 join sucursales s1 using(clvsucursal)
 join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
 left join sucursales_ext s3 on m.clvsucursalReferencia = s3.clvsucursal
+left join jurisdiccion j on s2.numjurisd = j.numjurisd
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
 where m.movimientoID = ? and m.clvsucursal = ?;";
@@ -567,7 +568,7 @@ where movimientoDetalle = ?;";
         $tabla = '<table cellpadding="1">
             <tr>
                 <td rowspan="8" width="100px">'.img($logo).'</td>
-                <td rowspan="8" width="450px" align="center"><font size="8">'.COMPANIA.'<br />'.$suc.': '.$row->sucursal.'<br />MOVIMIENTO: '.$row->tipoMovimientoDescripcion.' - '.$row->subtipoMovimientoDescripcion.'<br />PROVEEDOR: '.$row->razon.'<br />'.$suc_ref.': '.$row->sucursal_referencia.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->referencia).'</td>
+                <td rowspan="8" width="450px" align="center"><font size="8">'.COMPANIA.'<br />'.$suc.': '.$row->sucursal.'<br />MOVIMIENTO: '.$row->tipoMovimientoDescripcion.' - '.$row->subtipoMovimientoDescripcion.'<br />PROVEEDOR: '.$row->razon.'<br />'.$suc_ref.': '.$row->sucursal_referencia.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->referencia).'</td>
                 <td width="75px">ID Movimiento: </td>
                 <td width="95px" align="right">'.$row->movimientoID.'</td>
             </tr>
@@ -955,11 +956,11 @@ where movimientoDetalle = ?;";
 <tr align="center">
 <td colspan="8" rowspan="2">'.$embarco.'</td>
 
-<td bgcolor="BLACK"></td>
+<td></td>
 </tr>
 
 <tr align="center">
-<td bgcolor="BLACK"></td>
+<td></td>
 
 
 </tr>
@@ -973,13 +974,13 @@ where movimientoDetalle = ?;";
 <tr align="center">
 <td colspan="4" rowspan="2"></td>
 <td colspan="4" rowspan="2"></td>
-<td bgcolor="BLACK" ></td>
+<td></td>
 </tr>
 
 
 
 <tr align="center">
-<td bgcolor="BLACK"></td>
+<td></td>
 
 
 </tr>
@@ -1009,10 +1010,10 @@ where movimientoDetalle = ?;";
 <td colspan="2"></td>
 </tr>
 <tr align="center">
-<td colspan="7"></td>
+<td colspan="7">OBSERVACIONES:<br /><br /><br /></td>
 </tr>
 <tr align="center">
-<td colspan="9" bgcolor="#666666 "></td>
+<td colspan="9" bgcolor="#666666"></td>
 </tr>
 
 </table>';
