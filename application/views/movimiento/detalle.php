@@ -70,7 +70,14 @@
             
             if($row->statusMovimiento == 0)
             {
-                $link_elimina = anchor('movimiento/elimina_detalle/'.$row->movimientoDetalle, 'Elimina', array('class' => 'elimina_detalle'));
+                if($this->session->userdata('consulta') == 0)
+                {
+                    $link_elimina = anchor('movimiento/elimina_detalle/'.$row->movimientoDetalle, 'Elimina', array('class' => 'elimina_detalle'));
+                }else
+                {
+                    $link_elimina = null;
+                }
+                
             }else{
 
                 if($this->session->userdata('superuser') == 1)
@@ -85,7 +92,14 @@
             
             if($row->statusMovimiento == 1 && $row->subtipoMovimiento == 13)
             {
-                $link_devolucion = anchor('movimiento/devolucion/'.$row->movimientoDetalle, 'Devolucion', array('class' => 'devolucion'));
+                if($this->session->userdata('consulta') == 0)
+                {
+                    $link_devolucion = anchor('movimiento/devolucion/'.$row->movimientoDetalle, 'Devolucion', array('class' => 'devolucion'));
+                }else
+                {
+                    $link_devolucion = null;
+                }
+                
             }elseif($row->statusMovimiento == 0 && $row->subtipoMovimiento == 2)
             {
                 $link_devolucion = anchor('movimiento/modifica/'.$row->movimientoDetalle.'/'.$movimientoID, 'Modificar');

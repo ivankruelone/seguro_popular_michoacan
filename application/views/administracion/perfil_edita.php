@@ -10,6 +10,8 @@
 
         <?php echo MY_form_dropdown2('Ver valores: ', 'valuacion', $valuacion, $row->valuacion, 6); ?>
 
+        <?php echo MY_form_dropdown2('Consulta: ', 'consulta', $valuacion, $row->consulta, 6); ?>
+
         <?php echo form_hidden('clvpuesto', $row->clvpuesto); ?>
         
         <?php echo MY_form_submit(); ?>

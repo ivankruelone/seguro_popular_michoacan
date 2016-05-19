@@ -35,7 +35,7 @@
                                     
                                     ?>
                                     
-                                    <p><?php echo anchor('movimiento/nuevo/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Nuevo Movimiento'); ?></p>
+                                    <p><?php if($this->session->userdata('consulta') == 0) echo anchor('movimiento/nuevo/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Nuevo Movimiento'); ?></p>
                                     
                                     <p style="text-align: center;"><?php echo $this->pagination->create_links(); ?></p>
                                     <table class="table table-condensed">
@@ -68,21 +68,44 @@
                                                 
                                                 if($row->statusMovimiento == 0)
                                                 {
-                                                    $link_edita = anchor('movimiento/edita/'.$row->movimientoID, 'Edita <i class="icon-pencil bigger-130"> </i>');
+                                                    $status = '<span style="color: green; ">ABIERTO</span>';
+                                                    if($this->session->userdata('consulta') == 0)
+                                                    {
+                                                        $link_edita = anchor('movimiento/edita/'.$row->movimientoID, 'Edita <i class="icon-pencil bigger-130"> </i>');
+                                                    }else
+                                                    {
+                                                        $link_edita = null;
+                                                    }
+                                                    
                                                     $imprime = null;
                                                     
                                                 }else{
+                                                    $status = '<span style="color: red; ">CERRADO</span>';
                                                     $link_edita = null;
                                                     $imprime = anchor('movimiento/imprime/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                 }
                                                 
                                                 if($subtipoMovimiento == 13)
                                                 {
-                                                    $embarque = anchor('movimiento/embarque/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Embarque <i class="icon-truck bigger-130"> </i>');
+                                                    if($this->session->userdata('consulta') == 0)
+                                                    {
+                                                        $embarque = anchor('movimiento/embarque/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Embarque <i class="icon-truck bigger-130"> </i>');
+                                                    }else
+                                                    {
+                                                        $embarque = null;
+                                                    }
+                                                    
                                                     
                                                     if($row->statusPrepedido == 0)
                                                     {
-                                                        $prepedido = anchor('movimiento/prepedido/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Pre-pedido');
+                                                        if($this->session->userdata('consulta') == 0)
+                                                        {
+                                                            $prepedido = anchor('movimiento/prepedido/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Pre-pedido');
+                                                        }else
+                                                        {
+                                                            $prepedido = null;
+                                                        }
+                                                        
                                                         $guia = null;
                                                     }else{
                                                         $prepedido = null;
@@ -101,7 +124,14 @@
                                                         $descargaXML = null;
                                                         $descargaPDF = null;
                                                         $fechaFactura = null;
-                                                        $factura = anchor('movimiento/factura/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Facturar <i class="icon-file bigger-130"> </i>');
+                                                        if($this->session->userdata('consulta') == 0)
+                                                        {
+                                                            $factura = anchor('movimiento/factura/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Facturar <i class="icon-file bigger-130"> </i>');
+                                                        }else
+                                                        {
+                                                            $factura = null;
+                                                        }
+                                                        
                                                     }else{
                                                         $folioFactura = null;
                                                         $descargaXML = null;
@@ -136,7 +166,7 @@
                                             
                                             ?>
                                             <tr>
-                                                <td><?php echo $row->movimientoID; ?></td>
+                                                <td><?php echo $row->movimientoID; ?> <br /><?php echo $status; ?></td>
                                                 <td><?php echo $row->tipoMovimientoDescripcion; ?></td>
                                                 <td><?php echo $row->subtipoMovimientoDescripcion; ?></td>
                                                 <td><?php echo $row->orden; ?></td>
@@ -154,7 +184,7 @@
                                                 <td><?php echo $prepedido; ?></td>
                                                 <td><?php echo $guia; ?></td>
                                                 <td><?php echo anchor('movimiento/captura/'.$row->movimientoID, 'Captura <i class="icon-barcode bigger-130"> </i>'); ?></td>
-                                                <td><?php if($tipoMovimiento == 2) echo anchor('movimiento/transfer/'.$row->movimientoID.'/'.$this->movimiento_model->getAreaLimit1(), 'Transfer <i class="icon-barcode bigger-130"> </i>'); ?></td>
+                                                <td><?php if($this->session->userdata('consulta') == 0) if($tipoMovimiento == 2) echo anchor('movimiento/transfer/'.$row->movimientoID.'/'.$this->movimiento_model->getAreaLimit1(), 'Transfer <i class="icon-barcode bigger-130"> </i>'); ?></td>
                                                 <td><?php echo $embarque; ?></td>
                                                 <td><?php echo $imprime; ?></td>
                                                 <td><?php echo $factura; ?></td>

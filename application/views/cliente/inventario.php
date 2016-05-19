@@ -1,8 +1,9 @@
                             <div class="row-fluid">
                                 <div class="span12">
-                                                                        
+                                      
                                     <table class="table table-condensed">
                                         <caption>Registros: <?php echo $query->num_rows(); ?></caption>
+                                        <?php echo anchor('reportes/inv_excel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>   
                                         <thead>
                                             <tr>
                                                 <th>#</th>

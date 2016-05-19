@@ -232,6 +232,16 @@ where inventarioID = ?;";
         $this->load->view('impresiones/inventario', $data);
     }
 
+    function imprimeInventarioByModulo($moduloID, $pasilloID)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit','-1');
+        
+        $data['cabeza'] = $this->Inventario_model->getInventarioCabezaModulo($moduloID, $pasilloID);
+        $data['query'] = $this->Inventario_model->getInventarioByModulo($moduloID, $pasilloID);
+        $this->load->view('impresiones/inventario', $data);
+    }
+
     function imprimeInventarioCaducidades($caducidad)
     {
         set_time_limit(0);

@@ -186,6 +186,7 @@ class Administracion extends CI_Controller
         $administrador = $this->input->post('administrador');
 
         $this->admin_model->actualizaSucursal($clvsucursal, $numjurisd, $nombreSucursalPersonalizado, $domicilioSucursalPersonalizado, $nivelAtencion, $diaped, $director, $administrador);
+        $this->util->actNombreSucursal();
         redirect('administracion/sucursal');
     }
 
@@ -295,8 +296,9 @@ class Administracion extends CI_Controller
         $puesto = $this->input->post('puesto');
         $nivelUsuarioID = $this->input->post('nivelUsuarioID');
         $valuacion = $this->input->post('valuacion');
+        $consulta = $this->input->post('consulta');
 
-        $this->admin_model->insertPuesto($puesto, $nivelUsuarioID, $valuacion);
+        $this->admin_model->insertPuesto($puesto, $nivelUsuarioID, $valuacion, $consulta);
         redirect('administracion/perfiles');
     }
 
@@ -340,9 +342,26 @@ class Administracion extends CI_Controller
         $puesto = $this->input->post('puesto');
         $nivelUsuarioID = $this->input->post('nivelUsuarioID');
         $valuacion = $this->input->post('valuacion');
+        $consulta = $this->input->post('consulta');
 
-        $this->admin_model->updatePuesto($clvpuesto, $puesto, $nivelUsuarioID, $valuacion);
+        $this->admin_model->updatePuesto($clvpuesto, $puesto, $nivelUsuarioID, $valuacion, $consulta);
         $this->admin_model->updateValuacionByClvPuesto($clvpuesto);
         redirect('administracion/perfiles');
+    }
+
+    function descarga_catalogo()
+    {
+        $this->admin_model->getCatalogoArticulos();
+        
+        $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+                     
+        //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+        //if you want to save it as .XLSX Excel 2007 format
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+        //force user to download the Excel file without writing it to server's HD
+        $objWriter->save('php://output');
     }
 }

@@ -60,6 +60,8 @@
                                     <?php
                                     
                                     if($row->statusMovimiento == 0){
+
+                                        if($this->session->userdata('consulta') == 0){
                                     
                                     ?>
                                 
@@ -69,7 +71,7 @@
                                     
                                     echo form_hidden('subtipoMovimiento', $row->subtipoMovimiento);
                                     
-                                    
+                                        }
                                     }
                                     
                                     $atts = array(
@@ -126,107 +128,111 @@
                             <?php
                                     
                             if($row->statusMovimiento == 0){
+
+                                if($this->session->userdata('consulta') == 0){
                                 
                                 if($row->tipoMovimiento == 1)
                                 {
                             
                             ?>
                             
-							<div class="row-fluid">
-                                <div class="span12">
-                                    
-                                    <div class="widget-box">
-											<div class="widget-header">
-												<h4>Datos de los productos</h4>
-											</div>
-                                    
-                                    <div class="widget-body">
-												<div class="widget-main">
-                                                
-                                                <?php echo form_open('movimiento/captura_submit', array('class' => 'form-inline', 'id' => 'captura_form')); ?>
-														<input name="articulo" id="articulo" type="text" class="input-large" placeholder="Clave de articulo" required="required" />
-														<input name="comercial" id="comercial" type="text" class="input-large" placeholder="Nombre comercial" />
-														<input name="piezas" id="piezas" type="number" class="input-small" placeholder="Piezas" required="required" />
-														<input name="lote" id="lote" type="text" class="input-small" placeholder="Lote" pattern="[a-zA-Z0-9&ntilde;&Ntilde;]+" required="required" />
-														<input name="caducidad" id="caducidad" type="text" class="input-small" placeholder="Caducidad" required="required"/>
-														<input name="ean" id="ean" type="text" class="input-medium" placeholder="EAN" pattern="[0-9]+" maxlength="14" />
-														<input name="marca" id="marca" type="text" class="input-small" placeholder="Marca" required="required" />
-														<input name="costo" id="costo" type="text" class="input-small" placeholder="Costo" pattern="\d+(\.\d+)?" required="required" />
-                                                        <br />
-                                                        <select id="ubicacion" name="ubicacion"></select>
+    							<div class="row-fluid">
+                                    <div class="span12">
+                                        
+                                        <div class="widget-box">
+    											<div class="widget-header">
+    												<h4>Datos de los productos</h4>
+    											</div>
+                                        
+                                        <div class="widget-body">
+    												<div class="widget-main">
+                                                    
+                                                    <?php echo form_open('movimiento/captura_submit', array('class' => 'form-inline', 'id' => 'captura_form')); ?>
+    														<input name="articulo" id="articulo" type="text" class="input-large" placeholder="Clave de articulo" required="required" />
+    														<input name="comercial" id="comercial" type="text" class="input-large" placeholder="Nombre comercial" />
+    														<input name="piezas" id="piezas" type="number" class="input-small" placeholder="Piezas" required="required" />
+    														<input name="lote" id="lote" type="text" class="input-small" placeholder="Lote" pattern="[a-zA-Z0-9&ntilde;&Ntilde;]+" required="required" />
+    														<input name="caducidad" id="caducidad" type="text" class="input-small" placeholder="Caducidad" required="required"/>
+    														<input name="ean" id="ean" type="text" class="input-medium" placeholder="EAN" pattern="[0-9]+" maxlength="14" />
+    														<input name="marca" id="marca" type="text" class="input-small" placeholder="Marca" required="required" />
+    														<input name="costo" id="costo" type="text" class="input-small" placeholder="Costo" pattern="\d+(\.\d+)?" required="required" />
+                                                            <br />
+                                                            <select id="ubicacion" name="ubicacion"></select>
 
-														<button class="btn btn-info btn-small" id="button_aceptar">
-															<i class="icon-key bigger-110"></i>
-															Aceptar
-														</button>
-                                                <?php echo form_close(); ?>
-                                                <table class="table">
-                                                    <tr>
-                                                        <td id="susa" style="color: green;"></td>
-                                                        <td id="descripcion" style="color: blue;"></td>
-                                                        <td id="pres" style="color: red;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Cantidad Pedida: <span id="cans" style="color: red;">0</span></td>
-                                                        <td>Codigo esperado: <span id="codigo" style="color: red;">0</span></td>
-                                                        <td>Costo esperado: <span id="costoe" style="color: red;">0</span></td>
-                                                    </tr>
-                                                </table>
-												</div>
-											</div>
-                                    </div>
-                                    
-								</div>	
-                            </div>
-                            
-                            <?php
-                                    
-                                }elseif($row->tipoMovimiento == 2){
-                            
-                            ?>
-							<div class="row-fluid">
-                                <div class="span12">
-                                    
-                                    <div class="widget-box">
-											<div class="widget-header">
-												<h4>Datos de los productos</h4>
-											</div>
-                                    
-                                    <div class="widget-body">
-												<div class="widget-main">
-                                                
-                                                <?php echo form_open('movimiento/captura_submit2', array('class' => 'form-inline', 'id' => 'captura_form2')); ?>
-														<input name="articulo2" id="articulo2" type="text" class="input-large" placeholder="Clave de articulo" required="required" />
-														<input name="piezas" id="piezas" type="numeric" class="input-small" placeholder="Piezas" required="required" />
-                                                        <select size="1" name="lote2" id="lote2"></select>
+    														<button class="btn btn-info btn-small" id="button_aceptar">
+    															<i class="icon-key bigger-110"></i>
+    															Aceptar
+    														</button>
+                                                    <?php echo form_close(); ?>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td id="susa" style="color: green;"></td>
+                                                            <td id="descripcion" style="color: blue;"></td>
+                                                            <td id="pres" style="color: red;"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Cantidad Pedida: <span id="cans" style="color: red;">0</span></td>
+                                                            <td>Codigo esperado: <span id="codigo" style="color: red;">0</span></td>
+                                                            <td>Costo esperado: <span id="costoe" style="color: red;">0</span></td>
+                                                        </tr>
+                                                    </table>
+    												</div>
+    											</div>
+                                        </div>
+                                        
+    								</div>	
+                                </div>
+                                
+                                <?php
+                                        
+                                    }elseif($row->tipoMovimiento == 2){
+                                
+                                ?>
+    							<div class="row-fluid">
+                                    <div class="span12">
+                                        
+                                        <div class="widget-box">
+    											<div class="widget-header">
+    												<h4>Datos de los productos</h4>
+    											</div>
+                                        
+                                        <div class="widget-body">
+    												<div class="widget-main">
+                                                    
+                                                    <?php echo form_open('movimiento/captura_submit2', array('class' => 'form-inline', 'id' => 'captura_form2')); ?>
+    														<input name="articulo2" id="articulo2" type="text" class="input-large" placeholder="Clave de articulo" required="required" />
+    														<input name="piezas" id="piezas" type="numeric" class="input-small" placeholder="Piezas" required="required" />
+                                                            <select size="1" name="lote2" id="lote2"></select>
 
-														<button class="btn btn-info btn-small" id="button_aceptar2">
-															<i class="icon-key bigger-110"></i>
-															Aceptar
-														</button>
-                                                <?php echo form_close(); ?>
-                                                <table class="table">
-                                                    <tr>
-                                                        <td id="susa" style="color: green;"></td>
-                                                        <td id="descripcion" style="color: blue;"></td>
-                                                        <td id="pres" style="color: red;"></td>
-                                                    </tr>
-                                                </table>
-												</div>
-											</div>
-                                    </div>
-                                    
-								</div>	
-                            </div>
-                            
+    														<button class="btn btn-info btn-small" id="button_aceptar2">
+    															<i class="icon-key bigger-110"></i>
+    															Aceptar
+    														</button>
+                                                    <?php echo form_close(); ?>
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td id="susa" style="color: green;"></td>
+                                                            <td id="descripcion" style="color: blue;"></td>
+                                                            <td id="pres" style="color: red;"></td>
+                                                        </tr>
+                                                    </table>
+    												</div>
+    											</div>
+                                        </div>
+                                        
+    								</div>	
+                                </div>
+                                
+                                <?php
+                                    }
+                                        
+                                ?>
+
+
+                                
                             <?php
+
                                 }
-                                    
-                            ?>
-
-
-                            
-                            <?php
                             
                             }
                             

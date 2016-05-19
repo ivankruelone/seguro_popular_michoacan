@@ -1,8 +1,23 @@
 							<div class="row-fluid">
                                 <div class="span12">
+
+                                    <table cellpadding="2" cellspacing="2">
+                                        <tr>
+                                            <td style="background-color: <?php echo VERDE_PASTEL; ?>; width: 50px;"></td>
+                                            <td style="font-weight: bold;">ENTRADA</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color: <?php echo ROJO_PASTEL; ?>; width: 50px;"></td>
+                                            <td style="font-weight: bold;">SALIDA</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="background-color: <?php echo AMBAR_PASTEL; ?>; width: 50px;"></td>
+                                            <td style="font-weight: bold;">NEUTRO</td>
+                                        </tr>
+                                    </table>                                    
                                     
-                                    
-                                    <table class="table table-condensed">
+                                    <table class="table table-condensed table-hover">
+                                        <caption>Registros encontrados: <?php echo $query->num_rows(); ?></caption>
                                         <thead>
                                             <tr>
                                                 <th>Clave</th>
@@ -43,8 +58,22 @@
                                                     $movimiento = $row->movimientoID;
                                                 }
 
+                                                if($row->tipoMovimiento == 1)
+                                                {
+                                                    $color = VERDE_PASTEL;
+                                                }elseif($row->tipoMovimiento == 2)
+                                                {
+                                                    $color = ROJO_PASTEL;
+                                                }elseif($row->tipoMovimiento == 3)
+                                                {
+                                                    $color = AMBAR_PASTEL;
+                                                }else
+                                                {
+                                                    $color = '';
+                                                }
+
                                             ?>
-                                            <tr>
+                                            <tr style="background-color: <?php echo $color; ?>;">
                                                 <td><?php echo $row->cvearticulo; ?></td>
                                                 <td><?php echo $row->susa; ?></td>
                                                 <td><?php echo $row->descripcion; ?></td>

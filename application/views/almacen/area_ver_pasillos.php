@@ -1,7 +1,7 @@
 							<div class="row-fluid">
                                 <div class="span12">
                                     
-                                    <p><?php echo anchor('almacen/pasillo_nuevo/'.$areaID, 'Agrega un pasillo'); ?></p>
+                                    <p><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/pasillo_nuevo/'.$areaID, 'Agrega un pasillo'); ?></p>
                             
                                     <table id="table" class="table table-striped table-bordered table-hover">
                                         <thead>
@@ -36,7 +36,7 @@
                                                 <td><?php echo $row->pasilloTipoDescripcion; ?></td>
                                                 <td><?php echo $row->sentidoDescripcion; ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->posiciones, 0); ?></td>
-                                                <td><?php echo anchor('almacen/pasillo_edita/'.$row->areaID.'/'.$row->pasilloID, 'Edita'); ?></td>
+                                                <td><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/pasillo_edita/'.$row->areaID.'/'.$row->pasilloID, 'Edita'); ?></td>
                                                 <td><?php echo anchor('almacen/area_modulo/'.$row->areaID.'/'.$row->pasilloID, 'Ver modulos'); ?></td>
                                                 <td><?php echo anchor('almacen/area_modulo_inventario/'.$row->areaID.'/'.$row->pasilloID, 'Ver inventario'); ?></td>
                                             </tr>

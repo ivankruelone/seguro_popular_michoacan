@@ -9,6 +9,8 @@
 
         <?php echo MY_form_dropdown2('Ver valores: ', 'valuacion', $valuacion, null, 6); ?>
         
+        <?php echo MY_form_dropdown2('Consulta: ', 'consulta', $valuacion, null, 6); ?>
+
         <?php echo MY_form_submit(); ?>
                                     
         <?php echo form_close(); ?>

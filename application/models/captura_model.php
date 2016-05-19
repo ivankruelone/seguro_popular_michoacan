@@ -398,13 +398,18 @@ where r.consecutivo = ?;";
     
     function insertProducto($cveArticulo, $req, $sur, $precio, $lote,  $fechacad)
     {
-        $this->db->where('cvearticulo', $cveArticulo);
-        $this->db->where('activo', 1);
-        $query = $this->db->get('articulos');
+        $sql = "SELECT cvearticulo, precioven, ifnull(lote, 'SL') as lote, ifnull(caducidad, '9999-12-31') as caducidad, a.id, ifnull(inventarioID, 0) as inventarioID
+FROM articulos a
+left join inventario i on a.id = i.id and clvsucursal = ? and lote = ? and cantidad > 0
+where cvearticulo = ?;";
+
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), (string)$lote, (string)$cveArticulo));
         
         if($query->num_rows() > 0)
         {
-            $data = array('cvearticulo' => $cveArticulo, 'req' => $req, 'sur' => $sur, 'usuario' => $this->session->userdata('aleatorio'), 'precio' => $precio, 'idlote'=>$lote, 'fechacaducidad'=>$fechacad);
+            $row = $query->row();
+
+            $data = array('cvearticulo' => $row->cvearticulo, 'req' => $req, 'sur' => $sur, 'usuario' => $this->session->userdata('aleatorio'), 'precio' => $row->precioven, 'idlote'=>$row->lote, 'fechacaducidad'=>$row->caducidad, 'id' => $row->id, 'inventarioID' => $row->inventarioID);
             $this->db->insert('productos_temporal', $data);
         }
         
@@ -491,9 +496,9 @@ where r.consecutivo = ?;";
         $sql = "SELECT consecutivo_temporal, inventarioID, serie, a.id, cvearticulo, susa, descripcion, pres, a.precioven, a.ultimo_costo, a.servicio, a.tipoprod, case when ventaxuni = '1' then 'SI' else 'NO' end as ampuleo, ifnull(lote, 'SL') as lote, ifnull(caducidad, '9999-12-31') as caducidad, req, sur, ifnull(cantidad, 'NADA') as cantidad
 FROM productos_temporal p
 join articulos a using(cvearticulo)
-left join inventario i on a.id = i.id and p.idlote = i.lote and i.clvsucursal = ?
+left join inventario i using(inventarioID)
 where p.usuario = ?;";
-        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $this->session->userdata('aleatorio')));
+        $query = $this->db->query($sql, array($this->session->userdata('aleatorio')));
         return $query;
     }
 

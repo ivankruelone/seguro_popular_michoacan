@@ -1,9 +1,7 @@
 							<div class="row-fluid">
                                 <div class="span12">
                                     
-                                    <p><?php echo anchor('inventario/imprimeInventario/0', 'Imprimir inventario de Medicamento', array('target' => '_blank')); ?></p>
-                                    
-                                    <p><?php echo anchor('inventario/imprimeInventario/1', 'Imprimir inventario de Material de Curacion', array('target' => '_blank')); ?></p>
+                                    <p><?php echo anchor('inventario/imprimeInventarioByModulo/'.$moduloID.'/'.$pasilloID, 'Imprimir inventario', array('target' => '_blank')); ?></p>
 
                                     <table class="table table-condensed">
                                         <thead>

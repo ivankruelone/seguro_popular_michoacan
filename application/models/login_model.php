@@ -444,6 +444,7 @@ where clvsucursal = ?;";
             'cxp'               => $cxp,
             'nivelUsuario'      => $row->nivelUsuarioID,
             'valuacion'         => $row->valuacion,
+            'consulta'          => $row->consulta,
             'numjurisd'         => $row->numjurisd,
             'cveservicios'      => $row->cveservicios,
             'nivelAtencion'     => $nivelAtencion,

@@ -10,9 +10,10 @@
                                                 <th>Clave puesto</th>
                                                 <th>Puesto</th>
                                                 <th>Departamento</th>
-                                                <th>Valuacion</th>
-                                                <th>Editar</th>
-                                                <th>Asignar permisos</th>
+                                                <th class="center">Valuacion</th>
+                                                <th class="center">Consulta</th>
+                                                <th class="center">Editar</th>
+                                                <th class="center">Asignar permisos</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -27,9 +28,10 @@
                                                 <td><?php echo $row->clvpuesto; ?></td>
                                                 <td><?php echo $row->puesto; ?></td>
                                                 <td><?php echo $row->nivelUsuario; ?></td>
-                                                <td><?php echo $row->valuacion; ?></td>
-                                                <td><?php echo anchor('administracion/perfil_edita/'.$row->clvpuesto, 'Edita'); ?></td>
-                                                <td><?php echo anchor('administracion/perfil_permisos/'.$row->clvpuesto, 'Permisos'); ?></td>
+                                                <td class="center"><?php echo $row->valuacion; ?></td>
+                                                <td class="center"><?php echo $row->consulta; ?></td>
+                                                <td class="center"><?php echo anchor('administracion/perfil_edita/'.$row->clvpuesto, 'Edita'); ?></td>
+                                                <td class="center"><?php echo anchor('administracion/perfil_permisos/'.$row->clvpuesto, 'Permisos'); ?></td>
                                             </tr>
                                             <?php 
                                             

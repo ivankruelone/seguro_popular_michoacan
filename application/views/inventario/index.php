@@ -48,7 +48,7 @@
                                                 <th>EAN</th>
                                                 <th>Marca</th>
                                                 <th>Suministro</th>
-                                                <th>Ubicacion</th>
+                                                <th style="text-align: center;">Ubicacion</th>
                                                 <th colspan="3">Edicion</th>
                                             </tr>
                                         </thead>
@@ -59,21 +59,38 @@
                                             
                                             foreach($query->result() as $row){
                                                 
-                                                if($this->session->userdata('nivel') == 3)
+
+                                                if($this->session->userdata('consulta') == 0)
                                                 {
                                                     $edita_datos = anchor('inventario/datos/'.$row->inventarioID, 'Datos');
+                                                    $ubicacion = anchor('inventario/asigna_ubicacion/'.$row->inventarioID.'/'.$this->uri->segment(2), $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID);
+                                                }else
+                                                {
+                                                    $edita_datos = null;
+                                                    $ubicacion = $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID;
+                                                }
+                                                
+                                                if($this->session->userdata('superuser') == 1)
+                                                {
                                                     $edita_cantidad = anchor('inventario/cantidad/'.$row->inventarioID, 'Cantidad');
                                                 }else{
-                                                    $edita_datos = anchor('inventario/datos/'.$row->inventarioID, 'Datos');
                                                     $edita_cantidad = null;
                                                 }
                                                 
                                                 if($row->ventaxuni == 1 && $row->numunidades > 1)
                                                 {
-                                                    $convierte = anchor('inventario/convierte/'.$row->inventarioID, 'Convertir a piezas');
+                                                    if($this->session->userdata('consulta') == 0)
+                                                    {
+                                                        $convierte = anchor('inventario/convierte/'.$row->inventarioID, 'Convertir a piezas');
+                                                    }else
+                                                    {
+                                                        $convierte = null;
+                                                    }
+                                                    
                                                 }else{
                                                     $convierte = null;
                                                 }
+                                                
                                                 
                                                 
                                             
@@ -90,7 +107,7 @@
                                                 <td><?php echo $row->ean; ?></td>
                                                 <td><?php echo $row->marca; ?></td>
                                                 <td><?php echo $row->suministro; ?></td>
-                                                <td><?php echo anchor('inventario/asigna_ubicacion/'.$row->inventarioID.'/'.$this->uri->segment(2), $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID); ?></td>
+                                                <td style="text-align: center;"><?php echo $ubicacion; ?></td>
                                                 <td><?php echo $edita_datos; ?></td>
                                                 <td><?php echo $edita_cantidad; ?></td>
                                                 <td><?php echo $convierte; ?></td>

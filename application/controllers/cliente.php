@@ -27,6 +27,8 @@ class Cliente extends CI_Controller
         $data['query'] = $this->reportes_model->getInventarioGroupBySucursal();
         $this->load->view('main', $data);
     }
+    
+    
 
     function inventario_detalle($clvsucursal)
     {

@@ -1,7 +1,7 @@
 							<div class="row-fluid">
                                 <div class="span12">
                                     
-                                    <p><?php echo anchor('almacen/area_nueva', 'Agrega una area'); ?></p>
+                                    <p><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/area_nueva', 'Agrega una area'); ?></p>
                             
                                     <table id="table" class="table table-striped table-bordered table-hover">
                                         <thead>
@@ -18,7 +18,7 @@
                                             <tr>
                                                 <td><?php echo $row->areaID; ?></td>
                                                 <td><?php echo $row->area; ?></td>
-                                                <td><?php echo anchor('almacen/area_edita/'.$row->areaID, 'Edita'); ?></td>
+                                                <td><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/area_edita/'.$row->areaID, 'Edita'); ?></td>
                                                 <td><?php echo anchor('almacen/area_ver_pasillos/'.$row->areaID, 'Ver pasillos'); ?></td>
                                                 <td><?php echo anchor('almacen/area_inventario/'.$row->areaID, 'Ver inventario'); ?></td>
                                             </tr>

@@ -25,18 +25,31 @@
                                             
                                             foreach($query->result() as $row){
                                                 
-                                                if($this->session->userdata('nivel') == 3)
+                                                if($this->session->userdata('consulta') == 0)
                                                 {
                                                     $edita_datos = anchor('inventario/datos/'.$row->inventarioID, 'Datos');
+                                                }else
+                                                {
+                                                    $edita_datos = null;
+                                                }
+                                                
+                                                if($this->session->userdata('superuser') == 1)
+                                                {
                                                     $edita_cantidad = anchor('inventario/cantidad/'.$row->inventarioID, 'Cantidad');
                                                 }else{
-                                                    $edita_datos = anchor('inventario/datos/'.$row->inventarioID, 'Datos');
                                                     $edita_cantidad = null;
                                                 }
                                                 
                                                 if($row->ventaxuni == 1 && $row->numunidades > 1)
                                                 {
-                                                    $convierte = anchor('inventario/convierte/'.$row->inventarioID, 'Convertir a piezas');
+                                                    if($this->session->userdata('consulta') == 0)
+                                                    {
+                                                        $convierte = anchor('inventario/convierte/'.$row->inventarioID, 'Convertir a piezas');
+                                                    }else
+                                                    {
+                                                        $convierte = null;
+                                                    }
+                                                    
                                                 }else{
                                                     $convierte = null;
                                                 }

@@ -379,7 +379,7 @@ join pasillo_tipo t using(pasilloTipo)
 join area a using(areaID)
 where id = 0 and a.clvsucursal = ?";
 
-        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $inventarioID, $this->session->userdata('clvsucursal')));
+        $query = $this->db->query($sql, array($inventarioID, $this->session->userdata('clvsucursal'), $this->session->userdata('clvsucursal')));
         
         $a = array('0' => 'SELECCIONA UNA UBICACION');
         
@@ -1085,9 +1085,14 @@ join articulos a using(id) where movimientoID = ?;";
         } 
     }
 
+    function actNombreSucursal()
+    {
+        $sql = "UPDATE sucursales_ext e, sucursales s set descsucursal = nombreSucursalPersonalizado where e.clvsucursal = s.clvsucursal and LENGTH(nombreSucursalPersonalizado) > 0;";
+        $this->db->query($sql);
+    }
+
     function actSucursales()
     {
-       
         $arreglo = json_decode(json_encode($this->getDataOficina('sucursal', array())), TRUE);
         $this->db->insert_batch('sucursales', $arreglo, 'IGNORE');
     }

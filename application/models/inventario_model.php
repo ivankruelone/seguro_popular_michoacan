@@ -77,6 +77,19 @@ order by tipoprod, cvearticulo * 1 asc;";
         return $query;
     }
 
+    function getInventarioByModulo($moduloID, $pasilloID)
+    {
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join ubicacion u using(ubicacion)
+where cantidad <> 0 and i.clvsucursal = ? and moduloID = ? and pasilloID = ?
+order by tipoprod, cvearticulo * 1 asc;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $moduloID, $pasilloID));
+        return $query;
+    }
+
     function getInventarioReciba()
     {
         $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
@@ -264,7 +277,7 @@ order by tipoprod, cvearticulo * 1 asc;";
             $where_subtipoMovimiento = " and subtipoMovimiento = $subtipoMovimiento";
         }
         
-        $sql = "SELECT cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidadOld, cantidadNew, cast(cantidadNew - CantidadOld  as signed) as cantidad, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, receta, movimientoID, fechaKardex, ubicacion_anterior, ubicacion_actual
+        $sql = "SELECT cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidadOld, cantidadNew, cast(cantidadNew - CantidadOld  as signed) as cantidad, k.tipoMovimiento, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, receta, movimientoID, fechaKardex, ubicacion_anterior, ubicacion_actual
 FROM kardex k
 join articulos using(id)
 join tipo_movimiento t using(tipoMovimiento)
@@ -408,7 +421,62 @@ where pasilloID = ?;";
                 <td style="text-align: center; "><b>'.$this->session->userdata('clvsucursal').' - '.$this->session->userdata('sucursal').'</b></td>
             </tr>
             <tr>
-                <td style="text-align: center; "><b>INVENTARIO AREA: '.$pasillo.'</b></td>
+                <td style="text-align: center; "><b>INVENTARIO PASILLO: '.$pasillo.'</b></td>
+                <td style="text-align: center; ">FECHA DE GENERACION: <b>'.date('d/m/Y H:i:s').'</b></td>
+            </tr>
+        </table>
+        ';
+        
+        $tabla .= "
+        <br />";
+        
+        $tabla .= "
+        <table>
+            <thead>
+                <tr>
+                    <th style=\"width: 7%;\"><b>Clave</b></th>
+                    <th style=\"width: 19%;\"><b>Sustancia Activa</b></th>
+                    <th style=\"width: 19%;\"><b>Descripcion</b></th>
+                    <th style=\"width: 18%;\"><b>Presentacion</b></th>
+                    <th style=\"width: 7%;\"><b>Lote</b></th>
+                    <th style=\"width: 5%; text-align: left; \"><b>Cad.</b></th>
+                    <th style=\"width: 7%; text-align: left; \"><b>EAN</b></th>
+                    <th style=\"width: 10%; text-align: left; \"><b>Marca</b></th>
+                    <th style=\"width: 6%; text-align: right; \"><b>Inv.</b></th>
+                </tr>
+            </thead>
+            </table>";
+        return $tabla;
+    }
+
+    function getModulo($moduloID, $pasilloID)
+    {
+        $sql = "SELECT * FROM area a
+join pasillo p using(areaID)
+join modulo m using(pasilloID)
+where clvsucursal = ? and moduloID = ? and pasilloID = ?;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $moduloID, $pasilloID));
+        
+        if($query->num_rows() == 1)
+        {
+            $row = $query->row();
+            return 'AREA: ' . $row->area . ' - PASILLO: ' . $row->pasillo . ' - MODULO: ' . $row->moduloID;
+        }else{
+            return null;
+        }
+    }
+
+    function  getInventarioCabezaModulo($moduloID, $pasilloID)
+    {
+        $modulo = $this->getModulo($moduloID, $pasilloID);
+        
+        $tabla = '<table>
+            <tr>
+                <td style="text-align: center; "><b>'.COMPANIA.'</b></td>
+                <td style="text-align: center; "><b>'.$this->session->userdata('clvsucursal').' - '.$this->session->userdata('sucursal').'</b></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; "><b>INVENTARIO AREA: '.$modulo.'</b></td>
                 <td style="text-align: center; ">FECHA DE GENERACION: <b>'.date('d/m/Y H:i:s').'</b></td>
             </tr>
         </table>

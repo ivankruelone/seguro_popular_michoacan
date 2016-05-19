@@ -518,7 +518,7 @@ where clvsucursal = ?;";
 
     function getCaducadosFarmacias()
     {
-        $sql = "SELECT clvsucursal, descsucursal, id, cvearticulo, susa, descripcion, pres, lote, caducidad, cantidad
+        $sql = "SELECT clvsucursal, descsucursal, id, cvearticulo, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca
 FROM inventario i
 join sucursales s using(clvsucursal)
 join articulos a using(id)

@@ -2327,4 +2327,43 @@ function medicoAll_submit(){
         //$data['js'] = "reportes/recetas_periodo_detalle_js";
         $this->load->view('main', $data);
     }
+    
+    
+    function inv_excel(){
+        
+        $this->reportes_model->inv_excel();
+        $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+        $objWriter->save('php://output');
+        
+       // $query = $this->reportes_model->getInventarioGroupBySucursal();
+       
+    }
+    
+    function inventario_detalle_excel($clvsucursal){
+        
+        $this->reportes_model->get_invdetalle_excel($clvsucursal);
+        
+        $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+        $objWriter->save('php://output');  
+    }
+    
+    function invtotal_excel(){ 
+        
+        $this->reportes_model->get_inv_total_excel();
+        
+        $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); 
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+        $objWriter->save('php://output');
+    }
 }

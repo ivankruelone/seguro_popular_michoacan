@@ -141,6 +141,7 @@ class Almacen extends CI_Controller
         $data['articulos'] = $this->util->getArticuloComboFaltaUbicacion();
         $data['modulo'] = $this->almacen_model->drawModulo($pasilloID);
         $data['areaID'] = $areaID;
+        $data['pasilloID'] = $pasilloID;
         $data['js'] = "almacen/area_modulo_js";
         $data['pasilloID'] = $pasilloID;
         $this->load->view('main', $data);
@@ -308,6 +309,16 @@ class Almacen extends CI_Controller
         $this->load->view('main', $data);
     }
 
+    function modulo_inventario($moduloID, $pasilloID)
+    {
+        $data['subtitulo'] = "Inventario por Pasillo";
+        $data['query'] = $this->Inventario_model->getInventarioByModulo($moduloID, $pasilloID);
+        $data['moduloID'] = $moduloID;
+        $data['pasilloID'] = $pasilloID;
+        //$data['js'] = "inventario/por_sucursal_js";
+        $this->load->view('main', $data);
+    }
+
     function pedido()
     {
         $data['subtitulo'] = "Pedidos de hoy";
@@ -400,6 +411,13 @@ class Almacen extends CI_Controller
     {
         $data['subtitulo'] = "Ubicaciones disponibles en almacen";
         $data['query'] = $this->almacen_model->getUbicacion();
+        $this->load->view('main', $data);
+    }
+
+    function caducados_en_farmacia()
+    {
+        $data['subtitulo'] = "Caducados en Farmacias.";
+        $data['query'] = $this->almacen_model->getCaducadosFarmacias();
         $this->load->view('main', $data);
     }
 

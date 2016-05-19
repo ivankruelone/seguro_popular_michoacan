@@ -17,7 +17,7 @@
 ?>
 
 <table>
-    <caption id="tipo">captura</caption>
+    <caption id="tipo">captura: <?php echo $this->session->userdata('aleatorio'); ?></caption>
     <tr>
         <td>Fecha inicial: <span style="color: red;"><?php echo $rango['fecha_inicial']; ?></span></td>
         <td>Fecha final: <span style="color: red;"><?php echo $rango['fecha_final']; ?></span></td>

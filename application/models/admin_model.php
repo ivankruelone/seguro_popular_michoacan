@@ -13,7 +13,7 @@ class Admin_model extends CI_Model {
     
     function getUsuario()
     {
-        $sql = "SELECT usuario, clvusuario, password, nombreusuario, case when estaactivo = 0 then 'INACTIVO' else 'ACTIVO' end as estaactivo, descsucursal, puesto, estaactivo as activo, nivelUsuario, u.clvsucursal, case when u.valuacion = 0 then 'NO' else 'SI' end as valuacionDescripcion, u.valuacion
+        $sql = "SELECT usuario, clvusuario, password, nombreusuario, case when estaactivo = 0 then 'INACTIVO' else 'ACTIVO' end as estaactivo, descsucursal, puesto, estaactivo as activo, nivelUsuario, u.clvsucursal, case when u.valuacion = 0 then 'NO' else 'SI' end as valuacionDescripcion, case when u.consulta = 0 then 'NO' else 'SI' end as consultaDescripcion, u.valuacion, u.consulta
 FROM usuarios u
 join sucursales s using(clvsucursal)
 join puesto p using(clvpuesto)
@@ -240,7 +240,7 @@ order by menuID, s.submenuID;";
 
     function updateValuacionByUsuario($usuario)
     {
-        $sql = "UPDATE usuarios u, puesto p set u.valuacion = p.valuacion where u.clvpuesto = p.clvpuesto and u.usuario = ?;";
+        $sql = "UPDATE usuarios u, puesto p set u.valuacion = p.valuacion, u.consulta = p.consulta where u.clvpuesto = p.clvpuesto and u.usuario = ?;";
         $this->db->query($sql, array($usuario));
     }
 
@@ -396,7 +396,7 @@ limit ? offset ?;";
 
     function getPuesto()
     {
-        $sql = "SELECT clvpuesto, puesto, nivelUsuario, case when valuacion = 0 then 'NO' else 'SI' end as valuacion
+        $sql = "SELECT clvpuesto, puesto, nivelUsuario, case when valuacion = 0 then 'NO' else 'SI' end as valuacion, case when consulta = 0 then 'NO' else 'SI' end as consulta
 FROM puesto p
 join nivelUsuario n on p.nivelUsuarioIDR = n.nivelUsuarioID
 order by nivelUsuarioID, clvpuesto;";
@@ -408,7 +408,7 @@ order by nivelUsuarioID, clvpuesto;";
 
     function getPerfilByClvPuesto($clvpuesto)
     {
-        $sql = "SELECT clvpuesto, puesto, nivelUsuarioIDR, valuacion
+        $sql = "SELECT clvpuesto, puesto, nivelUsuarioIDR, valuacion, consulta
 FROM puesto p
 where clvpuesto = ?;";
 
@@ -417,7 +417,7 @@ where clvpuesto = ?;";
         return $query;
     }
 
-    function insertPuesto($puesto, $nivelUsuarioID, $valuacion)
+    function insertPuesto($puesto, $nivelUsuarioID, $valuacion, $consulta)
     {
         $this->db->where('nivelUsuarioIDR', $nivelUsuarioID);
         $this->db->where('puesto', $puesto);
@@ -425,7 +425,7 @@ where clvpuesto = ?;";
 
         if($query->num_rows() == 0)
         {
-            $data = array('puesto' => strtoupper($puesto), 'nivelUsuarioIDR' => $nivelUsuarioID, 'valuacion' => $valuacion);
+            $data = array('puesto' => strtoupper($puesto), 'nivelUsuarioIDR' => $nivelUsuarioID, 'valuacion' => $valuacion, 'consulta' => $consulta);
             $this->db->insert('puesto', $data);
         }
 
@@ -433,13 +433,13 @@ where clvpuesto = ?;";
 
     function updateValuacionByClvPuesto($clvpuesto)
     {
-        $sql = "UPDATE usuarios SET valuacion = (SELECT valuacion from puesto where clvpuesto = ?) where estaactivo = 1;";
+        $sql = "UPDATE usuarios u, puesto p set u.valuacion = p.valuacion, u.consulta = p.consulta where u.clvpuesto = p.clvpuesto and u.estaactivo = 1 and u.clvpuesto = ?;";
         $this->db->query($sql, array($clvpuesto));
     }
 
-    function updatePuesto($clvpuesto, $puesto, $nivelUsuarioID, $valuacion)
+    function updatePuesto($clvpuesto, $puesto, $nivelUsuarioID, $valuacion, $consulta)
     {
-        $data = array('puesto' => strtoupper($puesto), 'nivelUsuarioIDR' => $nivelUsuarioID, 'valuacion' => $valuacion);
+        $data = array('puesto' => strtoupper($puesto), 'nivelUsuarioIDR' => $nivelUsuarioID, 'valuacion' => $valuacion, 'consulta' => $consulta);
         $this->db->update('puesto', $data, array('clvpuesto' => $clvpuesto));
     }
 
@@ -487,6 +487,131 @@ order by menuID, s.submenuID;";
 
         $sql_inserta = "INSERT IGNORE INTO usuarios_submenu (SELECT usuario, submenuID, 1 FROM usuarios u, puesto_permisos p where u.clvpuesto = p.clvpuesto and p.clvpuesto = ? and estaactivo = 1);";
         $this->db->query($sql_inserta, array($clvpuesto));
+    }
+
+    function getCatalogoArticulos()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+            die($cacheMethod . " caching method is not available" . EOL);
+        }
+
+        $sql = "SELECT clave as clave_ssa, cvearticulo as clave_fenix, susa, descripcion, pres, suministro, case when antibiotico = 1 then 'SI' else 'NO' end as antibiotico, case when cause = 1 then 'SI' else 'NO' end as cause, case when fcb = 0 then 'CUADRO' else 'FUERA DE CUADRO' end as cuadro, precioven as precio_unitario, servicio, fcb
+FROM articulos a
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+order by tipoprod, cvearticulo * 1;";
+        
+        $query = $this->db->query($sql);
+
+        $this->excel->createSheet(0);
+        $this->excel->setActiveSheetIndex(0);
+        $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
+            
+            //$this->excel->getActiveSheet()->setTitle($row->area);
+            
+        $this->excel->getActiveSheet()->mergeCells('A1:N1');
+        $this->excel->getActiveSheet()->mergeCells('A2:K2');
+            
+        $this->excel->getActiveSheet()->mergeCells('L2:N2');
+
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
+        $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+
+
+        $num = 3;
+            
+        $data_empieza = $num + 1;
+            
+        $this->excel->getActiveSheet()->setCellValue('A'.$num, 'CLAVE SSA');
+        $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE FENIX');
+        $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+        $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+        $this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+        $this->excel->getActiveSheet()->setCellValue('F'.$num, 'SUMINISTRO');
+        $this->excel->getActiveSheet()->setCellValue('G'.$num, 'ANTIBIOTICO');
+        $this->excel->getActiveSheet()->setCellValue('H'.$num, 'CAUSES');
+        $this->excel->getActiveSheet()->setCellValue('I'.$num, 'CUADRO');
+        $this->excel->getActiveSheet()->setCellValue('J'.$num, 'PRECIO UNITARIO');
+        $this->excel->getActiveSheet()->setCellValue('K'.$num, 'SERVICIO');
+            
+        $i = 1;
+
+            if($query->num_rows() > 0)
+            {
+                
+                foreach($query->result()  as $row)
+                {
+                    $num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $row->clave_ssa);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row->clave_fenix);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row->susa);
+                    $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->suministro);
+                    $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->antibiotico);
+                    $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->cause);
+                    $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->cuadro);
+                    $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->precio_unitario);
+                    $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->servicio);
+                    
+                    if($row->fcb == 1)
+                    {
+                        $this->excel->getActiveSheet()->getStyle('A' . $num . ':N' . $num)->getFill()->applyFromArray(array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'startcolor' => array(
+                                 'rgb' => 'FFA07A'
+                            )
+                        ));
+                    }
+
+                    $i++;
+                    
+                }
+            
+                $data_termina = $num;
+            
+            
+                $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':K'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+            
+                $this->excel->getActiveSheet()->getStyle('C'.$data_empieza.':E'.$data_termina)->getAlignment()->setWrapText(true);
+            
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+            
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':K'.($data_termina + 1))->applyFromArray($styleArray);
+            
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':K'.($data_termina + 1));
+            
+            
+            }
+            
+        
     }
 
 }

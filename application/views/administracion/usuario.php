@@ -12,7 +12,8 @@
                                                 <th>Departamento</th>
                                                 <th>Usuario</th>
                                                 <th>Password</th>
-                                                <th>Valuación</th>
+                                                <th class="center">Valuación</th>
+                                                <th class="center">Consulta</th>
                                                 <th>Status</th>
                                                 <th>Sucursal</th>
                                                 <th colspan="2">Acciones</th>
@@ -40,7 +41,8 @@
                                                 <td><?php echo $row->nivelUsuario; ?></td>
                                                 <td><?php echo $row->clvusuario; ?></td>
                                                 <td><?php echo '*********'; ?></td>
-                                                <td><?php echo $row->valuacionDescripcion; ?></td>
+                                                <td class="center"><?php echo $row->valuacionDescripcion; ?></td>
+                                                <td class="center"><?php echo $row->consultaDescripcion; ?></td>
                                                 <td class="center"><?php echo $row->estaactivo ?></td>
                                                 <td><?php echo $row->clvsucursal .' - ' . $row->descsucursal; ?></td>
                                                 <td><?php echo anchor('administracion/usuario_edita/'.$row->usuario, 'Edita'); ?></td>

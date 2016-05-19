@@ -33,7 +33,7 @@
 
                                     </ul>
                                     
-                                    <p><?php echo anchor('almacen/modulo_nuevo/'.$areaID.'/'.$pasilloID, 'Agrega un modulo nuevo'); ?></p>
+                                    <p><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/modulo_nuevo/'.$areaID.'/'.$pasilloID, 'Agrega un modulo nuevo'); ?></p>
 
                                     <table id="table" class="table table-striped table-bordered table-hover">
                                         <thead>
@@ -41,6 +41,7 @@
                                                 <th>Modulo</th>
                                                 <th>Posiciones</th>
                                                 <th>Clonar</th>
+                                                <th>Ver Inventario</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -52,7 +53,8 @@
                                             <tr>
                                                 <td><?php echo $row->moduloID; ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->posiciones, 0); ?></td>
-                                                <td><?php echo anchor('almacen/modulo_clona/'.$areaID.'/'.$pasilloID.'/'.$row->moduloID, 'Clonar', array('class' => 'clona')); ?></td>
+                                                <td><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/modulo_clona/'.$areaID.'/'.$pasilloID.'/'.$row->moduloID, 'Clonar', array('class' => 'clona')); ?></td>
+                                                <td><?php echo anchor('almacen/modulo_inventario/'.$row->moduloID.'/'.$pasilloID, 'Ver inventario'); ?></td>
                                             </tr>
                                             <?php 
                                             
@@ -66,7 +68,7 @@
                                             <tr>
                                                 <td>Total de posiciones</td>
                                                 <td style="text-align: right;"><?php echo number_format($posiciones, 0); ?></td>
-                                                <td colspan="2">&nbsp;</td>
+                                                <td colspan="4">&nbsp;</td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -78,7 +80,7 @@
                             <div class="row-fluid">
                                 <div class="span12">
                                 
-                                <?php echo $modulo; ?>
+                                <?php if($this->session->userdata('consulta') == 0) echo $modulo; ?>
                                 
                                 <div id="dialog-message" class="hide">
 										<p>

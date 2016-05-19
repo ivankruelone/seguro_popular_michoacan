@@ -3,6 +3,9 @@
                                                                         
                                     <table class="table table-condensed">
                                         <caption>Registros: <?php echo $query->num_rows(); ?></caption>
+                                        <?php $r = $query->row();
+                                        
+                                        echo anchor('reportes/inventario_detalle_excel/'.$r->clvsucursal.'/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
                                         <thead>
                                             <tr>
                                                 <th># Sucursal</th>
