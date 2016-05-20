@@ -26,6 +26,22 @@ class Inventario extends CI_Controller
         $this->load->view('main', $data);
     }
     
+    function buscar()
+    {
+        $data['subtitulo'] = "Buscar en el inventario";
+        $this->load->view('main', $data);
+    }
+
+    function resultado_busqueda()
+    {
+    	$clave = $this->input->post('clave');
+    	$susa = $this->input->post('susa');
+        $data['subtitulo'] = "Resultado de la busqueda";
+        $data['query'] = $this->Inventario_model->getBusqueda($clave, $susa);
+        $data['js'] = "inventario/caducidades_js";
+        $this->load->view('main', $data);
+    }
+
     function inventarioByCaducidad()
     {
         $caducidad = $this->input->post('caducidad');
@@ -36,10 +52,38 @@ class Inventario extends CI_Controller
 
     function index()
     {
+        $this->load->library('pagination');
+
+
+        $config['base_url'] = site_url('inventario/index');
+        $config['total_rows'] = $this->Inventario_model->getCountInventario();
+        $config['per_page'] = 500;
+        $config['uri_segment'] = 3;
+        
+        $this->pagination->initialize($config); 
+
         $data['subtitulo'] = "";
-        $data['query'] = $this->Inventario_model->getInventario();
+        $data['query'] = $this->Inventario_model->getInventarioLimitOffset($config['per_page'], $this->uri->segment(3));
         //$data['js'] = "inventario/por_sucursal_js";
         $this->load->view('main', $data);
+    }
+
+    function reciba()
+    {
+        $this->load->library('pagination');
+
+        $config['base_url'] = site_url('inventario/reciba');
+        $config['total_rows'] = $this->Inventario_model->getCountReciba();
+        $config['per_page'] = 500;
+        $config['uri_segment'] = 3;
+        
+        $this->pagination->initialize($config); 
+
+        $data['subtitulo'] = "";
+        $data['query'] = $this->Inventario_model->getInventarioRecibaLimitOffset($config['per_page'], $this->uri->segment(3));
+        //$data['js'] = "inventario/por_sucursal_js";
+        $this->load->view('main', $data);
+       
     }
 
     function datos($inventarioID)
@@ -350,16 +394,7 @@ where inventarioID = ?;";
         
         
     }
-    
-    function reciba()
-    {
-        $data['subtitulo'] = "";
-        $data['query'] = $this->Inventario_model->getInventarioReciba();
-        //$data['js'] = "inventario/por_sucursal_js";
-        $this->load->view('main', $data);
-       
-    }
-    
+        
     function ajuste()
     {
         $data['subtitulo'] = "Busca el producto para hacer el ajuste";

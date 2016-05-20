@@ -449,6 +449,7 @@ where clvsucursal = ?;";
             'cveservicios'      => $row->cveservicios,
             'nivelAtencion'     => $nivelAtencion,
             'diaDescripcion'    => $diaDescripcion,
+            'ajuste'            => $row->ajuste
             );
 
         $this->session->set_userdata($newdata);

@@ -857,6 +857,22 @@ group by id, lote, i.ubicacion;";
         }
     }
 
+    function getUbicacionAutoLlenado()
+    {
+        $sql = "SELECT ubicacion FROM ubicacion u where clvsucursal = ? and id = 0 order by pasilloTipo desc limit 1;";
+
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal')));
+
+        if($query->num_rows() > 0)
+        {
+            $row = $query->row();
+            return $row->ubicacion;
+        }else
+        {
+            return 0;
+        }
+    }
+
     function getUbicacionRecibaGeneral()
     {
         $sql = "SELECT ubicacion FROM ubicacion u where clvsucursal = ? and pasilloTipo = 3;";
@@ -873,38 +889,107 @@ group by id, lote, i.ubicacion;";
         }
     }
 
+    function getDetalleSalida($referencia)
+    {
+        $sql = "SELECT d.* FROM movimiento m
+join movimiento_detalle d using(movimientoID)
+where tipoMovimiento = 2 and referencia = ? and clvsucursalReferencia = ?;";
+        $query = $this->db->query($sql, array((string)$referencia, $this->session->userdata('clvsucursal')));
+
+        return $query;
+    }
+
     function getSalidaRemota()
     {
         $referencia = $this->input->post('referencia');
         $movimientoID = $this->input->post('movimientoID');
 
         $datos = $this->util->getDataOficina('transitoDetalle', array('referencia' => $referencia));
-        //print_r($datos);
 
-        foreach ($datos as $dat) {
+        if(isset($datos->error))
+        {
+            $this->getSalidaLocal($referencia, $movimientoID);
+        }else
+        {
+            foreach ($datos as $dat) {
 
-            $id = $this->getIDFromCveArticulo($dat->cvearticulo);
+                $id = $this->getIDFromCveArticulo($dat->cvearticulo);
 
-            if($id > 0)
-            {
-
-                $this->db->where('movimientoID', $movimientoID);
-                $this->db->where('idRemoto', $dat->movimientoDetalle);
-
-                $q = $this->db->get('movimiento_detalle');
-
-                if($q->num_rows() == 0)
+                if($id > 0)
                 {
 
-                    $ubicacion = $this->getUbicacionRecibaGeneral();
+                    $this->db->where('movimientoID', $movimientoID);
+                    $this->db->where('idRemoto', $dat->movimientoDetalle);
 
-                    if($ubicacion > 0)
+                    $q = $this->db->get('movimiento_detalle');
+
+                    if($q->num_rows() == 0)
                     {
 
+                        $ubicacion = $this->getUbicacionAutoLlenado();
 
-                        $data = array(
+                        if($ubicacion > 0)
+                        {
+
+
+                            $data = array(
+                                'movimientoID'  => $movimientoID,
+                                'id'            => $id,
+                                'piezas'        => $dat->piezas,
+                                'costo'         => $dat->costo,
+                                'lote'          => (string)$dat->lote,
+                                'caducidad'     => (string)$dat->caducidad,
+                                'ean'           => $dat->ean,
+                                'marca'         => (string)$dat->marca,
+                                'ubicacion'     => $ubicacion,
+                                'comercial'     => (string)$dat->comercial,
+                                'idRemoto'      => $dat->movimientoDetalle
+                            );
+
+                            $this->db->insert('movimiento_detalle', $data);
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+
+
+
+    }
+    
+    function getSalidaLocal($referencia, $movimientoID)
+    {
+        $datos = $this->getDetalleSalida($referencia);
+
+        
+
+ 
+        foreach ($datos->result() as $dat) {
+
+
+
+            $this->db->where('movimientoID', $movimientoID);
+            $this->db->where('idRemoto', $dat->movimientoDetalle);
+
+            $q = $this->db->get('movimiento_detalle');
+
+            if($q->num_rows() == 0)
+            {
+
+                $ubicacion = $this->getUbicacionAutoLlenado();
+
+                echo $ubicacion;
+
+                if($ubicacion > 0)
+                {
+
+
+                    $data = array(
                             'movimientoID'  => $movimientoID,
-                            'id'            => $id,
+                            'id'            => $dat->id,
                             'piezas'        => $dat->piezas,
                             'costo'         => $dat->costo,
                             'lote'          => (string)$dat->lote,
@@ -914,19 +999,21 @@ group by id, lote, i.ubicacion;";
                             'ubicacion'     => $ubicacion,
                             'comercial'     => (string)$dat->comercial,
                             'idRemoto'      => $dat->movimientoDetalle
-                        );
+                    );
 
-                        $this->db->insert('movimiento_detalle', $data);
+                    print_r($data);
 
-                    }
+                    $this->db->insert('movimiento_detalle', $data);
 
                 }
 
             }
+
+
         }
 
     }
-    
+
     function correOrdenes()
     {
         $sql = "SELECT movimientoID FROM movimiento m where orden > 0 and statusMovimiento = 1 and aplicada = 0;";

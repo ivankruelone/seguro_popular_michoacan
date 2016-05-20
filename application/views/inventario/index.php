@@ -34,7 +34,10 @@
 
                                     <p><?php echo anchor('inventario/reasignaUbicacion/', 'Reasigna ubicación'); ?></p>
 
+                                    <p style="text-align: center;"><?php echo $this->pagination->create_links(); ?></p>
+
                                     <table class="table table-condensed">
+                                        <caption>Registros: <?php echo $query->num_rows(); ?></caption>
                                         <thead>
                                             <tr>
                                                 <th>Clave</th>
@@ -70,7 +73,7 @@
                                                     $ubicacion = $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID;
                                                 }
                                                 
-                                                if($this->session->userdata('superuser') == 1)
+                                                if($this->session->userdata('superuser') == 1 || $this->session->userdata('ajuste') == 1)
                                                 {
                                                     $edita_cantidad = anchor('inventario/cantidad/'.$row->inventarioID, 'Cantidad');
                                                 }else{

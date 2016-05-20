@@ -391,7 +391,7 @@ function valida_fecha()
                         $this->session->set_flashdata('folioReceta', $folioReceta);
                         redirect('captura/edita/');
                 }else{
-                    $this->session->set_flashdata('mensaje', "Este folio: ".$folioReceta.", esta capturado en la sucursal: " . $row->cvecentrosalud . ' - ' . $this->captura_model->getSucursalNombreByClvSucursal($row->cvecentrosalud));
+                    $this->session->set_flashdata('mensaje', "Este folio: ".$folioReceta.", esta capturado en la sucursal: " . $row->clvsucursal . ' - ' . $this->captura_model->getSucursalNombreByClvSucursal($row->clvsucursal));
                     redirect('captura/edicion');
                 }
             }else{
@@ -829,6 +829,35 @@ function valida_fecha()
     	$term = $this->input->get_post('term');
     	echo $this->captura_model->getCIE104($term);
 
+    }
+
+    function reporte_por_periodo(){
+        $this->load->model('reportes_model');
+        $data['subtitulo'] = "";
+        $data['js'] = "reportes/recetas_periodo_js";
+        $data['programa'] = $this->reportes_model->getProgramasCombo();
+        $data['requerimiento'] = $this->reportes_model->getRequerimientoCombo();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $this->load->view('main', $data);
+    }
+
+    function recetas_periodo_detalle()
+    {
+        $this->load->model('reportes_model');
+        ini_set("memory_limit","1024M");
+
+        $fecha1 = $this->input->post('fecha1');
+        $fecha2 = $this->input->post('fecha2');
+        $idprograma = $this->input->post('idprograma');
+        $tiporequerimiento = $this->input->post('tiporequerimiento');
+        $cvesuministro = $this->input->post('cvesuministro');
+
+        $data['query'] = $this->captura_model->recetas_periodo_detalle($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro);
+        $data['fecha1'] = $fecha1;
+        $data['fecha2'] = $fecha2;
+        $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
+        //$data['js'] = "reportes/recetas_periodo_detalle_js";
+        $this->load->view('main', $data);
     }
 
 }

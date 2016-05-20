@@ -77,7 +77,7 @@
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
             
-                <?php //$this->load->view('shortcuts'); ?>
+                <?php $this->load->view('shortcuts'); ?>
                 
                 <?php
                 
@@ -87,7 +87,7 @@
                 
                 <div style="text-align: center;">
                     <img src="<?php echo base_url();?>assets/img/Simple_TPV_01_128x128x32.png" width="128" height="128" />
-                    <p>Desarrollo: <a href="http://simpletpv.com" target="_blank">Simple TPV</a></p>
+                    <p>Dev: <a href="http://simpletpv.com" target="_blank">Simple TPV</a></p>
                 </div>
 
 				<div class="sidebar-collapse" id="sidebar-collapse">

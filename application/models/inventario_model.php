@@ -24,11 +24,38 @@ order by tipoprod, cvearticulo * 1 asc;";
         return $query;
     }
     
+    function getInventarioLimitOffset($limit, $offset = 0)
+    {
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join posicion p using(ubicacion)
+where cantidad <> 0 and i.clvsucursal = ?
+order by tipoprod, cvearticulo * 1 asc
+limit ? offset ?;";
+        $query = $this->db->query($sql, array((int)$this->session->userdata('clvsucursal'), (int)$limit, (int)$offset));
+        return $query;
+    }
+
+    function getCountInventario()
+    {
+        $sql = "SELECT count(*) as cuenta
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join posicion p using(ubicacion)
+where cantidad <> 0 and i.clvsucursal = ?;";
+        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        $row = $query->row();
+        return $row->cuenta;
+    }
+
     function getInventarioBusqueda($clave, $susa)
     {
         if(strlen(trim($clave)) > 0)
         {
-            $filtro1 = " and (cvearticulo like '%$clave%')";
+            $filtro1 = " and (cvearticulo like '%$clave%' or clave like '%$clave%')";
         }else{
             $filtro1 = null;
         }
@@ -46,6 +73,33 @@ join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
 left join posicion p using(ubicacion)
 where i.clvsucursal = ? $filtro1 $filtro2
+order by tipoprod, cvearticulo * 1 asc;";
+        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        return $query;
+    }
+
+    function getBusqueda($clave, $susa)
+    {
+        if(strlen(trim($clave)) > 0)
+        {
+            $filtro1 = " and (cvearticulo like '%$clave%' or clave like '%$clave%')";
+        }else{
+            $filtro1 = null;
+        }
+        
+        if(strlen(trim($susa)) > 0)
+        {
+            $filtro2 = " and (susa like '%$susa%' or comercial like '%$susa%')";
+        }else{
+            $filtro2 = null;
+        }
+
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join posicion p using(ubicacion)
+where i.clvsucursal = ? and cantidad > 0 $filtro1 $filtro2
 order by tipoprod, cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
         return $query;
@@ -102,6 +156,35 @@ where cantidad <> 0 and i.clvsucursal = ? and pasilloTipo = 3
 order by tipoprod, cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
         return $query;
+    }
+
+    function getInventarioRecibaLimitOffset($limit, $offset = 0)
+    {
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join posicion p using(ubicacion)
+left join pasillo o using(pasilloID)
+where cantidad <> 0 and i.clvsucursal = ? and pasilloTipo = 3
+order by tipoprod, cvearticulo * 1 asc
+limit ? offset ?;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), (int)$limit, (int)$offset));
+        return $query;
+    }
+
+    function getCountReciba()
+    {
+        $sql = "SELECT count(*) as cuenta
+FROM inventario i
+join articulos a using(id)
+join temporal_suministro s on a.tipoprod = s.cvesuministro
+left join posicion p using(ubicacion)
+left join pasillo o using(pasilloID)
+where cantidad <> 0 and i.clvsucursal = ? and pasilloTipo = 3;";
+        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        $row = $query->row();
+        return $row->cuenta;
     }
 
     function getInventariobyTipoprod($tipoprod)

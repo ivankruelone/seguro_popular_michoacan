@@ -24,6 +24,7 @@
 ?>
 
 <table class="table table-condensed">
+    <caption>Registros: <?php echo $query->num_rows(); ?></caption>
     <thead>
         <tr>
             <th>Detalle</th>
@@ -55,6 +56,11 @@
         $total = 0;
         
         foreach($query->result() as $row){
+
+            if($row->subtipoMovimiento <> 1)
+            {
+                $row->costo = 0;
+            }
             
             $importe = $row->costo * $row->piezas;
             

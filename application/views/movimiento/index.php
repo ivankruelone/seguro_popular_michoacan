@@ -85,7 +85,7 @@
                                                     $imprime = anchor('movimiento/imprime/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                 }
                                                 
-                                                if($subtipoMovimiento == 13)
+                                                if($subtipoMovimiento == 13 || $subtipoMovimiento == 21 || $subtipoMovimiento == 22 || $subtipoMovimiento == 23)
                                                 {
                                                     if($this->session->userdata('consulta') == 0)
                                                     {

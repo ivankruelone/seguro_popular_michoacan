@@ -198,7 +198,7 @@ where clvsucursal = ?;";
     function getRecetaProdcutos($folioReceta)
     {
         //$sql = "select r.cvearticulo, cantidadrequerida, cantidadsurtida, idlote, fechacaducidad, consecutivo from receta r join lotes l on r.cvearticulo = l.cvearticulo and r.idlote = l.lote where folioreceta = ? and r.status = 't'";
-        $sql = "SELECT consecutivo, cvearticulo, canreq, cansur, consecutivoDetalle, precioven, caducidad, lote
+        $sql = "SELECT d.*, cvearticulo
 FROM receta_detalle d
 join articulos a using(id)
 join receta r using(consecutivo)
@@ -210,7 +210,7 @@ where folioreceta = ?;";
     function getRecetaProdcutosByConsecutivo($consecutivo)
     {
         //$sql = "select r.cvearticulo, cantidadrequerida, cantidadsurtida, idlote, fechacaducidad, consecutivo from receta r join lotes l on r.cvearticulo = l.cvearticulo and r.idlote = l.lote where folioreceta = ? and r.status = 't'";
-        $sql = "SELECT consecutivo, cvearticulo, canreq, cansur, consecutivoDetalle, precioven, caducidad, lote
+        $sql = "SELECT d.*, cvearticulo
 FROM receta_detalle d
 join articulos a using(id)
 join receta r using(consecutivo)
@@ -425,7 +425,7 @@ where cvearticulo = ?;";
         
         if($row->consecutivo_temporal > 0)
         {
-            $query2 = $this->getInventario($row->cvearticulo, $row->idlote);
+            $query2 = $this->getInventarioByIDAndLote($row->id, $row->idlote);
             
             if($query2->num_rows()  > 0)
             {
@@ -522,18 +522,44 @@ where p.usuario = ?;";
         
         foreach($productos->result() as $row)
         {
-            $data = array('usuario' => $this->session->userdata('aleatorio'), 'cvearticulo' => $row->cvearticulo, 'req' => $row->canreq, 'sur' => $row->cansur, 'idlote' => $row->lote, 'fechacaducidad' => $row->caducidad, 'consecutivo_temporal' => $row->consecutivoDetalle, 'precio' => $row->precioven, 'consecutivo' => $row->consecutivo);
+            //usuario, cvearticulo, req, sur, consecutivo_temporal, serie, precio, fechacaducidad, idlote, consecutivo, id, inventarioID, fechaCaptura
+            $data = array('usuario' => $this->session->userdata('aleatorio'), 'cvearticulo' => $row->cvearticulo, 'req' => $row->canreq, 'sur' => $row->cansur, 'idlote' => $row->lote, 'fechacaducidad' => $row->caducidad, 'consecutivo_temporal' => $row->consecutivoDetalle, 'precio' => $row->precio, 'consecutivo' => $row->consecutivo, 'id' => $row->id, 'inventarioID' => $this->getInventarioID($row->id, $row->lote));
             $this->db->insert('productos_temporal', $data);
         }
     }
     
+    function getInventarioByIDAndLote($id, $lote)
+    {
+        $sql = "SELECT * FROM inventario i where clvsucursal = ? and id = ? and lote = ?;";
+
+        $query = $this->db->query($sql, array((int)$this->session->userdata('clvsucursal'), (int) $id, (string)$lote));
+
+        return $query;
+    }
+
+    function getInventarioID($id, $lote)
+    {
+        $sql = "SELECT inventarioID FROM inventario i where clvsucursal = ? and id = ? and lote = ?;";
+
+        $query = $this->db->query($sql, array((int)$this->session->userdata('clvsucursal'), (int) $id, (string)$lote));
+
+        if($query->num_rows() == 0)
+        {
+            return 0;
+        }else
+        {
+            $row = $query->row();
+            return $row->inventarioID;
+        }
+    }
+
     function fillProductosTemporalByConsecutivo($consecutivo)
     {
         $productos = $this->getRecetaProdcutosByConsecutivo($consecutivo);
         
         foreach($productos->result() as $row)
         {
-            $data = array('usuario' => $this->session->userdata('aleatorio'), 'cvearticulo' => $row->cvearticulo, 'req' => $row->canreq, 'sur' => $row->cansur, 'idlote' => $row->lote, 'fechacaducidad' => $row->caducidad, 'consecutivo_temporal' => $row->consecutivoDetalle, 'precio' => $row->precioven, 'consecutivo' => $row->consecutivo);
+            $data = array('usuario' => $this->session->userdata('aleatorio'), 'cvearticulo' => $row->cvearticulo, 'req' => $row->canreq, 'sur' => $row->cansur, 'idlote' => $row->lote, 'fechacaducidad' => $row->caducidad, 'consecutivo_temporal' => $row->consecutivoDetalle, 'precio' => $row->precio, 'consecutivo' => $row->consecutivo, 'id' => $row->id, 'inventarioID' => $this->getInventarioID($row->id, $row->lote));
             $this->db->insert('productos_temporal', $data);
         }
     }
@@ -923,6 +949,44 @@ where aleatorio = ?;";
         $query = $this->db->query($sql);
 
         return json_encode($query->result());
+    }
+
+    function recetas_periodo_detalle($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro)
+    {
+        
+        if($idprograma == 1000){
+            $pro = null;
+        }else{
+            $pro = "and r.idprograma = $idprograma";
+        }
+        
+        if($tiporequerimiento == 1000){
+            $req = null;
+        }else{
+            $req = "and r.tiporequerimiento = $tiporequerimiento";
+        }
+
+        if($cvesuministro == 1000){
+           $sumis = null;
+        }else{
+            $sumis = "and x.tipoprod = $cvesuministro";
+        }
+        
+        $s = "SELECT descsucursal, preciosinser, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
+             cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
+            fecha, fechaexp
+            from receta r
+            join sucursales s on r.clvsucursal=s.clvsucursal
+            join programa p on r.idprograma = p.idprograma
+            join temporal_requerimiento q on r.tiporequerimiento = q.tiporequerimiento
+            join receta_detalle d on d.consecutivo = r.consecutivo
+            join articulos x on d.id=x.id
+            where fecha between ? and ? $pro  $req $sumis
+            order by r.fecha, r.folioreceta";
+        $query = $this->db->query($s, array($fecha1, $fecha2));
+        $this->reportes_model->insertaQuery($this->db->last_query());
+        return $query;
+        
     }
 
 }
