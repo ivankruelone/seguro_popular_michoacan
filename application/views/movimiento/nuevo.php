@@ -88,6 +88,19 @@
                                     
                                     ?>
 
+                                    <?php 
+                                    
+                                    if($subtipoMovimiento == 22)
+                                    {
+                                        echo MY_form_dropdown2('Cobertura', 'idprograma', $programa, null, 6);
+                                    }else{
+                                        echo form_hidden('idprograma', 100);
+                                    }
+                                    
+                                     
+                                    
+                                    ?>
+
                                     <?php echo MY_form_input('observaciones', 'observaciones', 'Observaciones', 'text', 'Observaciones', 12, false); ?>
                                     
                                     <?php echo form_hidden('tipoMovimiento', $tipoMovimiento); ?>

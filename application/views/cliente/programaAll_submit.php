@@ -25,7 +25,7 @@
                                                 <th>INTRAHOSPITALARIOS</th>
                                                 <th>CLINICA DE HERIDAS</th>
                                                 <th>TOTAL</th>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <th>Precio Unitario</th>
                                                 <th>Importe</th>
                                                 <th>IVA</th>
@@ -101,7 +101,7 @@
                                                 <td style="text-align: right;"><?php echo number_format ($row->sm, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->ch, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->todo, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td style="text-align: right;"><?php echo number_format ($row->preciosinser, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($iva, 2); ?></td>
@@ -143,7 +143,7 @@
                                                 <td style="text-align: right;" id="sm"><?php echo number_format ($sm, 0); ?></td>
                                                 <td style="text-align: right;" id="ch"><?php echo number_format ($ch, 0); ?></td>
                                                 <td style="text-align: right;" id="to"><?php echo number_format ($to, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td>&nbsp;</td>
                                                 <td style="text-align: right;"><?php echo number_format($tImporte, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($tIVA, 2); ?></td>
@@ -166,7 +166,7 @@
                                                 <th>SEGURO MEDICO SIGLO XXI</th>
                                                 <th>CLINICA DE HERIDAS</th>
                                                 <th>TOTAL</th>
-                                                <?php if($this->session->userdata('valuacion') == 14){?>
+                                                <?php if($this->session->userdata('superuser') == 14){?>
                                                 <th>Precio Unitario</th>
                                                 <th>Importe</th>
                                                 <th>IVA</th>

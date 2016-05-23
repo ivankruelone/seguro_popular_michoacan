@@ -9,13 +9,66 @@
                                     
                                     <?php echo MY_form_datepicker('Fecha del documento', 'fecha', 3, true, $row->fecha); ?>
                                     
-                                    <?php echo MY_form_input('orden', 'orden', 'Orden de compra', 'text', 'Orden de compra', 3, true, $row->orden); ?>
+                                    <?php 
+                                    
+                                    if($row->subtipoMovimiento == 1 || $row->subtipoMovimiento == 3)
+                                    {
+                                        echo MY_form_input('orden', 'orden', 'Orden de compra', 'text', 'Orden de compra', 3, false, $row->orden); 
+                                    }else{
+                                        echo form_hidden('orden', 0);
+                                    }
+
+                                    ?>
 
                                     <?php echo MY_form_input('referencia', 'referencia', 'Referencia de documento', 'text', 'Referencia de documento', 3, true, $row->referencia); ?>
 
-                                    <?php echo MY_form_dropdown2('Sucursal', 'sucursal_referencia', $sucursales, $row->clvsucursalReferencia, 6); ?>
+                                    <?php 
+                                    
+                                    if($row->subtipoMovimiento == 1 || $row->subtipoMovimiento == 3 || $row->subtipoMovimiento == 12 || $row->subtipoMovimiento == 15)
+                                    {
+                                        echo form_hidden('sucursal_referencia', 0);
+                                    }else{
 
-                                    <?php echo MY_form_dropdown2('Proveedor', 'proveedor', $proveedores, $row->proveedorID, 6); ?>
+                                        if($row->tipoMovimiento == 1)
+                                        {
+                                            echo MY_form_dropdown2('Sucursal Origen', 'sucursal_referencia', $sucursales, $row->clvsucursalReferencia, 6); 
+                                        }elseif ($row->tipoMovimiento == 2){
+                                            echo MY_form_dropdown2('Sucursal Destino', 'sucursal_referencia', $sucursales, $row->clvsucursalReferencia, 6); 
+                                        }elseif ($row->tipoMovimiento == 3) {
+                                            echo MY_form_dropdown2('Sucursal', 'sucursal_referencia', $sucursales, $row->clvsucursalReferencia, 6); 
+                                        }
+                                        
+                                    }
+                                    
+                                    ?>
+
+
+                                    <?php 
+                                    
+                                    if($row->subtipoMovimiento == 1 || $row->subtipoMovimiento == 3)
+                                    {
+                                        echo MY_form_dropdown2('Proveedor', 'proveedor', $proveedores, $row->proveedorID, 6);
+                                    }else{
+                                        echo form_hidden('proveedor', 0);
+                                    }
+                                    
+                                     
+                                    
+                                    ?>
+
+
+                                    <?php 
+                                    
+                                    if($row->subtipoMovimiento == 22)
+                                    {
+                                        echo MY_form_dropdown2('Cobertura', 'idprograma', $programa, $row->cobertura, 6);
+                                    }else{
+                                        echo form_hidden('idprograma', 100);
+                                    }
+                                    
+                                     
+                                    
+                                    ?>
 
                                     <?php echo MY_form_input('observaciones', 'observaciones', 'Observaciones', 'text', 'Observaciones', 12, false, $row->observaciones); ?>
                                     

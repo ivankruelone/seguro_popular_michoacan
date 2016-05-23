@@ -119,7 +119,7 @@ where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ?;";
     
     function getMovimientos($tipoMovimiento, $subtipoMovimiento, $limit, $offset = 0)
     {
-        $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml
+        $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml, IFNULL(o.programa, 'TODAS') as programa
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -128,6 +128,7 @@ join sucursales s1 using(clvsucursal)
 join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
+left join programa o on m.cobertura = o.idprograma
 where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ?
 order by m.movimientoID desc
 limit ? offset ?
@@ -141,7 +142,7 @@ limit ? offset ?
     
     function getMovimientoByMovimientoID($movimientoID)
     {
-        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion
+        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -152,6 +153,7 @@ left join sucursales_ext s3 on m.clvsucursalReferencia = s3.clvsucursal
 left join jurisdiccion j on s2.numjurisd = j.numjurisd
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
+left join programa o on m.cobertura = o.idprograma
 where m.movimientoID = ? and m.clvsucursal = ?;";
 
         $query = $this->db->query($sql, array($movimientoID, $this->session->userdata('clvsucursal')));
@@ -165,7 +167,7 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
         return $query;
     }
     
-    function insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision)
+    function insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma)
     {
         $data = array(
             'tipoMovimiento'    => $tipoMovimiento,
@@ -179,7 +181,8 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
             'clvsucursalReferencia' => $sucursal_referencia,
             'usuario'           => $this->session->userdata('usuario'),
             'observaciones'     => $observaciones,
-            'remision'          => $remision
+            'remision'          => $remision,
+            'cobertura'         => $idprograma
             );
         
         $this->db->set('fechaAlta', 'now()', false);
@@ -568,7 +571,7 @@ where movimientoDetalle = ?;";
         $tabla = '<table cellpadding="1">
             <tr>
                 <td rowspan="8" width="100px">'.img($logo).'</td>
-                <td rowspan="8" width="450px" align="center"><font size="8">'.COMPANIA.'<br />'.$suc.': '.$row->sucursal.'<br />MOVIMIENTO: '.$row->tipoMovimientoDescripcion.' - '.$row->subtipoMovimientoDescripcion.'<br />PROVEEDOR: '.$row->razon.'<br />'.$suc_ref.': '.$row->sucursal_referencia.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->referencia).'</td>
+                <td rowspan="8" width="450px" align="center"><font size="8">'.COMPANIA.'<br />'.$suc.': '.$row->sucursal.'<br />MOVIMIENTO: '.$row->tipoMovimientoDescripcion.' - '.$row->subtipoMovimientoDescripcion.'<br />PROVEEDOR: '.$row->razon.'<br />'.$suc_ref.': '.$row->sucursal_referencia.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />COBERTURA: '.$row->programa.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->referencia).'</td>
                 <td width="75px">ID Movimiento: </td>
                 <td width="95px" align="right">'.$row->movimientoID.'</td>
             </tr>
@@ -1480,7 +1483,7 @@ where movimientoDetalle = ?;";
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and cantidad > 0 and i.clvsucursal = ?
+where m.movimientoID = ? and cantidad > 0 and pasilloTipo <> 2 and i.clvsucursal = ?
 group by areaID;";
         $query = $this->db->query($sql, array((int)$movimientoID, $this->session->userdata('clvsucursal')));
 

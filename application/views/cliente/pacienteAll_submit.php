@@ -20,7 +20,7 @@
                                                 <th>DESCRIPCION</th>
                                                 <th>REQUERIDAS</th>
                                                 <th>SURTIDAS</th>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <th>PRECIO UNITARIO</th>
                                                 <th>IMPORTE</th>
                                                 <th>IVA</th>
@@ -77,15 +77,15 @@
                                                 <td><?php echo $row->clvsucursal; ?></td>
                                                 <td><?php echo $row->descsucursal; ?></td>
                                                 <td><?php echo $row->fecha; ?></td>
-                                                <td><?php echo ($row->folioreceta); ?></td>
-                                                <td><?php echo ($row->programa); ?></td>
-                                                <td><?php echo ($row->cvemedico); ?></td>
-                                                <td><?php echo ($row->nombremedico); ?></td>
-                                                <td><?php echo ($row->cvearticulo); ?></td>
-                                                <td><?php echo ($row->completo); ?></td>
+                                                <td><?php echo utf8_encode($row->folioreceta); ?></td>
+                                                <td><?php echo utf8_encode($row->programa); ?></td>
+                                                <td><?php echo utf8_encode($row->cvemedico); ?></td>
+                                                <td><?php echo utf8_encode($row->nombremedico); ?></td>
+                                                <td><?php echo utf8_encode($row->cvearticulo); ?></td>
+                                                <td><?php echo utf8_encode($row->completo); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->canreq, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->cansur, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td style="text-align: right;"><?php echo number_format($row->preciosinser, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva, 2); ?></td>
@@ -111,7 +111,7 @@
                                                 <td style="text-align: right;" colspan="10">Totales</td>
                                                 <td style="text-align: right;" id="req"><?php echo number_format ($req, 0); ?></td>
                                                 <td style="text-align: right;" id="sur"><?php echo number_format ($sur, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td>&nbsp;</td>
                                                 <td style="text-align: right;"><?php echo number_format ($tImporte, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($tIVA, 2); ?></td>
@@ -133,7 +133,7 @@
                                                 <th>DESCRIPCION</th>
                                                 <th>REQUERIDAS</th>
                                                 <th>SURTIDAS</th>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <th>PRECIO UNITARIO</th>
                                                 <th>IMPORTE</th>
                                                 <th>IVA</th>

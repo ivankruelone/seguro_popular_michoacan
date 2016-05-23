@@ -79,11 +79,11 @@ EOF;
 $pdf->writeHTML($html, true, false, true, false, '');
 
 
-$sql = "SELECT pasilloID, pasillo FROM movimiento_prepedido m
+$sql = "SELECT pasilloID, pasillo, pasilloTipo FROM movimiento_prepedido m
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and cantidad > 0 and u.clvsucursal = ?
+where m.movimientoID = ? and areaID = ? and cantidad > 0 and pasilloTipo <> 2 and u.clvsucursal = ?
 group by areaID;";
 
 $query = $this->db->query($sql, array($movimientoID, $det->areaID, $this->session->userdata('clvsucursal')));
@@ -98,15 +98,33 @@ EOF;
         // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
 
-
-$sql2 = "SELECT * FROM movimiento_prepedido m
+if($row->pasilloTipo == 3)
+{
+    $sql2 = "SELECT * FROM movimiento_prepedido m
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and pasilloID = ? and cantidad > 0 and i.clvsucursal = ?
+where m.movimientoID = ? and areaID = ? and pasilloID = ? and cantidad > 0 and i.clvsucursal = ? and m.id not in (SELECT a.id FROM movimiento_prepedido m
+join articulos a using(id)
+left join inventario i using(id)
+left join ubicacion u using(ubicacion)
+where m.movimientoID = ? and pasilloTipo in(1, 2) and cantidad > 0 and i.clvsucursal = ?
+group BY m.movimientoPrepedido)
 group BY m.movimientoPrepedido;";
+    $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal'), $movimientoID, $this->session->userdata('clvsucursal')));
+}else
+{
+    $sql2 = "SELECT * FROM movimiento_prepedido m
+    join articulos a using(id)
+    left join inventario i using(id)
+    left join ubicacion u using(ubicacion)
+    where m.movimientoID = ? and areaID = ? and pasilloID = ? and cantidad > 0 and i.clvsucursal = ?
+    group BY m.movimientoPrepedido;";
+    $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal')));
+}
 
-$query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal')));
+
+
 
 if($query2->num_rows() > 0)
 {
@@ -152,7 +170,7 @@ if($query2->num_rows() > 0)
                         <td style="text-align: center; width: 10%; ">'.$row2->pasilloID.'-'.$row2->moduloID.'-'.$row2->nivelID.'-'.$row2->posicionID.'</td>
                     </tr>
                     <tr>
-                        <td colspan="2">'.$row2->ubicacion.'</td>
+                        <td colspan="2"><br /><br /><br /></td>
                     </tr>';
 
         }

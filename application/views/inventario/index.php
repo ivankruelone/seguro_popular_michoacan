@@ -66,11 +66,11 @@
                                                 if($this->session->userdata('consulta') == 0)
                                                 {
                                                     $edita_datos = anchor('inventario/datos/'.$row->inventarioID, 'Datos');
-                                                    $ubicacion = anchor('inventario/asigna_ubicacion/'.$row->inventarioID.'/'.$this->uri->segment(2), $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID);
+                                                    $ubicacion = anchor('inventario/asigna_ubicacion/'.$row->inventarioID.'/'.$this->uri->segment(2), $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID, array('title' => $row->area. '-' . $row->pasillo.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID));
                                                 }else
                                                 {
                                                     $edita_datos = null;
-                                                    $ubicacion = $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID;
+                                                    $ubicacion = '<span title="'.$row->area. '-' . $row->pasillo.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID.'">' . $row->pasilloID.'-'.$row->moduloID.'-'.$row->nivelID.'-'.$row->posicionID . '</span>';
                                                 }
                                                 
                                                 if($this->session->userdata('superuser') == 1 || $this->session->userdata('ajuste') == 1)

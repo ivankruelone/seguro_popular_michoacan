@@ -50,7 +50,7 @@ class Cliente extends CI_Controller
         $data['js'] = "reportes/fechasAll";
         $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
         $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
         $this->load->view('main', $data);
@@ -81,10 +81,10 @@ class Cliente extends CI_Controller
     {
         $data['subtitulo'] = "";
         $data['js'] = "reportes/programaAll2_js";
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
         $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
         $this->load->view('main', $data);
     }
@@ -96,11 +96,10 @@ class Cliente extends CI_Controller
         $fecha2 = $this->input->post('fecha2');
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
-        $tipo_sucursal = $this->input->post('tipo_sucursal');
         $suministro = $this->input->post('suministro');
         $idprograma = $this->input->post('idprograma');
         //$todo = $this->input->post('todo');
-        $data['query'] = $this->reportes_model->getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal);
+        $data['query'] = $this->reportes_model->getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";

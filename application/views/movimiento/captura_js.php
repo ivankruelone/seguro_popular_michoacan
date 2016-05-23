@@ -3,6 +3,8 @@
 $(document).on('ready', inicio);
 
 function inicio(){
+
+    $("#cargando2").hide();
     
     detalle();
 
@@ -61,6 +63,13 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
         
         }
     });
+
+    $("#articulo2").on('dblclick', rebusca);
+
+    function rebusca()
+    {
+        articuloValida2();
+    }
 
     $('#caducidad').datepicker({
         language: "es",
@@ -196,6 +205,7 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
              posting.done(function( data ) {
                 
                 $('#lote2').html(data);
+                $("#cargando2").hide();
                 
              });
 
@@ -360,6 +370,7 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
     {
         
         $articulo = $('#articulo2').val();
+        $("#cargando2").show();
         
         var $url = '<?php echo site_url('movimiento/articuloValida'); ?>';
         var $variables = { articulo: $articulo };

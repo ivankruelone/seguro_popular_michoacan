@@ -174,7 +174,7 @@
                                                 <td><?php echo $row->fecha; ?></td>
                                                 <td><?php echo $row->razon; ?></td>
                                                 <td><?php echo $row->sucursal; ?></td>
-                                                <td><?php echo $row->sucursal_referencia; ?></td>
+                                                <td><?php echo $row->sucursal_referencia . '<br /><span style="color: blue;">' . $row->programa . '</span>'; ?></td>
                                                 <td><?php echo $row->nombreusuario; ?></td>
                                                 <td><?php echo $row->fechaAlta.'<br />'.$row->fechaCierre.'<br />'.$row->fechaCancelacion; ?></td>
                                                 <td><?php echo $row->observaciones; ?></td>

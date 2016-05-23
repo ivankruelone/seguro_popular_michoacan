@@ -64,7 +64,7 @@ class Inventario extends CI_Controller
 
         $data['subtitulo'] = "";
         $data['query'] = $this->Inventario_model->getInventarioLimitOffset($config['per_page'], $this->uri->segment(3));
-        //$data['js'] = "inventario/por_sucursal_js";
+        $data['js'] = "inventario/index_js";
         $this->load->view('main', $data);
     }
 

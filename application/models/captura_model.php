@@ -981,9 +981,9 @@ where aleatorio = ?;";
             join temporal_requerimiento q on r.tiporequerimiento = q.tiporequerimiento
             join receta_detalle d on d.consecutivo = r.consecutivo
             join articulos x on d.id=x.id
-            where fecha between ? and ? $pro  $req $sumis
+            where fecha between ? and ?  and r.clvsucursal = ? $pro  $req $sumis
             order by r.fecha, r.folioreceta";
-        $query = $this->db->query($s, array($fecha1, $fecha2));
+        $query = $this->db->query($s, array($fecha1, $fecha2, (int)$this->session->userdata('clvsucursal')));
         $this->reportes_model->insertaQuery($this->db->last_query());
         return $query;
         

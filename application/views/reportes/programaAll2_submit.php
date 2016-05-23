@@ -17,7 +17,7 @@
                                                 <th>Descripcion</th>
                                                 <th>Cantidad Requerida</th>
                                                 <th>Cantidad surtida</th>
-                                                <?php if($this->session->userdata('superuser') == 1){?>
+                                                <?php if($this->session->userdata('valuacion') == 1){?>
                                                 <th>Precio Unitario</th>
                                                 <th>Importe</th>
                                                 <th>IVA</th>
@@ -76,7 +76,7 @@
                                                 <td><?php echo utf8_encode($row->completo); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->requerida, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->surtida, 0); ?></td>
-                                                <?php if($this->session->userdata('superuser') == 1){?>
+                                                <?php if($this->session->userdata('valuacion') == 1){?>
                                                 <td style="text-align: right;"><?php echo number_format($row->preciosinser, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva, 2); ?></td>
@@ -101,7 +101,7 @@
                                                 <td style="text-align: right;" colspan="3">Totales</td>
                                                 <td style="text-align: right;" id="req"><?php echo number_format ($req, 0); ?></td>
                                                 <td style="text-align: right;" id="sur"><?php echo number_format ($sur, 0); ?></td>
-                                                <?php if($this->session->userdata('superuser') == 1){?>
+                                                <?php if($this->session->userdata('valuacion') == 1){?>
                                                 <td>&nbsp;</td>
                                                 <td style="text-align: right;"><?php echo number_format ($tImporte, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($tIVA, 2); ?></td>
@@ -116,7 +116,7 @@
                                                 <th>Descripcion</th>
                                                 <th>Cantidad Requerida</th>
                                                 <th>Cantidad surtida</th>
-                                                <?php if($this->session->userdata('superuser') == 1){?>
+                                                <?php if($this->session->userdata('valuacion') == 1){?>
                                                 <th>Precio Unitario</th>
                                                 <th>Importe</th>
                                                 <th>IVA</th>

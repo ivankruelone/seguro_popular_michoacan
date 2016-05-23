@@ -422,10 +422,7 @@ class Reportes extends CI_Controller
     {
         $data['subtitulo'] = "";
         $data['js'] = "reportes/fechasAll";
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
         $this->load->view('main', $data);
     }
@@ -435,15 +432,11 @@ class Reportes extends CI_Controller
         ini_set("memory_limit","1024M");
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
-        $juris = $this->input->post('juris');
-        $sucursal = $this->input->post('sucursal');
-        $tipo_sucursal = $this->input->post('tipo_sucursal');
         $suministro = $this->input->post('suministro');
-        $idprograma = $this->input->post('idprograma');
         
         $todo = $this->input->post('todo');
         
-        $data['query'] = $this->reportes_model->getProgramaByAll($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal);
+        $data['query'] = $this->reportes_model->getProgramaByAll_farmacia($fecha1, $fecha2, $suministro);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/graficaProgramas2";
@@ -455,10 +448,7 @@ class Reportes extends CI_Controller
     {
         $data['subtitulo'] = "";
         $data['js'] = "reportes/programaAll2_js";
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
         $this->load->view('main', $data);
     }
@@ -468,13 +458,10 @@ class Reportes extends CI_Controller
         ini_set("memory_limit","512M");
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
-        $juris = $this->input->post('juris');
-        $sucursal = $this->input->post('sucursal');
-        $tipo_sucursal = $this->input->post('tipo_sucursal');
         $suministro = $this->input->post('suministro');
         $idprograma = $this->input->post('idprograma');
         //$todo = $this->input->post('todo');
-        $data['query'] = $this->reportes_model->getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal);
+        $data['query'] = $this->reportes_model->getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idprograma);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";
@@ -486,9 +473,6 @@ class Reportes extends CI_Controller
         $data['subtitulo'] = "";
         $data['js'] = "reportes/programaAll2_js";
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
         $this->load->view('main', $data);
     }
     
@@ -497,15 +481,12 @@ class Reportes extends CI_Controller
         ini_set("memory_limit","512M");
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
-        $juris = $this->input->post('juris');
-        $sucursal = $this->input->post('sucursal');
-        $tipo_sucursal = $this->input->post('tipo_sucursal');
         $clave = $this->input->post('cveArticulo');
         $idprograma = $this->input->post('idprograma');
         
         $data['clave'] = $clave;
         $data['completo'] = $this->reportes_model->getCompletoByCvearticulo($clave);
-        $data['query'] = $this->reportes_model->getByClaveByAll($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal);
+        $data['query'] = $this->reportes_model->getByClaveByAll_farmacia($fecha1, $fecha2, $clave, $idprograma);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -520,8 +501,6 @@ class Reportes extends CI_Controller
         $data['subtitulo'] = "";
         $data['js'] = "reportes/programaAll2_js";
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
         $this->load->view('main', $data);
     }
     
@@ -530,14 +509,12 @@ class Reportes extends CI_Controller
         ini_set("memory_limit","1024M");
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
-        $juris = $this->input->post('juris');
-        $sucursal = $this->input->post('sucursal');
         $expediente = $this->input->post('expedienteAll');
         $suministro = $this->input->post('suministro');
         
         $data['expediente'] = $expediente;
         $data['paciente'] = $this->reportes_model->getPacienteByCvepacienteJur($expediente);
-        $data['query'] = $this->reportes_model->getByCvePacienteAll($expediente, $fecha1, $fecha2, $sucursal, $suministro, $juris);
+        $data['query'] = $this->reportes_model->getByCvePacienteAll_farmacia($expediente, $fecha1, $fecha2, $suministro);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -549,8 +526,6 @@ class Reportes extends CI_Controller
         $data['subtitulo'] = "";
         $data['js'] = "reportes/medicoAll_js";
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
         $this->load->view('main', $data);
     }
 
@@ -565,7 +540,7 @@ function medicoAll_submit(){
         $suministro = $this->input->post('suministro');        
         $data['cveMedico'] = $cveMedico;
         $data['medico'] = $this->reportes_model->getNombreMedicoByCveMedicoJur($cveMedico);
-        $data['query'] = $this->reportes_model->getByCveMedicoAll($cveMedico, $fecha1, $fecha2, $sucursal, $suministro, $juris);
+        $data['query'] = $this->reportes_model->getByCveMedicoAll_farmacia($cveMedico, $fecha1, $fecha2, $suministro);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";
@@ -578,9 +553,6 @@ function medicoAll_submit(){
         $data['programa'] = $this->reportes_model->getProgramasCombo();
         $data['requerimiento'] = $this->reportes_model->getRequerimientoCombo();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
-        $data['nivelDeAtencion'] = $this->reportes_model->getNivelAtencionCombo2();
         $this->load->view('main', $data);
     }
     
@@ -592,10 +564,8 @@ function medicoAll_submit(){
         $idprograma = $this->input->post('idprograma');
         $tiporequerimiento = $this->input->post('tiporequerimiento');
         $cvesuministro = $this->input->post('cvesuministro');
-        $nivelatencion = $this->input->post('nivel');
-        $juris = $this->input->post('juris');
-        $sucursal = $this->input->post('sucursal');
-        $data['query'] = $this->reportes_model->recetas_periodo_detalleAll($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro, $nivelatencion, $sucursal, $juris);
+
+        $data['query'] = $this->reportes_model->recetas_periodo_detalleAll_farmacia($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -2253,7 +2223,7 @@ function medicoAll_submit(){
         $fecha2 = $this->input->post('fecha2');
         
         
-        $data['query'] = $this->reportes_model->rsu_surtidas($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -2277,7 +2247,7 @@ function medicoAll_submit(){
         $causes = $this->input->post('causes');
         
         
-        $data['query'] = $this->reportes_model->claves_causes($fecha1, $fecha2, $causes);
+        $data['query'] = $this->reportes_model->claves_causes_farmacia($fecha1, $fecha2, $causes);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -2299,7 +2269,7 @@ function medicoAll_submit(){
         $fecha2 = $this->input->post('fecha2');
         
         
-        $data['query'] = $this->reportes_model->claves_mayor_movimiento($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->claves_mayor_movimiento_farmacia($fecha1, $fecha2);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -2320,7 +2290,7 @@ function medicoAll_submit(){
         $fecha2 = $this->input->post('fecha2');
         
         
-        $data['query'] = $this->reportes_model->claves_menor_movimiento($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->claves_menor_movimiento_farmacia($fecha1, $fecha2);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;

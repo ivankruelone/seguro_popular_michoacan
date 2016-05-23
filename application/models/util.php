@@ -290,6 +290,7 @@ where clvsucursal= ?;";
     
     function getJurisCombo()
     {
+        $this->db->where('jurisdiccionActiva', 1);
         $query = $this->db->get('jurisdiccion');
         
         $a = array();
@@ -325,6 +326,21 @@ where clvsucursal= ?;";
         foreach($query->result() as $row)
         {
             $a[$row->causaID] = $row->causaDescripcion.' ('.$row->opcion.')';
+        }
+        
+        return $a;
+    }
+
+    function getProgramaCombo()
+    {
+        $this->db->where('activo', 1);
+        $query = $this->db->get('programa');
+        
+        $a = array();
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->idprograma] = $row->programa.' ('.$row->idprograma.')';
         }
         
         return $a;

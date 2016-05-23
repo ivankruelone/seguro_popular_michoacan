@@ -13,11 +13,11 @@ class Inventario_model extends CI_Model {
     
     function getInventario()
     {
-        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion, area, pasillo
 FROM inventario i
 join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
-left join posicion p using(ubicacion)
+left join ubicacion p using(ubicacion)
 where cantidad <> 0 and i.clvsucursal = ?
 order by tipoprod, cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
@@ -26,11 +26,11 @@ order by tipoprod, cvearticulo * 1 asc;";
     
     function getInventarioLimitOffset($limit, $offset = 0)
     {
-        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion, area, pasillo
 FROM inventario i
 join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
-left join posicion p using(ubicacion)
+left join ubicacion p using(ubicacion)
 where cantidad <> 0 and i.clvsucursal = ?
 order by tipoprod, cvearticulo * 1 asc
 limit ? offset ?;";

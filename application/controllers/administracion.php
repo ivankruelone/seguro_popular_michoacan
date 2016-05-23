@@ -64,7 +64,8 @@ class Administracion extends CI_Controller
         $clvsucursal = $this->input->post('clvsucursal');
         $clvpuesto = $this->input->post('clvpuesto');
         $clvnivel = $this->input->post('clvnivel');
-        $this->admin_model->insertaUsuario($clvusuario, $password, $nombreusuario, $clvsucursal, $clvpuesto, $clvnivel);
+        $numjurisd = $this->input->post('numjurisd');
+        $this->admin_model->insertaUsuario($clvusuario, $password, $nombreusuario, $clvsucursal, $clvpuesto, $clvnivel, $numjurisd);
         redirect('administracion/usuario');
     }
 

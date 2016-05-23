@@ -48,6 +48,7 @@ class Movimiento extends CI_Controller
         $data['subtipoMovimiento'] = $subtipoMovimiento;
         $data['sucursales'] = $this->util->getSucursalesCombo();
         $data['proveedores'] = $this->util->getProveedorCombo();
+        $data['programa'] = $this->util->getProgramaCombo();
         $data['validaUbicacion'] = $this->util->getValidaUbicacion($tipoMovimiento);
         $data['js'] = "movimiento/nuevo_js";
         $this->load->view('main', $data);
@@ -73,8 +74,9 @@ class Movimiento extends CI_Controller
         $sucursal_referencia = $this->input->post('sucursal_referencia');
         $proveedor = $this->input->post('proveedor');
         $observaciones = $this->input->post('observaciones');
+        $idprograma = $this->input->post('idprograma');
         
-        $this->movimiento_model->insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision);
+        $this->movimiento_model->insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma);
         redirect('movimiento/index/'.$tipoMovimiento.'/'.$subtipoMovimiento);
     }
     
@@ -84,6 +86,7 @@ class Movimiento extends CI_Controller
         $data['sucursales'] = $this->util->getSucursalesCombo();
         $data['proveedores'] = $this->util->getProveedorCombo();
         $data['query'] = $this->movimiento_model->getMovimiento($movimientoID);
+        $data['programa'] = $this->util->getProgramaCombo();
         $data['js'] = "movimiento/nuevo_js";
         $this->load->view('main', $data);
 

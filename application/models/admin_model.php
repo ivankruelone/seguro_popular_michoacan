@@ -244,14 +244,14 @@ order by menuID, s.submenuID;";
         $this->db->query($sql, array($usuario));
     }
 
-    function insertaUsuario($clvusuario, $password, $nombreusuario, $clvsucursal, $clvpuesto, $clvnivel)
+    function insertaUsuario($clvusuario, $password, $nombreusuario, $clvsucursal, $clvpuesto, $clvnivel, $numjurisd)
     {
         $this->db->where('clvusuario', $clvusuario);
         $query = $this->db->get('usuarios');
         
         if($query->num_rows() == 0)
         {
-            $data = array('clvusuario' => $clvusuario, 'password' => $password, 'nombreusuario' => $nombreusuario, 'clvsucursal' => $clvsucursal, 'clvpuesto' => $clvpuesto, 'estaactivo' => True, 'nivelUsuarioID' => $clvnivel, 'valuacion' => 0);
+            $data = array('clvusuario' => $clvusuario, 'password' => $password, 'nombreusuario' => $nombreusuario, 'clvsucursal' => $clvsucursal, 'clvpuesto' => $clvpuesto, 'estaactivo' => True, 'nivelUsuarioID' => $clvnivel, 'valuacion' => 0, 'numjurisd' => $numjurisd);
             $this->db->insert('usuarios', $data);
             $usuario = $this->db->insert_id();
             $this->updateValuacionByUsuario($usuario);

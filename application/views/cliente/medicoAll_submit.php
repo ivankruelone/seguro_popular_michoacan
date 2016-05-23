@@ -1,26 +1,25 @@
  							<div class="row-fluid">
                                 <div class="span12">
                                 
-                                <?php echo anchor('reportes/Paciente_Excel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
+                                <?php echo anchor('reportes/Medico_Excel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
 
-                                <h3><?php echo $expediente . ' - ' . $paciente;?></h3>
+                                
+                                <h3><?php echo $cveMedico . ' - ' . $medico;?></h3>
                             
                                     <table id="ventas-table" class="table table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th># SUC.</th>
-                                                <th>SUCURSAL</th>
                                                 <th>FECHA</th>
                                                 <th>FOLIO</th>
                                                 <th>PROGRAMA</th>
-                                                <th>CLAVE MEDICO</th>
-                                                <th>MEDICO</th>
+                                                <th>CLAVE PACIENTE</th>
+                                                <th>PACIENTE</th>
                                                 <th>CLAVE</th>
-                                                <th>DESCRIPCION</th>
+                                                <th>DESCRIPCIOM</th>
                                                 <th>REQUERIDAS</th>
                                                 <th>SURTIDAS</th>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <th>PRECIO UNITARIO</th>
                                                 <th>IMPORTE</th>
                                                 <th>IVA</th>
@@ -36,13 +35,13 @@
                                             $num = 0;
                                             $req = 0;
                                             $sur = 0;
-
+                                            
                                             $tImporte = 0;
                                             $tIVA = 0;
                                             $tServicio = 0;
                                             $tServicioIVA = 0;
                                             $total = 0;
-                                            
+
                                             foreach($query->result() as $row){
                                             $num++;    
                                                 
@@ -74,18 +73,16 @@
                                             ?>
                                             <tr>
                                                 <td><?php echo $num; ?></td>
-                                                <td><?php echo $row->clvsucursal; ?></td>
-                                                <td><?php echo $row->descsucursal; ?></td>
                                                 <td><?php echo $row->fecha; ?></td>
-                                                <td><?php echo ($row->folioreceta); ?></td>
-                                                <td><?php echo ($row->programa); ?></td>
-                                                <td><?php echo ($row->cvemedico); ?></td>
-                                                <td><?php echo ($row->nombremedico); ?></td>
-                                                <td><?php echo ($row->cvearticulo); ?></td>
-                                                <td><?php echo ($row->completo); ?></td>
+                                                <td><?php echo utf8_encode($row->folioreceta); ?></td>
+                                                <td><?php echo utf8_encode($row->programa); ?></td>
+                                                <td><?php echo utf8_encode($row->cvepaciente); ?></td>
+                                                <td><?php echo utf8_encode($row->paciente); ?></td>
+                                                <td><?php echo utf8_encode($row->cvearticulo); ?></td>
+                                                <td><?php echo utf8_encode($row->completo); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->canreq, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->cansur, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td style="text-align: right;"><?php echo number_format($row->preciosinser, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva, 2); ?></td>
@@ -108,10 +105,10 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td style="text-align: right;" colspan="10">Totales</td>
+                                                <td style="text-align: right;" colspan="8">Totales</td>
                                                 <td style="text-align: right;" id="req"><?php echo number_format ($req, 0); ?></td>
                                                 <td style="text-align: right;" id="sur"><?php echo number_format ($sur, 0); ?></td>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
                                                 <td>&nbsp;</td>
                                                 <td style="text-align: right;"><?php echo number_format ($tImporte, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($tIVA, 2); ?></td>
@@ -122,24 +119,22 @@
                                             </tr>
                                             <tr>
                                                 <th>#</th>
-                                                <th># SUC.</th>
-                                                <th>SUCURSAL</th>
-                                                <th>FECHA</th>
-                                                <th>FOLIO</th>
-                                                <th>PROGRAMA</th>
-                                                <th>CLAVE MEDICO</th>
-                                                <th>MEDICO</th>
-                                                <th>CLAVE</th>
-                                                <th>DESCRIPCION</th>
-                                                <th>REQUERIDAS</th>
-                                                <th>SURTIDAS</th>
-                                                <?php if($this->session->userdata('valuacion') == 1){?>
-                                                <th>PRECIO UNITARIO</th>
-                                                <th>IMPORTE</th>
+                                                <th>Fecha</th>
+                                                <th>Folio</th>
+                                                <th>Programa</th>
+                                                <th>Clave Paciente</th>
+                                                <th>Paciente</th>
+                                                <th>Clave</th>
+                                                <th>Descripcion</th>
+                                                <th>Requeridas</th>
+                                                <th>Surtidas</th>
+                                                <?php if($this->session->userdata('superuser') == 1){?>
+                                                <th>Precio Unitario</th>
+                                                <th>Importe</th>
                                                 <th>IVA</th>
-                                                <th>SERVICIO</th>
-                                                <th>IVA SERVICIO</th>
-                                                <th>SUBTOTAL</th>
+                                                <th>Servicio</th>
+                                                <th>IVA Servicio</th>
+                                                <th>Subtotal</th>
                                                 <?php }?>
                                              </tr>
                                         </tfoot>
@@ -151,6 +146,8 @@
                             
                             <div class="row-fluid">
                                 <div class="span12">
+                                
                                 <div id="grafica"></div>
+                                
                                 </div>
                             </div>

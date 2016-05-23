@@ -141,7 +141,7 @@
                                         
                                         <div class="widget-box">
     											<div class="widget-header">
-    												<h4>Datos de los productos</h4>
+    												<h4>Datos de los productos | Cobertura: <span style="color: blue; "><?php echo $row->programa; ?></span> (<span id="cobertura"><?php echo $row->cobertura; ?></span>)</h4>
     											</div>
                                         
                                         <div class="widget-body">
@@ -193,7 +193,7 @@
                                         
                                         <div class="widget-box">
     											<div class="widget-header">
-    												<h4>Datos de los productos</h4>
+    												<h4>Datos de los productos | Cobertura: <span style="color: blue; "><?php echo $row->programa; ?></span> (<span id="cobertura"><?php echo $row->cobertura; ?></span>)</h4>
     											</div>
                                         
                                         <div class="widget-body">
@@ -208,6 +208,8 @@
     															<i class="icon-key bigger-110"></i>
     															Aceptar
     														</button>
+
+                                                            <span id="cargando2" behavior="alternate" style="color: red;">Buscando...</span>
                                                     <?php echo form_close(); ?>
                                                     <table class="table">
                                                         <tr>

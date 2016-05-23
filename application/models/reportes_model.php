@@ -6,9 +6,13 @@ class Reportes_model extends CI_Model {
      * 
      * @return
      */
+
+    var $clvpuesto = null;
+
     function __construct()
     {
         parent::__construct();
+        $this->clvpuesto = $this->session->userdata('clvpuesto');
     }
     
     function recetas_periodo_detalle($fecha1, $fecha2, $idprograma, $tiporequerimiento)
@@ -1272,7 +1276,7 @@ order by fechaCierre, referencia;";
     
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
- function getSucursalesByJur2($juris = 0)
+    function getSucursalesByJur2($juris = 0)
     {
         if($juris == 0)
         {
@@ -1295,8 +1299,42 @@ order by fechaCierre, referencia;";
         return $a;
     }
     
+    function getSucursalesCliente()
+    {
+
+        switch ($this->clvpuesto) {
+            case 15:
+                $this->db->where('clvsucursal', $this->session->userdata('clvsucursal'));
+                $a = array();
+                break;
+            case 16:
+                $this->db->where('numjurisd', $this->session->userdata('numjurisd'));
+                $a = array();
+                break;
+            case 17:
+            case 18:
+                $a = array('0' => 'TODAS');
+                break;
+            default:
+               
+        }
+
+        $this->db->where('activa', 1);
+        $this->db->where('tiposucursal', 1);
+        $this->db->order_by('clvsucursal');
+        $query = $this->db->get('sucursales');
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->clvsucursal] = $row->clvsucursal. ' - ' . trim($row->descsucursal);
+        }
+        
+        return $a;
+    }
+
     function getProgramas()
     {
+        $this->db->where('activo', 1);
         $this->db->order_by('idprograma');
         $query = $this->db->get('programa');
         
@@ -1324,6 +1362,39 @@ order by fechaCierre, referencia;";
         return $a;
     }
     
+    function getJurisCliente()
+    {
+
+        switch ($this->clvpuesto) {
+            case 15:
+                $this->db->where('numjurisd', $this->session->userdata('numjurisd'));
+                $a = array();
+                break;
+            case 16:
+                $this->db->where('numjurisd', $this->session->userdata('numjurisd'));
+                $a = array();
+                break;
+            case 17:
+            case 18:
+                $a = array('0' => 'TODAS');
+                break;
+            default:
+               
+        }
+
+        $this->db->where('jurisdiccionActiva', 1);
+        $this->db->order_by('numjurisd');
+        $query = $this->db->get('jurisdiccion');
+        
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->numjurisd] = $row->numjurisd. ' - ' . trim($row->jurisdiccion);
+        }
+        
+        return $a;
+    }
+
     function getSuministroCombo()
     {
         $query = $this->db->get('temporal_suministro');
@@ -1420,6 +1491,48 @@ group by a.cvearticulo,r.idprograma";
     }
     
     
+     function getProgramaByAll_farmacia($fecha1, $fecha2, $suministro)
+    {
+        $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = "and a.tipoprod = $suministro";
+        }
+        
+
+        $sql = "
+       SELECT a.cvearticulo, concat(a.susa,' ',a.descripcion, ' ',a.pres) as completo,a.tipoprod
+, (select sum(case when r.idprograma = '0' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pa
+, (select sum(case when r.idprograma = '1' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as sp
+, (select sum(case when r.idprograma = '2' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as op
+, (select sum(case when r.idprograma = '3' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pp
+, (select sum(case when r.idprograma = '4' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as bp
+, (select sum(case when r.idprograma = '5' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as am
+, (select sum(case when r.idprograma = '6' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pq
+, (select sum(case when r.idprograma = '7' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as sm
+, (select sum(case when r.idprograma = '8' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as ch
+, (select sum(p.cansur) from receta_detalle p where p.consecutivo = x.consecutivo) as todo,
+(select sum(x.precio) from receta_detalle p where p.consecutivo = x.consecutivo group by p.consecutivo) as subtotal,
+preciosinser,a.servicio,cansur
+from articulos a
+join receta_detalle x on x.id = a.id
+join receta r on x.consecutivo = r.consecutivo
+join sucursales s on r.clvsucursal = s.clvsucursal
+join temporal_suministro tt on a.tipoprod = tt.cvesuministro $tipo
+where r.fecha between ? and ? and r.clvsucursal = ? 
+group by a.cvearticulo,r.idprograma";
+
+
+        $query = $this->db->query($sql, array($fecha1, $fecha2, (string)$this->session->userdata('clvsucursal')));
+        //echo $this->db->last_query();
+        $this->insertaQuery($this->db->last_query());
+        
+        //echo $this->db->last_query();
+        return $query;
+    }
+
      function insertaQuery($query_string){
         $this->db->where('usuario', $this->session->userdata('usuario'));
         $this->db->where('reporte', $this->uri->segment(2));
@@ -1446,7 +1559,7 @@ group by a.cvearticulo,r.idprograma";
         
     }
 
-function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal)
+function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal)
 
     {
         $suministro = (int) $suministro;
@@ -1458,7 +1571,7 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         }
         
         
-        if($sucursal== 0)
+        if($sucursal == 0)
         {
             if($juris == 0)
             {
@@ -1478,20 +1591,13 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         }else{
             $programa = "and r.idprograma = '$idprograma'";
         }
-        
-        if($tipo_sucursal == 0)
-        {
-            $nivel_sucursal = null;
-        }else{
-            $nivel_sucursal = "and s.tiposucursal = $tipo_sucursal";
-        }
-        
-        $sql = "select a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
+                
+        $sql = "SELECT a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
         as completo, a.tipoprod, sum(canreq)
         as requerida, sum(cansur) as surtida, preciosinser
         from articulos a join receta_detalle d on a.id = d.id
         join receta r on d.consecutivo = r.consecutivo
-        join sucursales s on r.clvsucursal = s.clvsucursal $nivel_sucursal
+        join sucursales s on r.clvsucursal = s.clvsucursal
         where fecha between ? and ? $tipo $filtro $programa
         group by a.cvearticulo, a.tipoprod, completo,
         preciosinser order by tipoprod, a.cvearticulo,
@@ -1505,6 +1611,46 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         return $query;
     }
 
+
+function getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idprograma)
+
+    {
+        $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = "and tipoprod = $suministro";
+        }
+        
+        
+       
+        if((int)$idprograma == 1000)
+        {
+            $programa = null;
+        }else{
+            $programa = "and r.idprograma = '$idprograma'";
+        }
+        
+        
+        $sql = "SELECT a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
+        as completo, a.tipoprod, sum(canreq)
+        as requerida, sum(cansur) as surtida, preciosinser
+        from articulos a join receta_detalle d on a.id = d.id
+        join receta r on d.consecutivo = r.consecutivo
+        join sucursales s on r.clvsucursal = s.clvsucursal
+        where fecha between ? and ? and r.clvsucursal = ? $tipo $programa
+        group by a.cvearticulo, a.tipoprod, completo,
+        preciosinser order by tipoprod, a.cvearticulo,
+        replace(a.cvearticulo, 'S/C', '');";
+
+        
+        $query = $this->db->query($sql, array($fecha1, $fecha2, (string)$this->session->userdata('clvsucursal')));
+        
+        $this->insertaQuery($this->db->last_query());
+        
+        return $query;
+    }
 
 function getCompletoByCvearticulo($cveArticulo)
     {
@@ -1597,6 +1743,36 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByClaveByAll_farmacia($fecha1, $fecha2, $clave, $idprograma)
+    {
+
+        if((int)$idprograma == 1000)
+        {
+            $programa = null;
+        }else{
+            $programa = "and r.idprograma = '$idprograma'";
+        }
+
+
+
+        $sql = "SELECT 
+            r.clvsucursal, descsucursal, programa, fecha, tipoprod, preciosinser, folioreceta, 
+            cvepaciente, concat(nombre,' ',apaterno,' ',amaterno) as paciente, cvemedico, 
+            nombremedico, r.clvsucursal, descsucursal, canreq, cansur 
+            from receta r join receta_detalle d on d.consecutivo = r.consecutivo
+            join sucursales s on r.clvsucursal = s.clvsucursal
+            join programa p using(idprograma) 
+            join articulos a using(id)
+            where fecha between ? and ? and cvearticulo = ? and r.clvsucursal = ? $programa 
+            order by fecha";
+            
+        $query = $this->db->query($sql, array($fecha1, $fecha2, $clave, (string)$this->session->userdata('clvsucursal')));
+        
+        $this->insertaQuery($this->db->last_query());
+        
+        return $query;
+    }
+
      function getPacienteByCvepacienteJur($cvepaciente)
     {
         $sql = "SELECT concat(nombre,' ',apaterno,' ',amaterno) as paciente 
@@ -1655,6 +1831,33 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByCvePacienteAll_farmacia($cvepaciente, $fecha1, $fecha2, $suministro)
+    {
+        $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and  tipoprod = $suministro";
+        }
+        
+            
+        $sql = "SELECT programa, tipoprod, preciosinser, r.clvsucursal, descsucursal, 
+        fecha, folioreceta, cvemedico, nombremedico, cvearticulo, concat(susa,' ',descripcion,' ',pres)
+        as completo, canreq, cansur from receta r join receta_detalle d on d.consecutivo = r.consecutivo
+        join articulos a using(id)
+    join sucursales s on r.clvsucursal = s.clvsucursal
+    join programa p using(idprograma)
+    where fecha between ? and ? and cvepaciente = ? and r.clvsucursal = ? $tipo
+    order by fecha, folioreceta;";
+    
+        $query = $this->db->query($sql, array($fecha1, $fecha2, $cvepaciente, (string)$this->session->userdata('clvsucursal')));
+
+        $this->insertaQuery($this->db->last_query());
+        
+        return $query;
+    }
+
     function getNombreMedicoByCveMedicoJur($cvemedico)
     {
         $this->db->select('nombremedico');
@@ -1711,6 +1914,34 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByCveMedicoAll_farmacia($cvemedico, $fecha1, $fecha2, $suministro)
+    {
+        $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and  tipoprod = $suministro";
+        }
+        
+        
+        $sql = "SELECT programa, tipoprod, preciosinser, r.clvsucursal, descsucursal, 
+        fecha, folioreceta, cvepaciente, concat(trim(apaterno),' ',trim(amaterno),' ',trim(nombre)) as paciente, 
+        cvearticulo, concat(susa,' ',descripcion,' ',pres)as completo, canreq, cansur
+    from receta r join receta_detalle d on d.consecutivo = r.consecutivo 
+    join articulos a using(id) 
+    join sucursales s on r.clvsucursal = s.clvsucursal
+    join programa p using(idprograma)
+    where fecha between ? and ? and r.clvsucursal = ? and cvemedico = ? $tipo
+    order by fecha, folioreceta;";
+    
+        $query = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (string)$this->session->userdata('clvsucursal'), (string)$cvemedico));
+       
+        $this->insertaQuery($this->db->last_query());
+        
+        return $query;
+    }
+
     function recetas_periodo_detalleAll($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro, $nivelatencion, $sucursal, $juris)
     {
         
@@ -1761,6 +1992,43 @@ function getCompletoByCvearticulo($cveArticulo)
         
     }
     
+    function recetas_periodo_detalleAll_farmacia($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro)
+    {
+        
+        if($idprograma == 1000){
+            $pro = null;
+        }else{
+            $pro = "and r.idprograma = $idprograma";
+        }
+        
+        if($tiporequerimiento == 1000){
+            $req = null;
+        }else{
+            $req = "and r.tiporequerimiento = $tiporequerimiento";
+        }
+
+        if($cvesuministro == 1000){
+           $sumis = null;
+        }else{
+            $sumis = "and r.cvesuministro = $cvesuministro";
+        }
+        
+        $s = "SELECT descsucursal, preciosinser, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
+             cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
+            fecha, fechaexp
+            from receta r
+            join sucursales s on r.clvsucursal=s.clvsucursal
+            join programa p on r.idprograma = p.idprograma
+            join temporal_requerimiento q on r.tiporequerimiento = q.tiporequerimiento
+            join receta_detalle d on d.consecutivo = r.consecutivo
+            join articulos x on d.id=x.id
+            where fecha between ? and ? and r.clvsucursal = ? $pro $req $sumis";
+        $query = $this->db->query($s, array($fecha1, $fecha2, (int)$this->session->userdata('clvsucursal')));
+        $this->insertaQuery($this->db->last_query());
+        return $query;
+        
+    }
+
     function getNivelAtencionCombo2()
     {
         $this->db->order_by('nivelatencion');
@@ -1961,7 +2229,6 @@ function getCompletoByCvearticulo($cveArticulo)
         } 
     }
     
-     
     function rsu_surtidas($fecha1,$fecha2)
     {
         $sql = "SELECT clvsucursal, descsucursal, count(*) as cuenta
@@ -1974,7 +2241,17 @@ function getCompletoByCvearticulo($cveArticulo)
         return $q;
     }
 
-
+    function rsu_surtidas_farmacia($fecha1,$fecha2)
+    {
+        $sql = "SELECT clvsucursal, descsucursal, count(*) as cuenta
+                FROM receta r
+                join sucursales s using(clvsucursal)
+                where fecha between ? and ? and r.clvsucursal = ?
+                group by clvsucursal
+                order by cuenta desc;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        return $q;
+    }
 
     function claves_causes($fecha1, $fecha2, $causes)
     {
@@ -1988,6 +2265,18 @@ order by surtido desc;";
         return $q;
     }
     
+    function claves_causes_farmacia($fecha1, $fecha2, $causes)
+    {
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+where fecha between ? and ? and cause = ? and r.clvsucursal = ?
+group by id
+order by surtido desc;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, $causes, (int)$this->session->userdata('clvsucursal')));
+        return $q;
+    }
+
     function claves_mayor_movimiento($fecha1, $fecha2)
     {
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
@@ -2001,6 +2290,32 @@ limit 20;";
         return $q;
     }
     
+    function claves_mayor_movimiento_farmacia($fecha1, $fecha2)
+    {
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+where fecha between ? and ? and r.clvsucursal = ?
+group by id
+order by surtido desc
+limit 20;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        return $q;
+    }
+
+    function claves_menor_movimiento_farmacia($fecha1,$fecha2)
+    {
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+where fecha between ? and ? and r.clvsucursal = ?
+group by id
+order by surtido asc
+limit 20;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        return $q;
+    }
+
     function claves_menor_movimiento($fecha1,$fecha2)
     {
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
@@ -2022,11 +2337,29 @@ limit 20;";
 
     function getInventarioGroupBySucursal()
     {
+
+        $filtro = null;
+
+        switch ($this->clvpuesto) {
+            case 15:
+                $filtro = " and clvsucursal = " . $this->session->userdata('clvsucursal');
+                break;
+            case 16:
+                $filtro = " and numjurisd = " . $this->session->userdata('numjurisd');
+                break;
+            case 17:
+            case 18:
+                
+                break;
+            default:
+               
+        }
+
         $sql = "SELECT clvsucursal, descsucursal, sum(cantidad) as cantidad, sum(cantidad * precioven) as importe, sum(case when tipoprod = 1 then cantidad * precioven * 0.16 else 0 end) as iva_producto, sum(cantidad * servicio) as servicio, sum(cantidad * servicio * 0.16) as iva_servicio
 FROM inventario i
 join sucursales s using(clvsucursal)
 join articulos a using(id)
-where cantidad > 0 and activa = 1
+where cantidad > 0 and activa = 1 $filtro
 group by clvsucursal
 order by clvsucursal;";
         
@@ -2054,11 +2387,29 @@ order by tipoprod, cvearticulo * 1;";
 
     function getInventarioTotalByClave()
     {
+
+        $filtro = null;
+
+        switch ($this->clvpuesto) {
+            case 15:
+                $filtro = " and clvsucursal = " . $this->session->userdata('clvsucursal');
+                break;
+            case 16:
+                $filtro = " and numjurisd = " . $this->session->userdata('numjurisd');
+                break;
+            case 17:
+            case 18:
+                
+                break;
+            default:
+               
+        }
+
         $sql = "SELECT id, cvearticulo, susa, descripcion, pres, sum(cantidad) as cantidad, sum(cantidad * precioven) as importe, sum(case when tipoprod = 1 then cantidad * precioven * 0.16 else 0 end) as iva_producto, sum(cantidad * servicio) as servicio, sum(cantidad * servicio * 0.16) as iva_servicio
 FROM inventario i
 join sucursales s using(clvsucursal)
 join articulos a using(id)
-where cantidad > 0 and activa = 1
+where cantidad > 0 and activa = 1 $filtro
 group by id
 order by tipoprod, cvearticulo * 1;";
 
