@@ -68,6 +68,22 @@ class Inventario extends CI_Controller
         $this->load->view('main', $data);
     }
 
+    function cobertura()
+    {
+        $data['subtitulo'] = "";
+        $data['query'] = $this->Inventario_model->getInventarioCobertura();
+        $data['js'] = "inventario/index_js";
+        $this->load->view('main', $data);
+    }
+
+    function fuera()
+    {
+        $data['subtitulo'] = "";
+        $data['query'] = $this->Inventario_model->getInventarioFueraCobertura();
+        $data['js'] = "inventario/index_js";
+        $this->load->view('main', $data);
+    }
+
     function reciba()
     {
         $this->load->library('pagination');

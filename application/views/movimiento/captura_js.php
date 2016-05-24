@@ -52,7 +52,7 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
     	
     $( "#articulo2" ).autocomplete({
         
-    source: '<?php echo site_url('movimiento/busca_articulo'); ?>',
+    source: '<?php echo site_url('movimiento/busca_articulo_salida'); ?>' + '/' + $("#nivelatencionReferencia").html() + '/' + $("#cobertura").html(),
     minLength: 2,
     select: function( event, ui ) {
         
@@ -369,11 +369,14 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
     function articuloValida2()
     {
         
-        $articulo = $('#articulo2').val();
+        var $articulo = $('#articulo2').val();
+        var $nivelatencionReferencia = $("#nivelatencionReferencia").html();
+        var $cobertura = $("#cobertura").html();
+
         $("#cargando2").show();
         
-        var $url = '<?php echo site_url('movimiento/articuloValida'); ?>';
-        var $variables = { articulo: $articulo };
+        var $url = '<?php echo site_url('movimiento/articuloValidaSalida'); ?>';
+        var $variables = { articulo: $articulo, nivelatencionReferencia: $nivelatencionReferencia, cobertura: $cobertura };
         var posting = $.post( $url, $variables );
             
              posting.done(function( data ) {

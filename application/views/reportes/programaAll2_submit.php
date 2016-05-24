@@ -45,11 +45,11 @@
                                                 
                                                 $piezas = $row->surtida;
                                                 
-                                                $importe = $row->preciosinser * $piezas;
+                                                $importe = $row->precioven * $piezas;
                                                     
                                                 if((int)$row->tipoprod == 1)
                                                 {
-                                                    $iva = $row->preciosinser * $piezas * .16;
+                                                    $iva = $row->precioven * $piezas * .16;
                                                 }else{
                                                     $iva = 0;
                                                 }
@@ -77,7 +77,7 @@
                                                 <td style="text-align: right;"><?php echo number_format($row->requerida, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->surtida, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>
-                                                <td style="text-align: right;"><?php echo number_format($row->preciosinser, 2); ?></td>
+                                                <td style="text-align: right;"><?php echo number_format($row->precioven, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($servicio, 2); ?></td>

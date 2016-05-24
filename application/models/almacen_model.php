@@ -257,7 +257,6 @@ where pasilloID = ?;";
         $sql = "SELECT p.*, ifnull(cvearticulo, 'VACIO') as cvearticulo, ifnull(minimo, 0) as minimo, ifnull(maximo, 0) as maximo
 FROM posicion p
 join pasillo o using(pasilloID)
-left join rack_buffer b using(id, pasilloTipo)
 left join articulos a using(id)
 where pasilloID = ? and moduloID = ? and nivelID = ?
 order by posicionID";
@@ -428,13 +427,11 @@ where pasilloTipo = 1 and id = ?;";
         
         if($id == 0)
         {
-            $this->db->update('posicion', array('id' => $id), array('ubicacion' => $ubicacion));
+            $this->db->update('posicion', array('id' => $id, 'minimo' => $minimo, 'maximo' => $maximo), array('ubicacion' => $ubicacion));
             echo $this->db->affected_rows();
         }else{
             
-            $data3 = array('minimo' => $minimo, 'maximo' => $maximo);
-            $this->db->update('rack_buffer', $data3, array('id' => $id, 'pasilloTipo' => $pasilloTipo));
-            
+           
             if($this->checkUbicacion($id) == 0)
             {
                 $this->db->update('posicion', array('id' => $id), array('ubicacion' => $ubicacion));

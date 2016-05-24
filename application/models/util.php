@@ -336,7 +336,7 @@ where clvsucursal= ?;";
         $this->db->where('activo', 1);
         $query = $this->db->get('programa');
         
-        $a = array();
+        $a = array('100' => 'TODAS');
         
         foreach($query->result() as $row)
         {
@@ -1111,6 +1111,7 @@ join articulos a using(id) where movimientoID = ?;";
     {
         $arreglo = json_decode(json_encode($this->getDataOficina('sucursal', array())), TRUE);
         $this->db->insert_batch('sucursales', $arreglo, 'IGNORE');
+        $this->actNombreSucursal();
     }
     
     function queryUbicacionesComboByClave($cvearticulo)

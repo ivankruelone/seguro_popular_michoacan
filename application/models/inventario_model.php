@@ -10,6 +10,41 @@ class Inventario_model extends CI_Model {
     {
         parent::__construct();
     }
+
+    function getInventarioCobertura()
+    {
+        $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
+FROM inventario i
+left join articulos a using(id)
+left join sucursales s using(clvsucursal)
+left join articulos_cobertura c using(id, nivelatencion)
+left join programa p using(idprograma)
+left join temporal_suministro o on a.tipoprod = o.cvesuministro
+left join ubicacion u using(ubicacion, clvsucursal)
+where clvsucursal = ? and cantidad > 0
+group by inventarioID
+order by tipoprod, cvearticulo * 1 asc;";
+        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        return $query;
+    }
+
+    function getInventarioFueraCobertura()
+    {
+        $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
+FROM inventario i
+left join articulos a using(id)
+left join sucursales s using(clvsucursal)
+left join articulos_cobertura c using(id, nivelatencion)
+left join programa p using(idprograma)
+left join temporal_suministro o on a.tipoprod = o.cvesuministro
+left join ubicacion u using(ubicacion, clvsucursal)
+where clvsucursal = ? and cantidad > 0
+group by inventarioID
+having programa = 'SIN COBERTURA'
+order by tipoprod, cvearticulo * 1 asc;";
+        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        return $query;
+    }
     
     function getInventario()
     {

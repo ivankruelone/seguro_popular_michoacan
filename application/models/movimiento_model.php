@@ -142,7 +142,7 @@ limit ? offset ?
     
     function getMovimientoByMovimientoID($movimientoID)
     {
-        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura
+        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura, s2.nivelatencion as nivelatencionReferencia
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -169,6 +169,12 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
     
     function insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma)
     {
+
+        if($subtipoMovimiento == 22 && $referencia == 'AUTO')
+        {
+            $referencia = $this->getFolioPaquete();
+        }
+
         $data = array(
             'tipoMovimiento'    => $tipoMovimiento,
             'subtipoMovimiento' => $subtipoMovimiento,
@@ -207,8 +213,14 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
     
     function getLotes($cvearticulo)
     {
-        $sql = "SELECT inventarioID, lote, caducidad, cantidad FROM inventario i join articulos a using(id) where cvearticulo = ? and clvsucursal = ? having cantidad > 0 order by caducidad;";
-        $query = $this->db->query($sql, array($cvearticulo, $this->session->userdata('clvsucursal')));
+        $sql = "SELECT inventarioID, lote, caducidad, cantidad, area, pasillo
+        FROM inventario i 
+        join articulos a using(id)
+        left join ubicacion u using(ubicacion)
+        where cvearticulo = ? and i.clvsucursal = ? 
+        having cantidad > 0 
+        order by pasilloTipo, caducidad;";
+        $query = $this->db->query($sql, array((string)$cvearticulo, (int)$this->session->userdata('clvsucursal')));
         return $query;
     }
     
@@ -219,7 +231,7 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
         return $query;
     }
 
-    function updateMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $movimientoID)
+    function updateMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $idprograma, $movimientoID)
     {
         $data = array(
             'tipoMovimiento'    => $tipoMovimiento,
@@ -231,7 +243,8 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
             'clvsucursal'       => $this->session->userdata('clvsucursal'),
             'clvsucursalReferencia' => $sucursal_referencia,
             'usuario'           => $this->session->userdata('usuario'),
-            'observaciones'     => $observaciones
+            'observaciones'     => $observaciones,
+            'cobertura'         => $idprograma
             );
         
         $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
@@ -249,6 +262,40 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
             $this->db->where('cvearticulo', (string)$cvearticulo);
             $query = $this->db->get('articulos');
             return $query;
+        }
+        
+        
+    }
+
+    function getArticuloByClaveSalida($cvearticulo, $nivelatencionReferencia, $cobertura)
+    {
+        if($cobertura == 100)
+        {
+            $filtro = null;
+        }else
+        {
+            $filtro = ' and idprograma = ' . (int)$cobertura;
+        }
+
+        $sql = "SELECT * 
+        FROM articulos a 
+        join articulos_cobertura c using(id)
+        where id in(SELECT id FROM inventario i where ean = ? and ean > 0) and activo = 1 and nivelatencion = ? $filtro
+        group by id;";
+        $query2 = $this->db->query($sql, array((string)$cvearticulo, $nivelatencionReferencia));
+        
+        if($query2->num_rows() > 0)
+        {
+            return $query2;
+        }else{
+            $sql3 = "SELECT a.*
+from articulos a
+join articulos_cobertura c using(id)
+where activo = 1 and cvearticulo = ? and nivelatencion = ? $filtro
+group by id;";
+            $query3 = $this->db->query($sql3, array((string)$cvearticulo, (int)$nivelatencionReferencia));
+            
+            return $query3;
         }
         
         
@@ -432,6 +479,41 @@ where movimientoDetalle = ?;";
         }
     }
     
+    function getArticuloDatosSalida($cvearticulo, $nivelatencionReferencia, $cobertura, $orden = 0)
+    {
+        $query = $this->getArticuloByClaveSalida($cvearticulo, $nivelatencionReferencia, $cobertura);
+        
+        if($query->num_rows() == 1)
+        {
+            $row = $query->row();
+            if($row->activo == 1)
+            {
+                
+                $datos = $this->getOrdenDetalleByClave($orden, $cvearticulo);
+                
+                if(isset($datos->error) || $orden == 0)
+                {
+                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|-1|0|0';
+                }else{
+                    
+                    foreach($datos as $datos)
+                    {
+                        
+                    }
+                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|'.($datos->cans - $row->aplica).'|'.$datos->codigo.'|'.$datos->costo;
+                }
+                
+                
+                
+            }else{
+                return '0|0|NO ENCONTRADO O FUERA DE COBERTURA|NO ENCONTRADO|NO ENCONTRADO|-1|0|0';
+            }
+            
+        }else{
+            return '0|0|NO ENCONTRADO O FUERA DE COBERTURA|NO ENCONTRADO|NO ENCONTRADO|-1|0|0';
+        }
+    }
+
     function getMarca($ean)
     {
         $sql = "SELECT ean, marca FROM inventario i where ean = ? group by ean;";
@@ -475,6 +557,38 @@ where movimientoDetalle = ?;";
         
     }
     
+    function getArticulosJSONSalida($term, $nivelatencionReferencia, $cobertura)
+    {
+        $this->load->library('Services_JSON');
+        $j = new Services_JSON();
+
+        if($cobertura == 100)
+        {
+            $filtro = null;
+        }else
+        {
+            $filtro = ' and idprograma = ' . (int)$cobertura;
+        }
+        
+        $sql = "select * 
+        from articulos a
+        join articulos_cobertura c using(id)
+        where (id like '%$term%' or cvearticulo like '%$term%' or susa like '%$term%' or descripcion like '%$term%') and activo = 1 and nivelatencion = ? $filtro
+        group by id
+        limit 20;";
+        $query = $this->db->query($sql, array($nivelatencionReferencia));
+        
+        $a = array();
+        
+        foreach($query->result() as $row)
+        {
+            $b = array('id' => $row->id, 'cvearticulo' => $row->cvearticulo, 'susa' => $row->susa, 'descripcion' => $row->descripcion, 'pres' => $row->pres, 'value' => $row->cvearticulo.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres);
+            array_push($a, $b);
+        }
+        return $j->encode($a);
+        
+    }
+
     function getProveedorJSON($term)
     {
         $this->load->library('Services_JSON');
@@ -642,6 +756,9 @@ where movimientoDetalle = ?;";
     function detalle($movimientoID)/*HOJA DE PEDIDO hoja 1*/
     {
         $query = $this->getDetalle($movimientoID);
+
+        $subtipoMovimiento = $this->getSubtipoMovimientoByMovimientoID($movimientoID);
+
         
         $tabla = '
         <style>
@@ -689,6 +806,14 @@ where movimientoDetalle = ?;";
 
         foreach($query->result() as $row)
         {
+
+            if($subtipoMovimiento == 1 || $subtipoMovimiento == 3)
+            {
+               
+            }else
+            {
+                $row->costo = 0;
+            }
 
             $importe = $row->costo * $row->piezas;
             
@@ -1863,6 +1988,14 @@ join subtipo_movimiento s using(tipoMovimiento) where tipoMovimiento = ? and sub
 
         return $row->movimientoID;
 
+    }
+
+    function getFolioPaquete()
+    {
+        $sql = "SELECT max(replace(referencia, 'P-', '')* 1) as maximo FROM movimiento m where subtipoMovimiento = 22;";
+        $query = $this->db->query($sql);
+        $row = $query->row();
+        return 'P-' . str_pad(($row->maximo + 1), 4, '0', STR_PAD_LEFT);
     }
 
 }

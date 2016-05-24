@@ -28,7 +28,14 @@
                                     
                                     if($subtipoMovimiento == 4 || $subtipoMovimiento == 5 || $subtipoMovimiento == 6 || $subtipoMovimiento == 7 || $subtipoMovimiento == 8 || $subtipoMovimiento == 9 || $subtipoMovimiento == 12 || $subtipoMovimiento == 13 || $subtipoMovimiento == 15 || $subtipoMovimiento == 20 || $subtipoMovimiento == 21 || $subtipoMovimiento == 22 || $subtipoMovimiento == 23)
                                     {
-                                        $fol = $tipoMovimiento.STR_PAD($this->session->userdata('clvsucursal'), 5, '0', STR_PAD_LEFT).STR_PAD($subtipoMovimiento, 2, '0', STR_PAD_LEFT).date('ymdHi');
+
+                                        if($subtipoMovimiento == 22)
+                                        {
+                                            $fol = 'AUTO';
+                                        }else
+                                        {
+                                            $fol = $tipoMovimiento.STR_PAD($this->session->userdata('clvsucursal'), 5, '0', STR_PAD_LEFT).STR_PAD($subtipoMovimiento, 2, '0', STR_PAD_LEFT).date('ymdHi');
+                                        }
                                         echo MY_form_input('referencia', 'referencia', 'Folio', 'text', 'Folio', 3, true, $fol); 
                                     }elseif($subtipoMovimiento == 3)
                                     {

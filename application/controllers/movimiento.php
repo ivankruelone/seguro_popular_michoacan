@@ -104,8 +104,9 @@ class Movimiento extends CI_Controller
         $sucursal_referencia = $this->input->post('sucursal_referencia');
         $proveedor = $this->input->post('proveedor');
         $observaciones = $this->input->post('observaciones');
+        $idprograma = $this->input->post('idprograma');
         
-        $this->movimiento_model->updateMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $movimientoID);
+        $this->movimiento_model->updateMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $idprograma, $movimientoID);
         redirect('movimiento/index/'.$tipoMovimiento.'/'.$subtipoMovimiento);
     }
 
@@ -185,6 +186,12 @@ class Movimiento extends CI_Controller
         echo $this->movimiento_model->getArticulosJSON($term);
     }
     
+    function busca_articulo_salida($nivelatencionReferencia = 2, $cobertura = 100)
+    {
+        $term = $this->input->get_post('term');
+        echo $this->movimiento_model->getArticulosJSONSalida($term, $nivelatencionReferencia, $cobertura);
+    }
+
     function busca_proveedor()
     {
         $term = $this->input->get_post('term');
@@ -204,6 +211,15 @@ class Movimiento extends CI_Controller
         echo $this->movimiento_model->getArticuloDatos($articulo, $orden);
     }
     
+    function articuloValidaSalida()
+    {
+        $articulo = $this->input->post('articulo');
+        $nivelatencionReferencia = $this->input->post('nivelatencionReferencia');
+        $cobertura = $this->input->post('cobertura');
+
+        echo $this->movimiento_model->getArticuloDatosSalida($articulo, $nivelatencionReferencia, $cobertura);
+    }
+
     function getEANMarca()
     {
         $ean = $this->input->post('ean');
@@ -287,7 +303,7 @@ class Movimiento extends CI_Controller
         
         foreach($query->result() as $row)
         {
-            $a .= '<option value="'.$row->inventarioID.'">'.$row->lote.' - '.$row->caducidad.' ('.$row->cantidad.')</option>
+            $a .= '<option value="'.$row->inventarioID.'">'.$row->lote.' - '.$row->caducidad.' ('.$row->cantidad.') - '.$row->area.' - '.$row->pasillo.'</option>
             ';
         }
         
