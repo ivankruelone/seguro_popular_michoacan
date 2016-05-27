@@ -654,4 +654,36 @@ class Catalogosweb extends CI_Controller
         redirect('workspace');
     }
     
+    function getArticuloForStandAlone()
+    {
+        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod, case when idprograma = 0 then 1 else 0 end as pa, case when idprograma = 1 then 1 else 0 end as sp, case when idprograma = 2 then 1 else 0 end as op, case when idprograma = 3 then 1 else 0 end as pp, case when idprograma = 4 then 1 else 0 end as bp, case when idprograma = 5 then 1 else 0 end as am, case when idprograma = 6 then 1 else 0 end as pq, case when idprograma = 7 then 1 else 0 end as sm
+FROM articulos a
+left join articulos_cobertura c on a.id = c.id and nivelatencion = 1
+group by id
+;";
+        $query =  $this->db->query($sql);
+        
+        $data = "";
+        
+        foreach($query->result() as $row)
+        {
+            $clave = trim($row->cvearticulo);
+            $sustancia = trim(($row->descripcion));
+            $descripcion = trim(($row->susa));
+            $presentacion = trim(($row->pres));
+            $pa = $this->formatBool($row->pa1);
+            $sp = $this->formatBool($row->sp1);
+            $op = $this->formatBool($row->op1);
+            $pp = $this->formatBool($row->pp1);
+            $bp = $this->formatBool($row->bp1);
+            $am = $this->formatBool($row->am1);
+            $pq = $this->formatBool($row->pq1);
+            $sm = $this->formatBool($row->sm1);
+            $data .= "replace into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$cvearticulo', '$susa', '$descripcion', '$pres', $row->precioven, $row->numunidades, $pa, $sp, $op, $pp, $bp, $am, $pq, $sm, $row->tipoprod, $row->id);\r\n";
+        }
+        
+        return $data;
+        
+    }
+
 }

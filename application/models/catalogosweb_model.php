@@ -559,4 +559,94 @@ join puesto p using(clvpuesto);";
         $data = array('clvusuario' => $clvusuario, 'password' => $password, 'nombreusuario' => $nombreusuario, 'clvsucursal' => $clvsucursal, 'clvpuesto' => $clvpuesto, 'estaactivo' => $estaactivo);
         $this->db->update('usuarios', $data, array('usuario' => $usuario));
     }
+
+    function limpia($in)
+    {
+        $out = str_replace("'", "", $in);
+        return $out;
+    }
+
+    function getArticuloForStandAlone()
+    {
+        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod, case when idprograma = 0 then 1 else 0 end as pa, case when idprograma = 1 then 1 else 0 end as sp, case when idprograma = 2 then 1 else 0 end as op, case when idprograma = 3 then 1 else 0 end as pp, case when idprograma = 4 then 1 else 0 end as bp, case when idprograma = 5 then 1 else 0 end as am, case when idprograma = 6 then 1 else 0 end as pq, case when idprograma = 7 then 1 else 0 end as sm
+FROM articulos a
+left join articulos_cobertura c on a.id = c.id and nivelatencion = 1
+group by id
+;";
+        $query =  $this->db->query($sql);
+        
+        $data = "delete from articulo;\r\n";
+        
+        foreach($query->result() as $row)
+        {
+            $clave = $this->limpia(trim($row->cvearticulo));
+            $sustancia = $this->limpia(trim($row->descripcion));
+            $descripcion = $this->limpia(trim($row->susa));
+            $presentacion = $this->limpia(trim($row->pres));
+            $data .= "replace into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n";
+        }
+        
+        return $data;
+        
+    }
+
+    function getArticuloForStandAlone2()
+    {
+        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod, case when idprograma = 0 then 1 else 0 end as pa, case when idprograma = 1 then 1 else 0 end as sp, case when idprograma = 2 then 1 else 0 end as op, case when idprograma = 3 then 1 else 0 end as pp, case when idprograma = 4 then 1 else 0 end as bp, case when idprograma = 5 then 1 else 0 end as am, case when idprograma = 6 then 1 else 0 end as pq, case when idprograma = 7 then 1 else 0 end as sm
+FROM articulos a
+left join articulos_cobertura c on a.id = c.id and nivelatencion = 2
+group by id
+;";
+        $query =  $this->db->query($sql);
+        
+        $data = "delete from articulo;\r\n";
+        
+        foreach($query->result() as $row)
+        {
+            $clave = $this->limpia(trim($row->cvearticulo));
+            $sustancia = $this->limpia(trim($row->descripcion));
+            $descripcion = $this->limpia(trim($row->susa));
+            $presentacion = $this->limpia(trim($row->pres));
+            $data .= "replace into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n";
+        }
+        
+        return $data;
+        
+    }
+
+    function getSucursalForStandAlone()
+    {
+        $sql = "SELECT clvsucursal, descsucursal FROM sucursales s where activa = 1 and tiposucursal not in(0, 4);";
+        $query =  $this->db->query($sql);
+        
+        $data = "";
+        
+        foreach($query->result() as $row)
+        {
+            $suc = trim($row->clvsucursal);
+            $sucursal = trim($row->descsucursal);
+            $data .= "replace into sucursal (suc, sucursal) values('$suc', '$sucursal');\r\n";
+        }
+        
+        return $data;
+        
+    }
+
+    function getUsuarioForStandAlone()
+    {
+        $sql = "SELECT clvsucursal, descsucursal FROM sucursales s where activa = 1 and tiposucursal not in(0, 4);";
+        $query =  $this->db->query($sql);
+        
+        $data = "";
+        
+        foreach($query->result() as $row)
+        {
+            $suc = trim($row->clvsucursal);
+            $sucursal = trim($row->descsucursal);
+            $data .= "replace into usuario (idUsuario, usuario, password, nombreUsuario, activo, suc) values($suc, '$suc', '$suc', '$sucursal', 1, $suc);\r\n";
+        }
+        
+        return $data;
+        
+    }
 }

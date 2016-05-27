@@ -328,16 +328,19 @@ group by areaID;";
             $this->excel->setActiveSheetIndex($hoja);
             $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
             
-            //$this->excel->getActiveSheet()->setTitle($row->area);
+            $this->excel->getActiveSheet()->setTitle($row->area);
             
-            $this->excel->getActiveSheet()->mergeCells('A1:N1');
-            $this->excel->getActiveSheet()->mergeCells('A2:K2');
-            
-            $this->excel->getActiveSheet()->mergeCells('L2:N2');
+            $this->excel->getActiveSheet()->mergeCells('A1:O1');
+            $this->excel->getActiveSheet()->mergeCells('A2:O2');
 
             $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-            $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
-            $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+            $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->setCellValue('A2', APLICACION.'     '.date('d/M/Y H:i:s'));
+            $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
             
             if($cvearticulo == null)
             {
@@ -482,14 +485,17 @@ group by areaID;";
             
             $this->excel->getActiveSheet()->setTitle('INVENTARIO TOTAL');
             
-            $this->excel->getActiveSheet()->mergeCells('A1:N1');
-            $this->excel->getActiveSheet()->mergeCells('A2:K2');
-            
-            $this->excel->getActiveSheet()->mergeCells('L2:N2');
+            $this->excel->getActiveSheet()->mergeCells('A1:O1');
+            $this->excel->getActiveSheet()->mergeCells('A2:O2');
 
             $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-            $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
-            $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+            $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->setCellValue('A2', APLICACION.'      '.date('d/M/Y H:i:s'));
+            $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
             
             if($cvearticulo == null)
             {
@@ -708,14 +714,17 @@ group by areaID;";
                 }
                 
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                
-                $this->excel->getActiveSheet()->mergeCells('L2:N2');
+                $this->excel->getActiveSheet()->mergeCells('A1:V1');
+                $this->excel->getActiveSheet()->mergeCells('A2:V2');
     
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+                $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
                 $this->excel->getActiveSheet()->setCellValue('A2', APLICACION . ' DESDE ' . $fecha1 . ' HASTA ' . $fecha2);
-                $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+                $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
 
 
                 $num = 3;
@@ -866,14 +875,17 @@ group by areaID;";
             $this->excel->getActiveSheet()->setTitle('AJUSTES');
             
             
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                
-                $this->excel->getActiveSheet()->mergeCells('L2:N2');
+                $this->excel->getActiveSheet()->mergeCells('A1:N1');
+                $this->excel->getActiveSheet()->mergeCells('A2:N2');
     
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+                $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
                 $this->excel->getActiveSheet()->setCellValue('A2', APLICACION . ' DESDE ' . $fecha1 . ' HASTA ' . $fecha2);
-                $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+                $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
 
 
                 $num = 3;
@@ -1068,14 +1080,17 @@ group by areaID;";
                 
                 
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                
-                $this->excel->getActiveSheet()->mergeCells('L2:N2');
+                $this->excel->getActiveSheet()->mergeCells('A1:V1');
+                $this->excel->getActiveSheet()->mergeCells('A2:V2');
     
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+                $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
                 $this->excel->getActiveSheet()->setCellValue('A2', APLICACION . ' DESDE ' . $fecha1 . ' HASTA ' . $fecha2);
-                $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+                $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+                $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
 
 
                 $num = 3;
@@ -1533,7 +1548,7 @@ group by a.cvearticulo,r.idprograma";
         return $query;
     }
 
-     function insertaQuery($query_string){
+     function insertaQuery($query_string,$aa){
         $this->db->where('usuario', $this->session->userdata('usuario'));
         $this->db->where('reporte', $this->uri->segment(2));
         $query = $this->db->get('temporal_query');
@@ -1542,7 +1557,8 @@ group by a.cvearticulo,r.idprograma";
             $data = array(
                 'usuario'   => $this->session->userdata('usuario'),
                 'reporte'   => $this->uri->segment(2),
-                'query'     => $query_string
+                'query'     => $query_string,
+                'titulo'    => $aa
                 );
                 
             $this->db->insert('temporal_query', $data);
@@ -1553,7 +1569,7 @@ group by a.cvearticulo,r.idprograma";
                 'reporte'   => $this->uri->segment(2)
                 );
             
-            $data = array('query' => $query_string);
+            $data = array('query' => $query_string,'titulo'=>$aa);
             $this->db->update('temporal_query', $data, $where);
         }
         
@@ -1591,7 +1607,9 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         }else{
             $programa = "and r.idprograma = '$idprograma'";
         }
-                
+         
+         
+        $aa = $this->getTitulos($fecha1,$fecha2,$suministro,$idprograma);        
         $sql = "SELECT a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
         as completo, a.tipoprod, sum(canreq)
         as requerida, sum(cansur) as surtida, precioven
@@ -1606,7 +1624,7 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         
         $query = $this->db->query($sql, array($fecha1, $fecha2));
         
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1632,6 +1650,7 @@ function getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idp
             $programa = "and r.idprograma = '$idprograma'";
         }
         
+        $aa = $this->getTitulos($fecha1,$fecha2,$suministro,$idprograma);
         
         $sql = "SELECT a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
         as completo, a.tipoprod, sum(canreq)
@@ -1647,10 +1666,273 @@ function getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idp
         
         $query = $this->db->query($sql, array($fecha1, $fecha2, (string)$this->session->userdata('clvsucursal')));
         
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
+    
+    function getTitulos($fecha1,$fecha2,$suministro,$idprograma)
+    {
+        
+        $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $t1 = 'SUMINISTRO DE:  TODO';
+        }else{
+            $s1 = "select * from temporal_suministro where cvesuministro = $suministro";
+            $q1 = $this->db->query($s1);
+            $r1 = $q1->row();
+            $t1 = 'SUMINISTRO DE: '.$r1->suministro;
+        }
+        
+    
+        if((int)$idprograma == 1000)
+        {
+            $t2 = 'DEL PROGRAMA DE: TODO';
+        }else{
+            $s2 = "select * from programa where idprograma = $idprograma";
+            $q2 = $this->db->query($s2);
+            $r2 = $q2->row();
+            $t2 = 'DEL PROGRAMA: '.$r2->programa;
+        }
+        
+        $tituloss = 'REPORTE DEL '.$t1.'  '.$t2.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+         
+    }
+    
+    function getTitulos2($fecha1,$fecha2,$clave,$idprograma)
+    {
+        if((int)$idprograma == 1000)
+        {
+            $t2 = 'DEL PROGRAMA DE: TODO';
+        }else{
+            $s2 = "select * from programa where idprograma = $idprograma";
+            $q2 = $this->db->query($s2);
+            $r2 = $q2->row();
+            $t2 = 'DEL PROGRAMA: '.$r2->programa;
+        }
+        
+        $s3 = $this->getCompletoByCvearticulo($clave);
+        $t3 = 'DEL ARTICULO: '.$clave.' - '.$s3;
+        
+        $tituloss = 'REPORTE DE MEDICAMENTO Y MATERIAL DE CURACION '.$t2.' '.$t3.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+         
+    }
+    
+    function getTitulos22($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal)
+    {
+        
+          if($sucursal == 0)
+        {
+            if($juris == 0)
+            {
+                $t1 = ' EN GENERAL';  
+            }else{
+                $s1 = "select * from jurisdiccion where numjurisd = $jur";
+                $q1 = $this->db->query($s1);
+                $r1 = $q1->row();
+                $t1 = 'DENTRO DE LA JURISDICCION DE: '.$r1->jurisdiccion;
+            }
+        }else{
+                $s1 = "select * from sucursales where clvsucursal = $sucursal";
+                $q1 = $this->db->query($s1);
+                $r1 = $q1->row();
+                $t1 = 'DENTRO DE LA SUCURSAL DE: '.$r1->descsucursal;
+        } 
+        
+        
+         if((int)$idprograma == 1000)
+        {
+            $t2 = '';
+        }else{
+            $s2 = "select * from programa where idprograma = $idprograma";
+            $q2 = $this->db->query($s2);
+            $r2 = $q2->row();
+            $t2 = 'DEL PROGRAMA: '.$r2->programa;
+        }
+        
+        
+        if($tipo_sucursal == 0)
+        {
+            $t3 = '';
+        }else{
+            $s3 = "select * from temporal_nivel_atencion where nivelatencion = $tipo_sucursal";
+            $q3 = $this->db->query($s3);
+            $r3 = $q3->row();
+            $t3 = ' CON TIPO DE SUCURSAL DE: '. $r3->tipo_sucursal;
+        }
+        
+        
+        $s4 = $this->getCompletoByCvearticulo($clave);
+        $t4 = 'DEL ARTICULO: '.$clave.' - '.$s4;
+        
+        $tituloss = 'REPORTE DE MEDICAMENTO Y MATERIAL DE CURACION '.$t1.' '.$t2.' '.$t3.' '.$t4.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+          
+    }
+    
+    
+    function getTitulos3($fecha1,$fecha2,$suministro)
+    {
+       $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $t1 = 'SUMINISTRO DE:  TODO';
+        }else{
+            $s1 = "select * from temporal_suministro where cvesuministro = $suministro";
+            $q1 = $this->db->query($s1);
+            $r1 = $q1->row();
+            $t1 = 'SUMINISTRO DE: '.$r1->suministro;
+        }
+        
+        $tituloss = 'REPORTE '.$t1.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+         
+    }
+    
+    function getTitulos33($fecha1, $fecha2, $sucursal, $suministro, $juris)
+    {
+       $suministro = (int) $suministro;
+        if($suministro == 1000)
+        {
+            $t1 = ' GENERAL DE TODOS LOS SUMINISTROS';
+        }else{
+            $s1 = "select * from temporal_suministro where cvesuministro = $suministro";
+            $q1 = $this->db->query($s1);
+            $r1 = $q1->row();
+            $t1 = ' DEL SUMINISTRO DE: '.$r1->suministro;
+        }
+        
+       if($sucursal == 0)
+        {
+            if($juris == 0)
+            {
+                $t2 = '';  
+            }else{
+                $s2 = "select * from jurisdiccion where numjurisd = $jur";
+                $q2 = $this->db->query($s2);
+                $r2 = $q2->row();
+                $t2 = 'DENTRO DE LA JURISDICCION DE: '.$r2->jurisdiccion;
+            }
+        }else{
+                $s2 = "select * from sucursales where clvsucursal = $sucursal";
+                $q2 = $this->db->query($s2);
+                $r2 = $q2->row();
+                $t2 = 'DENTRO DE LA SUCURSAL DE: '.$r2->descsucursal;
+        } 
+        
+        
+      
+        $tituloss = 'REPORTE '.$t1.' '.$t2.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+    }
+    
+    
+    function getTitulos4($fecha1,$fecha2,$idprograma,$tiporequerimiento,$cvesuministro)
+    {
+         if($idprograma == 1000){
+            $t1 = 'DEL PROGRAMA DE: TODO ';
+        }else{
+            $s1 = "select * from programa where idprograma = $idprograma";
+            $q1 = $this->db->query($s1);
+            $r1 = $q1->row();
+            $t1 = 'DEL PROGRAMA: '.$r1->programa;
+        }
+        
+        if($tiporequerimiento == 1000){
+            $t3 = 'DE TODOS LOS REQUERIMIENTOS';
+        }else{
+            $s3 = "select * from temporal_requerimiento where tiporequerimiento = $tiporequerimiento";
+            $q3 = $this->db->query($s3);
+            $r3 = $q3->row();
+            $t3 = ' DEL REQUERIMIENTO: '.$r3->requerimiento;
+        }
+
+         $cvesuministro = (int) $cvesuministro;
+        if($cvesuministro == 1000)
+        {
+            $t2 = 'SUMINISTRO DE:  TODO ';
+        }else{
+            $s2 = "select * from temporal_suministro where cvesuministro = $cvesuministro";
+            $q2 = $this->db->query($s2);
+            $r2 = $q2->row();
+            $t2 = ' SUMINISTRO DE: '.$r2->suministro;
+        }
+        
+        $tituloss = 'REPORTE DEL '.$t2.' '.$t1.' '.$t3.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+    }
+    
+    
+    
+    
+    function getTitulos5($fecha1, $fecha2, $idprograma, $tiporequerimiento, $sucursal, $juris)
+    {
+        if($idprograma == 1000){
+            $t1 = 'DEL PROGRAMA DE: TODO';
+        }else{
+            $s1 = "select * from programa where idprograma = $idprograma";
+            $q1 = $this->db->query($s1);
+            $r1 = $q1->row();
+            $t1 = 'DEL PROGRAMA: '.$r1->programa;
+        }
+        
+        if($tiporequerimiento == 1000){
+            $t3 = 'DE TODOS LOS REQUERIMIENTOS';
+        }else{
+            $s3 = "select * from temporal_requerimiento where tiporequerimiento = $tiporequerimiento";
+            $q3 = $this->db->query($s3);
+            $r3 = $q3->row();
+            $t3 = ' DEL REQUERIMIENTO: '.$r3->requerimiento;
+        }
+        $jur = $this->session->userdata('jur');
+          if($sucursal == 0)
+        {
+            if($juris == 0)
+            {
+                $t2 = '';  
+            }else{
+                $s2 = "select * from jurisdiccion where numjurisd = $jur";
+                $q2 = $this->db->query($s2);
+                $r2 = $q2->row();
+                $t2 = 'DENTRO DE LA JURISDICCION DE: '.$r2->jurisdiccion;
+            }
+        }else{
+                $s2 = "select * from sucursales where clvsucursal = $sucursal";
+                $q2 = $this->db->query($s2);
+                $r2 = $q2->row();
+                $t2 = 'DENTRO DE LA SUCURSAL DE: '.$r2->descsucursal;
+        } 
+        
+        $tituloss = 'REPORTE '.$t2.' '.$t1.' '.$t3.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;  
+    }
+    
+    
+    function getTitulos6($fecha1,$fecha2,$causes)
+    {
+
+        if($causes == 0){
+           $t1 = ' DE LOS NO CAUSES' ;
+        }else{
+           $t1 = ' DE LOS CAUSES' ; 
+        }
+        $tituloss = 'REPORTE '.$t1.'. EN EL PERIODO DEL: '.$fecha1.' AL '.$fecha2.'.';
+        return $tituloss;
+        
+    }
+    
+ 
+    
+    
+    
 
 function getCompletoByCvearticulo($cveArticulo)
     {
@@ -1723,7 +2005,7 @@ function getCompletoByCvearticulo($cveArticulo)
             $set_nivel_atencion = "and s.tiposucursal = $tipo_sucursal";
         }
 
-
+       $aa = $this->getTitulos22($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal);
 
         $sql = "select 
             r.clvsucursal, descsucursal, programa, fecha, tipoprod, precioven, folioreceta, 
@@ -1738,7 +2020,7 @@ function getCompletoByCvearticulo($cveArticulo)
             
         $query = $this->db->query($sql, array($fecha1, $fecha2, $clave));
         
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1754,7 +2036,7 @@ function getCompletoByCvearticulo($cveArticulo)
         }
 
 
-
+        $aa = $this->getTitulos2($fecha1,$fecha2,$clave,$idprograma);
         $sql = "SELECT 
             r.clvsucursal, descsucursal, programa, fecha, tipoprod, precioven, folioreceta, 
             cvepaciente, concat(nombre,' ',apaterno,' ',amaterno) as paciente, cvemedico, 
@@ -1768,7 +2050,7 @@ function getCompletoByCvearticulo($cveArticulo)
             
         $query = $this->db->query($sql, array($fecha1, $fecha2, $clave, (string)$this->session->userdata('clvsucursal')));
         
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1814,7 +2096,7 @@ function getCompletoByCvearticulo($cveArticulo)
             $suc = "and r.clvsucursal = '$sucursal'";
         }
         
-            
+        $aa = $this->getTitulos33($fecha1, $fecha2, $sucursal, $suministro, $juris);    
         $sql = "select programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
         fecha, folioreceta, cvemedico, nombremedico, cvearticulo, concat(susa,' ',descripcion,' ',pres)
         as completo, canreq, cansur from receta r join receta_detalle d on d.consecutivo = r.consecutivo
@@ -1826,7 +2108,7 @@ function getCompletoByCvearticulo($cveArticulo)
     
         $query = $this->db->query($sql, array($fecha1, $fecha2));
 
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1841,7 +2123,7 @@ function getCompletoByCvearticulo($cveArticulo)
             $tipo = " and  tipoprod = $suministro";
         }
         
-            
+        $aa = $this->getTitulos3($fecha1,$fecha2,$suministro);   
         $sql = "SELECT programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
         fecha, folioreceta, cvemedico, nombremedico, cvearticulo, concat(susa,' ',descripcion,' ',pres)
         as completo, canreq, cansur from receta r join receta_detalle d on d.consecutivo = r.consecutivo
@@ -1853,7 +2135,7 @@ function getCompletoByCvearticulo($cveArticulo)
     
         $query = $this->db->query($sql, array($fecha1, $fecha2, $cvepaciente, (string)$this->session->userdata('clvsucursal')));
 
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1894,9 +2176,9 @@ function getCompletoByCvearticulo($cveArticulo)
                 $suc = "s.numjurisd = $juris";
             }
         }else{
-            $suc = "and clvsucursal = '$sucursal'";
+            $suc = "and r.clvsucursal = '$sucursal'";
         }
-        
+        $aa = $this->getTitulos33($fecha1,$fecha2,$sucursal, $suministro, $juris); 
         $sql = "select programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
         fecha, folioreceta, cvepaciente, concat(trim(apaterno),' ',trim(amaterno),' ',trim(nombre)) as paciente, 
         cvearticulo, concat(susa,' ',descripcion,' ',pres)as completo, canreq, cansur
@@ -1909,7 +2191,7 @@ function getCompletoByCvearticulo($cveArticulo)
     
         $query = $this->db->query($sql, array($fecha1, $fecha2, $cvemedico));
        
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1924,8 +2206,8 @@ function getCompletoByCvearticulo($cveArticulo)
             $tipo = " and  tipoprod = $suministro";
         }
         
-        
-        $sql = "SELECT programa, tipoprod, preciosinser, r.clvsucursal, descsucursal, 
+        $aa = $this->getTitulos3($fecha1,$fecha2,$suministro); 
+        $sql = "SELECT programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
         fecha, folioreceta, cvepaciente, concat(trim(apaterno),' ',trim(amaterno),' ',trim(nombre)) as paciente, 
         cvearticulo, concat(susa,' ',descripcion,' ',pres)as completo, canreq, cansur
     from receta r join receta_detalle d on d.consecutivo = r.consecutivo 
@@ -1937,7 +2219,7 @@ function getCompletoByCvearticulo($cveArticulo)
     
         $query = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (string)$this->session->userdata('clvsucursal'), (string)$cvemedico));
        
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         
         return $query;
     }
@@ -1975,7 +2257,7 @@ function getCompletoByCvearticulo($cveArticulo)
         }else{
             $sumis = "and r.cvesuministro = $cvesuministro";
         }*/
-        
+        $aa = $this->getTitulos5($fecha1, $fecha2, $idprograma, $tiporequerimiento, $sucursal, $juris);
         $s = "SELECT descsucursal, precioven, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
              cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
             fecha, fechaexp
@@ -1987,7 +2269,7 @@ function getCompletoByCvearticulo($cveArticulo)
             join articulos x on d.id=x.id
             where fecha between ? and ? $pro  $req $dato ";
         $query = $this->db->query($s, array($fecha1, $fecha2));
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $query;
         
     }
@@ -2006,14 +2288,14 @@ function getCompletoByCvearticulo($cveArticulo)
         }else{
             $req = "and r.tiporequerimiento = $tiporequerimiento";
         }
-
+        /*
         if($cvesuministro == 1000){
            $sumis = null;
         }else{
             $sumis = "and r.cvesuministro = $cvesuministro";
-        }
-        
-        $s = "SELECT descsucursal, preciosinser, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
+        }*/
+        $aa = $this->getTitulos4($fecha1,$fecha2,$idprograma,$tiporequerimiento,$cvesuministro);
+        $s = "SELECT descsucursal, precioven, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
              cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
             fecha, fechaexp
             from receta r
@@ -2022,9 +2304,9 @@ function getCompletoByCvearticulo($cveArticulo)
             join temporal_requerimiento q on r.tiporequerimiento = q.tiporequerimiento
             join receta_detalle d on d.consecutivo = r.consecutivo
             join articulos x on d.id=x.id
-            where fecha between ? and ? and r.clvsucursal = ? $pro $req $sumis";
+            where fecha between ? and ? and r.clvsucursal = ? $pro $req";//$sumis
         $query = $this->db->query($s, array($fecha1, $fecha2, (int)$this->session->userdata('clvsucursal')));
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $query;
         
     }
@@ -2219,6 +2501,21 @@ function getCompletoByCvearticulo($cveArticulo)
         }
     }
     
+    function getTitulo($reporte)
+    {
+        $this->db->where('usuario', $this->session->userdata('usuario'));
+        $this->db->where('reporte', $reporte);
+        
+        $query = $this->db->get('temporal_query');
+        
+        if($query->num_rows() == 0){
+            return null;
+        }else{
+            $row = $query->row();
+            return $row->titulo;
+        }
+    }
+    
     
     function executeQuery($reporte){
        $sql = $this->getQuery($reporte);
@@ -2229,8 +2526,18 @@ function getCompletoByCvearticulo($cveArticulo)
         } 
     }
     
+    function executeTitulo($reporte){
+       $sql = $this->getTitulo($reporte);
+        if($sql == null){
+            return null;
+        }else{
+            return $sql;
+        } 
+    }
+    
     function rsu_surtidas($fecha1,$fecha2)
     {
+        $aa = 'REPORTE DE RECETAS SURTIDAS POR UNIDAD EN EL PERIODO DE: '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT clvsucursal, descsucursal, count(*) as cuenta
                 FROM receta r
                 join sucursales s using(clvsucursal)
@@ -2238,11 +2545,14 @@ function getCompletoByCvearticulo($cveArticulo)
                 group by clvsucursal
                 order by cuenta desc;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
     function rsu_surtidas_farmacia($fecha1,$fecha2)
     {
+        
+        $aa = 'REPORTE DE RECETAS SURTIDAS POR UNIDAD EN EL PERIODO DE: '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT clvsucursal, descsucursal, count(*) as cuenta
                 FROM receta r
                 join sucursales s using(clvsucursal)
@@ -2250,11 +2560,13 @@ function getCompletoByCvearticulo($cveArticulo)
                 group by clvsucursal
                 order by cuenta desc;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
     function claves_causes($fecha1, $fecha2, $causes)
     {
+        $aa = $this->getTitulos6($fecha1, $fecha2, $causes);
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2262,11 +2574,13 @@ where fecha between ? and ? and cause = ?
 group by id
 order by surtido desc;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, $causes));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
     
     function claves_causes_farmacia($fecha1, $fecha2, $causes)
     {
+        $aa = $this->getTitulos6($fecha1, $fecha2, $causes);
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2274,11 +2588,13 @@ where fecha between ? and ? and cause = ? and r.clvsucursal = ?
 group by id
 order by surtido desc;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, $causes, (int)$this->session->userdata('clvsucursal')));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
     function claves_mayor_movimiento($fecha1, $fecha2)
     {
+        $aa = 'REPORTE DE CLAVES EN MAYOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2287,11 +2603,13 @@ group by id
 order by surtido desc
 limit 20;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
     
     function claves_mayor_movimiento_farmacia($fecha1, $fecha2)
     {
+        $aa = 'REPORTE DE CLAVES EN MAYOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2300,11 +2618,13 @@ group by id
 order by surtido desc
 limit 20;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
     function claves_menor_movimiento_farmacia($fecha1,$fecha2)
     {
+        $aa = 'REPORTE DE CLAVES EN MENOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2313,11 +2633,13 @@ group by id
 order by surtido asc
 limit 20;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, (int)$this->session->userdata('clvsucursal')));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
     function claves_menor_movimiento($fecha1,$fecha2)
     {
+        $aa = 'REPORTE DE CLAVES EN MENOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
         $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
@@ -2326,6 +2648,7 @@ group by id
 order by surtido asc
 limit 20;";
         $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
         return $q;
     }
 
@@ -2437,25 +2760,22 @@ order by tipoprod, cvearticulo * 1;";
             $this->excel->createSheet($hoja);
             $this->excel->setActiveSheetIndex($hoja);
                
-            $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
-            $this->excel->getActiveSheet()->setTitle('INVENTARIO DE SUCURSALES');
+        $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
+        $this->excel->getActiveSheet()->setTitle('INVENTARIO DE SUCURSALES');
              
-           $query = $this->getInventarioGroupBySucursal();  
+        $query = $this->getInventarioGroupBySucursal();  
                 
-           $this->excel->getActiveSheet()->mergeCells('A1:K1');
-           $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                
-           $this->excel->getActiveSheet()->mergeCells('L2:N2');
+        $this->excel->getActiveSheet()->mergeCells('A1:I1');
+        $this->excel->getActiveSheet()->mergeCells('A2:I2');
     
-           $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-              $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO DE SUCS');
-        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO DE SUCURSALES'.'   '.date('d-M-Y H:i:s'));
+        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('K2', date('d/M/Y H:i:s'));
 
 
                 $num = 3;
@@ -2578,21 +2898,24 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->setTitle('DETALLE DE INVENTARIO');
              
            $query = $this->getInvetarioDetalleBySucursal($clvsucursal);
+            
+           if($this->session->userdata('valuacion') == 1){
+             $this->excel->getActiveSheet()->mergeCells('A1:I1');
+             $this->excel->getActiveSheet()->mergeCells('A2:I2');
+           }else{     
+             $this->excel->getActiveSheet()->mergeCells('A1:N1');
+             $this->excel->getActiveSheet()->mergeCells('A2:N2');
+           }
                 
-           $this->excel->getActiveSheet()->mergeCells('A1:K1');
-           $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                
-           $this->excel->getActiveSheet()->mergeCells('L2:N2');
     
-           $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-              $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
         $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO DETALLADO DE LA SUCURSAL: '.$clvsucursal);
-        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('K2', date('d/M/Y H:i:s'));
 
 
                 $num = 4;
@@ -2728,20 +3051,18 @@ order by tipoprod, cvearticulo * 1;";
              
            $query = $this->getInventarioTotalByClave();    
                 
-           $this->excel->getActiveSheet()->mergeCells('A1:K1');
-           $this->excel->getActiveSheet()->mergeCells('A2:K2');
+        $this->excel->getActiveSheet()->mergeCells('A1:I1');
+        $this->excel->getActiveSheet()->mergeCells('A2:I2');
                 
-           $this->excel->getActiveSheet()->mergeCells('L2:N2');
     
-           $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-              $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO TOTAL');
-        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO TOTAL'.date('d/M/Y H:i:s'));
+        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVerticalHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('K2', date('d/M/Y H:i:s'));
 
 
                 $num = 4;
@@ -2913,6 +3234,77 @@ order by tipoprod, cvearticulo * 1;";
         return $query;
     }  
     
+    function reportes_resumen_salidas($fecha1, $fecha2)
+    {
+        $sql = "SELECT (SELECT count(referencia) as folio FROM movimiento m where fechaCierre between '$fecha1' and '$fecha2'
+                and tipoMovimiento = 2 and subtipoMovimiento in (4,5,6,7,8,9,13))as folios,
+                count(distinct c.cvearticulo) as claves,sum(b.piezas) as piezas,count(distinct b.lote) as lotes,
+                count(distinct a.clvsucursalReferencia) as sucdestino
+                FROM movimiento a
+                join movimiento_detalle b on b.movimientoID = a.movimientoID
+                join articulos c on c.id = b.id
+                join sucursales e on e.clvsucursal = a.clvsucursalReferencia
+                where a.fechaCierre between '$fecha1' and '$fecha2'
+                and a.tipoMovimiento = 2 and a.subtipoMovimiento in (4,5,6,7,8,9,13)
+                order by a.referencia;";
+
+        $query = $this->db->query($sql);
+        
+        return $query;
+    }
+    
+    function reportes_resumen_salidas_detalle($fecha1, $fecha2)
+    {
+        $sql = "SELECT a.referencia,c.cvearticulo,b.piezas,c.susa,c.descripcion,c.pres,b.lote,a.clvsucursalReferencia,e.descsucursal
+                FROM movimiento a
+                join movimiento_detalle b on b.movimientoID = a.movimientoID
+                join articulos c on c.id = b.id
+                join proveedor d on d.proveedorID = a.proveedorID
+                join sucursales e on e.clvsucursal = a.clvsucursalReferencia
+                where a.fechaCierre between '$fecha1' and '$fecha2' and tipoMovimiento = 2 
+                and a.subtipoMovimiento in (4,5,6,7,8,9,13)
+                order by a.referencia;";
+
+        $query = $this->db->query($sql);
+        
+        return $query;
+    }
+    
+    function salidas_por_clave($fecha1, $fecha2,$cvearticulo)
+    {
+        $sql = "SELECT count(distinct a.referencia) as facturas,c.cvearticulo,c.descripcion,count(distinct b.lote) as lotes,
+                count(distinct b.caducidad) as caducidad,
+                sum(b.piezas) as piezas,count(distinct a.clvsucursalReferencia) as Destino
+                FROM movimiento a
+                join movimiento_detalle b on b.movimientoID = a.movimientoID
+                join articulos c on c.id = b.id
+                join proveedor d on d.proveedorID = a.proveedorID
+                join sucursales e on e.clvsucursal = a.clvsucursalReferencia
+                where a.fechaCierre between '$fecha1' and '$fecha2' and c.cvearticulo = '$cvearticulo'
+                and a.tipoMovimiento =  2 and a.subtipoMovimiento in (4,5,6,7,8,9,13);";
+
+        $query = $this->db->query($sql);
+        
+        return $query;
+    }
+        
+    function salidas_por_clave_detalle($fecha1, $fecha2,$cvearticulo)
+    {
+        $sql = "SELECT a.referencia,c.cvearticulo,c.descripcion,b.lote,b.caducidad,b.piezas,a.clvsucursalReferencia,e.descsucursal
+                FROM movimiento a
+                join movimiento_detalle b on b.movimientoID = a.movimientoID
+                join articulos c on c.id = b.id
+                join proveedor d on d.proveedorID = a.proveedorID
+                join sucursales e on e.clvsucursal = a.clvsucursalReferencia
+                where a.fechaCierre between '$fecha1' and '$fecha2' and c.cvearticulo = '$cvearticulo'
+                and a.tipoMovimiento =  2 and a.subtipoMovimiento in (4,5,6,7,8,9,13)
+                order by a.referencia;";
+
+        $query = $this->db->query($sql);
+        
+        return $query;
+    }
+    
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function getPrograma2Excel($reporte){
         set_time_limit(0);
@@ -2922,7 +3314,7 @@ order by tipoprod, cvearticulo * 1;";
         if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
         	die($cacheMethod . " caching method is not available" . EOL);
         }
-        
+                
         $hoja = 0;
             
                 $this->excel->createSheet($hoja);
@@ -2933,27 +3325,38 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->setTitle('MEDICAMENTO Y MATERIAL');
               
                 $query4 = $this->reportes_model->executeQuery($reporte);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
                 
-                
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
+                if($this->session->userdata('valuacion') == 1){
+                   $this->excel->getActiveSheet()->mergeCells('A1:K1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:K2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:K3');  
+                }else{
+                   $this->excel->getActiveSheet()->mergeCells('A1:E1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:E2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:E3');
+                }
     
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL DE CURACION ENTREGADO');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+               	$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL:  '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
 
 
                 $num = 5;
@@ -3104,27 +3507,39 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->setTitle('MEDICAMENTO Y MATERIAL');
               
                 $query4 = $this->reportes_model->executeQuery($reporte);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
                 
+                  
+                if($this->session->userdata('valuacion') == 1){
+                   $this->excel->getActiveSheet()->mergeCells('A1:R1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:R2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:R3');  
+                }else{
+                   $this->excel->getActiveSheet()->mergeCells('A1:L1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:L2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:L3');
+                }
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
-    
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL POR CLAVES');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(10);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
 
 
                 $num = 5;
@@ -3221,8 +3636,7 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->getStyle('K'.$data_empieza.':K'.$data_termina)->getNumberFormat()->setFormatCode('0');
                 $this->excel->getActiveSheet()->getStyle('L'.$data_empieza.':L'.$data_termina)->getNumberFormat()->setFormatCode('0');
 				if($this->session->userdata('valuacion') == 1){
-				//$this->excel->getActiveSheet()->getStyle('M'.$data_empieza.':M'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
-                $this->excel->getActiveSheet()->getStyle('M'.$data_empieza.':M'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			    $this->excel->getActiveSheet()->getStyle('M'.$data_empieza.':M'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                 $this->excel->getActiveSheet()->getStyle('N'.$data_empieza.':N'.($data_termina + 1))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 				$this->excel->getActiveSheet()->getStyle('O'.$data_empieza.':O'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                 $this->excel->getActiveSheet()->getStyle('P'.$data_empieza.':P'.($data_termina + 1))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
@@ -3276,7 +3690,7 @@ order by tipoprod, cvearticulo * 1;";
     }  
     
     
-    function getPacienteExcel($reporte){
+    function getPacienteExcel($expediente,$reporte){
         set_time_limit(0);
         ini_set("memory_limit","-1");
         $this->load->library('excel');
@@ -3292,30 +3706,49 @@ order by tipoprod, cvearticulo * 1;";
                 
                 
                 $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
-                $this->excel->getActiveSheet()->setTitle('MEDICAMENTO Y MATERIAL');
+                $this->excel->getActiveSheet()->setTitle('SUMINISTRO');
               
                 $query4 = $this->reportes_model->executeQuery($reporte);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
                 
+                $paciente = $this->getPacienteByCvepacienteJur($expediente);
+             
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
-    
+                if($this->session->userdata('valuacion') == 1){
+                   $this->excel->getActiveSheet()->mergeCells('A1:R1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:R2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:R3'); 
+                   $this->excel->getActiveSheet()->mergeCells('A4:R4'); 
+                }else{
+                   $this->excel->getActiveSheet()->mergeCells('A1:L1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:L2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:L3');
+                   $this->excel->getActiveSheet()->mergeCells('A4:L4');
+                }
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL POR PACIENTE');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
+                $this->excel->getActiveSheet()->setCellValue('A4', 'PACIENTE: '.$expediente.' - '.$paciente);
+				$this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(12);
+				$this->excel->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
 
 
                 $num = 5;
@@ -3466,7 +3899,7 @@ order by tipoprod, cvearticulo * 1;";
                 $hoja++;  
     }   
     
-    function getMedicoExcel($reporte){
+    function getMedicoExcel($cveMedico,$reporte){
         set_time_limit(0);
         ini_set("memory_limit","-1");
         $this->load->library('excel');
@@ -3482,30 +3915,48 @@ order by tipoprod, cvearticulo * 1;";
                 
                 
                 $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
-                $this->excel->getActiveSheet()->setTitle('MEDICAMENTO Y MATERIAL');
+                $this->excel->getActiveSheet()->setTitle('REPORTE DE MEDICO');
               
                 $query4 = $this->reportes_model->executeQuery($reporte);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
+                $medico= $this->getNombreMedicoByCveMedicoJur($cveMedico);
                 
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
-    
+                if($this->session->userdata('valuacion') == 1){
+                   $this->excel->getActiveSheet()->mergeCells('A1:P1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:P2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:P3');  
+                   $this->excel->getActiveSheet()->mergeCells('A4:P4'); 
+                }else{
+                   $this->excel->getActiveSheet()->mergeCells('A1:J1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:J2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:J3');
+                   $this->excel->getActiveSheet()->mergeCells('A4:J4'); 
+                }
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL POR MEDICO');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
+                $this->excel->getActiveSheet()->setCellValue('A4', 'MEDICO: '.$cveMedico.' - '.$medico);
+				$this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(12);
+				$this->excel->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
 
 
                 $num = 5;
@@ -3670,27 +4121,37 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->setTitle('MEDICAMENTO Y MATERIAL');
               
                 $query4 = $this->reportes_model->executeQuery($reporte);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
                 
-                
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
-    
+                if($this->session->userdata('valuacion') == 1){
+                   $this->excel->getActiveSheet()->mergeCells('A1:W1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:W2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:W3');  
+                }else{
+                   $this->excel->getActiveSheet()->mergeCells('A1:Q1');
+                   $this->excel->getActiveSheet()->mergeCells('A2:Q2');
+                   $this->excel->getActiveSheet()->mergeCells('A3:Q3');
+                }
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL POR PERIODO');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
 
 
                 $num = 5;
@@ -3856,7 +4317,7 @@ order by tipoprod, cvearticulo * 1;";
     }
     
     
-    function getRsuExcel($fecha1,$fecha2,$reporte){
+    function getRsuExcel($reporte){
         set_time_limit(0);
         ini_set("memory_limit","-1");
         $this->load->library('excel');
@@ -3874,28 +4335,37 @@ order by tipoprod, cvearticulo * 1;";
                 $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
                 $this->excel->getActiveSheet()->setTitle('RECETAS SURTIDAS');
               
-                $query4 = $this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
+                $query4 = $this->reportes_model->executeQuery($reporte);//$this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
                 
+               
+               $this->excel->getActiveSheet()->mergeCells('A1:D1');
+               $this->excel->getActiveSheet()->mergeCells('A2:D2');
+               if($this->session->userdata('valuacion') == 1){
+               }else{
+               $this->excel->getActiveSheet()->mergeCells('A3:D3'); 
+               } 
                 
-                $this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->mergeCells('A3:K3');
-    
                 $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
-				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
 				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A1:K1');
-                $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE RECETAS SURTIDAS POR UNIDAD');
-				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(10);
 				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A2:K2');
-                $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACAN');
-				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
 				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-				$this->excel->getActiveSheet()->mergeCells('A3:K3');
+                }
 
 
                 $num = 5;
@@ -3950,6 +4420,504 @@ order by tipoprod, cvearticulo * 1;";
              
                 $hoja++;    
     }
+    
+    function getCausesExcel($reporte){
+         set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+        	die($cacheMethod . " caching method is not available" . EOL);
+        }
+        
+        $hoja = 0;
+            
+                $this->excel->createSheet($hoja);
+                $this->excel->setActiveSheetIndex($hoja);
+                
+                
+                $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
+                $this->excel->getActiveSheet()->setTitle('CLAVES CAUSES');
+              
+                $query4 = $this->reportes_model->executeQuery($reporte);//$this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
+                
+                $this->excel->getActiveSheet()->mergeCells('A1:F1');
+                $this->excel->getActiveSheet()->mergeCells('A2:F2');
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->mergeCells('A3:F3');
+                }
+                $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+				$this->excel->getActiveSheet()->mergeCells('A1:F1');
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(10);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+                }
+
+
+                $num = 5;
+                
+                $data_empieza = $num + 1;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, '#');
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE');
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+				$this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+				$this->excel->getActiveSheet()->setCellValue('F'.$num, 'CANT SUR.');
+                
+				
+				$i = 1; 
+				
+                foreach($query4->result()  as $row4)
+                {
+                  					
+					$num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $i);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row4->cvearticulo);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row4->susa);
+					$this->excel->getActiveSheet()->setCellValue('D'.$num, $row4->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row4->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row4->surtido);
+                    $i++;
+                    
+                }
+                
+                $data_termina = $num;
+
+                $this->excel->getActiveSheet()->setCellValue('F'.($data_termina + 1), '=sum(F'.$data_empieza.':F'.$data_termina.')');
+                
+                $this->excel->getActiveSheet()->getStyle('F'.$data_empieza.':F'.$data_termina)->getNumberFormat()->setFormatCode('0');
+                
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':F'.$data_termina)->getAlignment()->setWrapText(true);
+              
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+                
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':F'.($data_termina + 1))->applyFromArray($styleArray);
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':F'.($data_termina + 1));
+             
+                $hoja++;  
+    }
+    
+    
+    function getMayorExcel($reporte){
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+        	die($cacheMethod . " caching method is not available" . EOL);
+        }
+        
+        $hoja = 0;
+            
+                $this->excel->createSheet($hoja);
+                $this->excel->setActiveSheetIndex($hoja);
+                
+                
+                $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
+                $this->excel->getActiveSheet()->setTitle('CLAVES MAYOR');
+              
+                $query4 = $this->reportes_model->executeQuery($reporte);//$this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
+                
+                $this->excel->getActiveSheet()->mergeCells('A1:F1');
+                $this->excel->getActiveSheet()->mergeCells('A2:F2');
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->mergeCells('A3:F3');
+                }
+                $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(10);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+                }
+
+                $num = 5;
+                
+                $data_empieza = $num + 1;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, '#');
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE');
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+				$this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+				$this->excel->getActiveSheet()->setCellValue('F'.$num, 'CANTIDAD SURTIDA');
+                
+				
+				$i = 1; 
+				
+                foreach($query4->result()  as $row4)
+                {
+                  					
+					$num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $i);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row4->cvearticulo);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row4->susa);
+					$this->excel->getActiveSheet()->setCellValue('D'.$num, $row4->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row4->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row4->surtido);
+                    $i++;
+                    
+                }
+                
+                $data_termina = $num;
+
+                $this->excel->getActiveSheet()->setCellValue('F'.($data_termina + 1), '=sum(F'.$data_empieza.':F'.$data_termina.')');
+                
+                $this->excel->getActiveSheet()->getStyle('F'.$data_empieza.':F'.$data_termina)->getNumberFormat()->setFormatCode('0');
+                
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':F'.$data_termina)->getAlignment()->setWrapText(true);
+              
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+                
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':F'.($data_termina + 1))->applyFromArray($styleArray);
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':F'.($data_termina + 1));
+             
+                $hoja++;    
+    }
+    
+    
+    function getMenorExcel($reporte){
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+        	die($cacheMethod . " caching method is not available" . EOL);
+        }
+        
+        $hoja = 0;
+            
+                $this->excel->createSheet($hoja);
+                $this->excel->setActiveSheetIndex($hoja);
+                
+                
+                $this->excel->getActiveSheet()->getTabColor()->setRGB('32CD32');
+                $this->excel->getActiveSheet()->setTitle('CLAVES MENOR');
+              
+                $query4 = $this->reportes_model->executeQuery($reporte);//$this->reportes_model->rsu_surtidas_farmacia($fecha1, $fecha2);
+                $titulo = $this->reportes_model->executeTitulo($reporte);
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
+                
+                $this->excel->getActiveSheet()->mergeCells('A1:F1');
+                $this->excel->getActiveSheet()->mergeCells('A2:F2');
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->mergeCells('A3:F3');
+                }
+                $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+				$this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+				$this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+				$this->excel->getActiveSheet()->mergeCells('A1:F1');
+                $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+				$this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(10);
+				$this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+                if($this->session->userdata('valuacion') == 1){
+                }else{
+                $this->excel->getActiveSheet()->setCellValue('A3', 'SUCURSAL: '.$succ.' - '.$sucx);
+				$this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
+				$this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+                }
+
+                $num = 5;
+                
+                $data_empieza = $num + 1;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, '#');
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE');
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+				$this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+				$this->excel->getActiveSheet()->setCellValue('F'.$num, 'CANTIDAD SURTIDA');
+                
+				
+				$i = 1; 
+				
+                foreach($query4->result()  as $row4)
+                {
+                  					
+					$num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $i);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row4->cvearticulo);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row4->susa);
+					$this->excel->getActiveSheet()->setCellValue('D'.$num, $row4->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row4->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row4->surtido);
+                    $i++;
+                    
+                }
+                
+                $data_termina = $num;
+
+                $this->excel->getActiveSheet()->setCellValue('F'.($data_termina + 1), '=sum(F'.$data_empieza.':F'.$data_termina.')');
+                
+                $this->excel->getActiveSheet()->getStyle('F'.$data_empieza.':F'.$data_termina)->getNumberFormat()->setFormatCode('0');
+                
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+				$this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':F'.$data_termina)->getAlignment()->setWrapText(true);
+              
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+                
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':F'.($data_termina + 1))->applyFromArray($styleArray);
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':F'.($data_termina + 1));
+             
+                $hoja++;     
+    }
+    
+    
+    function getNecesidadesExcel()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+        	die($cacheMethod . " caching method is not available" . EOL);
+        }
+        $this->load->model('almacen_model');
+        $query = $this->almacen_model->calculaPedidoAlmacen();
+        
+            $hoja = 0;
+            $this->excel->createSheet($hoja);
+            $this->excel->setActiveSheetIndex($hoja);
+            $this->excel->getActiveSheet()->getTabColor()->setRGB('EAAC1C');
+            $this->excel->getActiveSheet()->setTitle('NECESIDADES DEL ALMACEN');
+            $succ = $this->session->userdata('clvsucursal');
+            if($this->session->userdata('valuacion') == 1){
+               $titulo = 'REPORTE GENERAL DE NECESIDADES DE ALMACEN'.' '.APLICACION.'     '.date('d/M/Y H:i:s');
+            }else{
+                $succ = $this->session->userdata('clvsucursal');
+                $s = "select * from sucursales where clvsucursal = $succ";
+                $q = $this->db->query($s);
+                $r = $q->row();
+                $sucx = $r->descsucursal;
+                $titulo = 'REPORTE GENERAL DE NECESIDADES DE ALMACEN'.' '.APLICACION.' SUCURSAL '.$succ.' - '.$sucx.date('d/M/Y H:i:s');
+            }
+                        
+            $this->excel->getActiveSheet()->mergeCells('A1:L1');
+            $this->excel->getActiveSheet()->mergeCells('A2:L2');
+            $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+            $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->setCellValue('A2', $titulo);
+            $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+            
+            $num = 3;
+            $data_empieza = $num + 1;
+            
+            $this->excel->getActiveSheet()->setCellValue('A'.$num, '#');
+            $this->excel->getActiveSheet()->setCellValue('B'.$num, 'ID');
+            $this->excel->getActiveSheet()->setCellValue('C'.$num, 'CLAVE');
+            $this->excel->getActiveSheet()->setCellValue('D'.$num, 'SUSTANCIA ACTIVA');
+            $this->excel->getActiveSheet()->setCellValue('E'.$num, 'DESCRIPCION');
+            $this->excel->getActiveSheet()->setCellValue('F'.$num, 'PRESENTACION');
+            $this->excel->getActiveSheet()->setCellValue('G'.$num, 'BUFER');
+            $this->excel->getActiveSheet()->setCellValue('H'.$num, 'INVENTARIO');
+            $this->excel->getActiveSheet()->setCellValue('I'.$num, 'FACTOR BUFFER');
+            $this->excel->getActiveSheet()->setCellValue('J'.$num, 'PEDIDO');
+            $this->excel->getActiveSheet()->setCellValue('K'.$num, 'EXCEDENTES');
+            $this->excel->getActiveSheet()->setCellValue('L'.$num, 'SOBRANTES');
+            
+            $i = 1;
+            
+            if($query->num_rows() > 0)
+            {
+            
+             $bufferFarmacias = 0;$inventario = 0;$pedido = 0;
+             $excedente = 0;$sobrante = 0;
+                
+            foreach($query->result()  as $row)
+            {                
+                $num++;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, $i);
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, $row->id);
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, $row->cvearticulo);
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->susa);
+                $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->descripcion);
+                $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->pres);
+                $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->bufferFarmacias);
+                $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->inventario);
+                $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->factor);
+                $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->pedido);
+                $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->excedente);
+                $this->excel->getActiveSheet()->setCellValue('L'.$num, $row->sobrante);
+                //
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setRowHeight(20);
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setVisible(true);
+                //$this->excel->getActiveSheet()->setCellValue('m'.$num, '=H'.$num.'*L'.$num);
+                
+                if($row->factor < 70 && $row->bufferFarmacias > 0)
+                {
+                    $this->excel->getActiveSheet()->getStyle('A' . $num . ':L' . $num)->getFill()->applyFromArray(array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'startcolor' => array(
+                             'rgb' => '5BD244'
+                        )
+                    ));
+                }elseif($row->factor > 150){
+                    $this->excel->getActiveSheet()->getStyle('A' . $num . ':L' . $num)->getFill()->applyFromArray(array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'startcolor' => array(
+                             'rgb' => 'FF6961'
+                        )
+                    ));
+                }elseif($row->sobrante > 0){
+                    $this->excel->getActiveSheet()->getStyle('A' . $num . ':L' . $num)->getFill()->applyFromArray(array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'startcolor' => array(
+                             'rgb' => 'FBAD89'
+                        )
+                    ));
+                }
+                
+                $i++;
+                
+            }
+            
+            $data_termina = $num;
+            
+            $this->excel->getActiveSheet()->setCellValue('G'.($data_termina + 1), '=sum(G'.$data_empieza.':G'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('H'.($data_termina + 1), '=sum(H'.$data_empieza.':H'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('I'.($data_termina + 1), '=sum(I'.$data_empieza.':I'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('J'.($data_termina + 1), '=sum(J'.$data_empieza.':J'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('K'.($data_termina + 1), '=sum(K'.$data_empieza.':K'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('L'.($data_termina + 1), '=sum(L'.$data_empieza.':L'.$data_termina.')');
+            
+            
+            $this->excel->getActiveSheet()->getStyle('G'.$data_empieza.':G'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            $this->excel->getActiveSheet()->getStyle('H'.$data_empieza.':H'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            $this->excel->getActiveSheet()->getStyle('I'.$data_empieza.':I'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':J'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            $this->excel->getActiveSheet()->getStyle('K'.$data_empieza.':K'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            $this->excel->getActiveSheet()->getStyle('L'.$data_empieza.':L'.$data_termina)->getNumberFormat()->setFormatCode('0');
+            
+            $this->excel->getActiveSheet()->getStyle('G'.$data_empieza.':G'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('H'.$data_empieza.':H'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('I'.$data_empieza.':I'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':J'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('K'.$data_empieza.':K'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('L'.$data_empieza.':L'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            
+            $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+            $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+            $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+            $this->excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);//setWidth(30);
+            $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+            
+            $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':L'.$data_termina)->getAlignment()->setWrapText(true);
+            
+            $styleArray = array(
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FFFF0000'),
+                    ),
+                ),
+            );
+            
+            $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':L'.($data_termina + 1))->applyFromArray($styleArray);
+            
+            $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+            $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':L'.($data_termina + 1));
+            
+            
+            }
+            $hoja++;
+        }
     
     
     

@@ -1,7 +1,7 @@
 							<div class="row-fluid">
                                 <div class="span12">
                             
-                                    <table id="ventas-table" class="table table-striped table-bordered table-hover">
+                                    <table id="ventas-table" class="table table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Remision</th>
@@ -17,7 +17,8 @@
                                                 <th>Importe</th>
                                                 <th>IVA</th>
                                                 <th>Subtotal</th>
-                                                <th>Hacer remision</th>
+                                                <th>Imprimir</th>
+                                                <th>Eliminar</th>
                                              </tr>
                                         </thead>
                                         <tbody>
@@ -34,11 +35,23 @@
                                             $iva_servicio = 0;
                                             
                                             foreach($query->result() as $row){
-                                            $num++;    
+                                            $num++;
+
+                                            if($row->remisionStatus == 1)
+                                            {
+                                                $imprime = anchor('facturacion/imprimirRemision/'.$row->remision.'/'.$row->clvsucursal, 'Imprimir remisión', array('target' => '_blank'));
+                                                $cancela = anchor('facturacion/eliminar_remision/'.$row->remision.'/'.$row->clvsucursal, 'Eliminar remisión', array('class' => 'eliminarRemision'));
+                                                $color = null;
+                                            }else
+                                            {
+                                                $imprime = 'CANCELADA';
+                                                $cancela = 'CANCELADA';
+                                                $color = ROJO_PASTEL;
+                                            }
                                                 
                                             
                                             ?>
-                                            <tr>
+                                            <tr style="background-color: <?php echo $color; ?>;">
                                                 <td><?php echo $row->remision; ?></td>
                                                 <td><?php echo $row->perini; ?></td>
                                                 <td><?php echo $row->perfin; ?></td>
@@ -52,7 +65,8 @@
                                                 <td style="text-align: right;"><?php echo number_format ($row->importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->iva_producto, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->importe + $row->iva_producto, 2); ?></td>
-                                                <td><?php echo anchor('facturacion/imprimirRemision/'.$row->remision.'/'.$row->clvsucursal, 'Imprimir remisión', array('target' => '_blank')); ?></td>
+                                                <td><?php echo $imprime; ?></td>
+                                                <td><?php echo $cancela; ?></td>
                                                 </tr>
                                                 
                                                 
@@ -81,6 +95,7 @@
                                                 <td style="text-align: right;"><?php echo number_format($iva_producto, 2); ?></td>
                                                 <td style="text-align: right;" style="font-size: large;"><?php echo number_format($total, 2); ?></td>
                                                 <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="9" style="text-align: right;">Servicio</td>
@@ -89,10 +104,12 @@
                                                 <td style="text-align: right;"><?php echo number_format($iva_servicio, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($servicio + $iva_servicio, 2); ?></td>
                                                 <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
                                             </tr>
                                             <tr>
                                                 <td colspan="12" style="text-align: right;">Total</td>
                                                 <td style="text-align: right;"><?php echo number_format($total + $servicio + $iva_servicio, 2); ?></td>
+                                                <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                         </tfoot>

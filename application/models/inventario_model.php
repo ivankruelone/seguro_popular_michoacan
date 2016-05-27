@@ -13,36 +13,71 @@ class Inventario_model extends CI_Model {
 
     function getInventarioCobertura()
     {
+        if( $this->session->userdata('clvsucursal') == ALMACEN)
+        {
         $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
-FROM inventario i
-left join articulos a using(id)
-left join sucursales s using(clvsucursal)
-left join articulos_cobertura c using(id, nivelatencion)
-left join programa p using(idprograma)
-left join temporal_suministro o on a.tipoprod = o.cvesuministro
-left join ubicacion u using(ubicacion, clvsucursal)
-where clvsucursal = ? and cantidad > 0
-group by inventarioID
-order by tipoprod, cvearticulo * 1 asc;";
-        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+    FROM inventario i
+    left join articulos a using(id)
+    left join sucursales s using(clvsucursal)
+    left join cobertura_programa c using(id)
+    left join programa p using(idprograma)
+    left join temporal_suministro o on a.tipoprod = o.cvesuministro
+    left join ubicacion u using(ubicacion, clvsucursal)
+    where clvsucursal = ? and cantidad > 0
+    group by inventarioID
+    order by tipoprod, cvearticulo * 1 asc;";
+            $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        }else
+        {
+            $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
+    FROM inventario i
+    left join articulos a using(id)
+    left join sucursales s using(clvsucursal)
+    left join articulos_cobertura c using(id, nivelatencion)
+    left join programa p using(idprograma)
+    left join temporal_suministro o on a.tipoprod = o.cvesuministro
+    left join ubicacion u using(ubicacion, clvsucursal)
+    where clvsucursal = ? and cantidad > 0
+    group by inventarioID
+    order by tipoprod, cvearticulo * 1 asc;";
+            $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        }
         return $query;
     }
 
     function getInventarioFueraCobertura()
     {
+        if( $this->session->userdata('clvsucursal') == ALMACEN)
+        {
+            $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
+    FROM inventario i
+    left join articulos a using(id)
+    left join sucursales s using(clvsucursal)
+    left join cobertura_programa c using(id)
+    left join programa p using(idprograma)
+    left join temporal_suministro o on a.tipoprod = o.cvesuministro
+    left join ubicacion u using(ubicacion, clvsucursal)
+    where clvsucursal = ? and cantidad > 0
+    group by inventarioID
+    having programa = 'SIN COBERTURA'
+    order by tipoprod, cvearticulo * 1 asc;";
+            $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        }else
+        {
         $sql = "SELECT i.id, cvearticulo, inventarioID, susa, descripcion, pres, ventaxuni, lote, caducidad, cantidad, ean, marca, suministro, group_concat(IFNULL(programa, 'SIN COBERTURA')) as programa, area, pasillo, areaID, pasilloID, moduloID, nivelID, posicionID
-FROM inventario i
-left join articulos a using(id)
-left join sucursales s using(clvsucursal)
-left join articulos_cobertura c using(id, nivelatencion)
-left join programa p using(idprograma)
-left join temporal_suministro o on a.tipoprod = o.cvesuministro
-left join ubicacion u using(ubicacion, clvsucursal)
-where clvsucursal = ? and cantidad > 0
-group by inventarioID
-having programa = 'SIN COBERTURA'
-order by tipoprod, cvearticulo * 1 asc;";
-        $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+    FROM inventario i
+    left join articulos a using(id)
+    left join sucursales s using(clvsucursal)
+    left join articulos_cobertura c using(id, nivelatencion)
+    left join programa p using(idprograma)
+    left join temporal_suministro o on a.tipoprod = o.cvesuministro
+    left join ubicacion u using(ubicacion, clvsucursal)
+    where clvsucursal = ? and cantidad > 0
+    group by inventarioID
+    having programa = 'SIN COBERTURA'
+    order by tipoprod, cvearticulo * 1 asc;";
+            $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
+        }
         return $query;
     }
     
@@ -755,7 +790,7 @@ order by kardexID
 FROM articulos a
 left join demandaCalculada d on a.id = d.id and d.clvsucursal = ?
 left join inv i on a.id = i.id and i.clvsucursal = ?
-where tipoPresentacion = 1;";
+order by tipoprod, cvearticulo * 1;";
 
         $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $this->session->userdata('clvsucursal')));
         return $query;

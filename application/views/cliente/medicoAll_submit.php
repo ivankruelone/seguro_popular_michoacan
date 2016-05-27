@@ -1,7 +1,7 @@
  							<div class="row-fluid">
                                 <div class="span12">
                                 
-                                <?php echo anchor('reportes/Medico_Excel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
+                                <?php echo anchor('reportes/Medico_Excel/'.$cveMedico.'/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
 
                                 
                                 <h3><?php echo $cveMedico . ' - ' . $medico;?></h3>

@@ -1,7 +1,7 @@
  							<div class="row-fluid">
                                 <div class="span12">
                                 
-                                <?php echo anchor('reportes/Medico_Excel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
+                                <?php echo anchor('reportes/Medico_Excel/'.$cveMedico.'/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
 
                                 
                                 <h3><?php echo $cveMedico . ' - ' . $medico;?></h3>
@@ -47,17 +47,17 @@
                                                 
                                                 $piezas = $row->cansur;
                                                 
-                                                $importe = $row->preciosinser * $piezas;
+                                                $importe = $row->precioven * $piezas;
                                                     
                                                 if((int)$row->tipoprod == 1)
                                                 {
-                                                    $iva = $row->preciosinser * $piezas * .16;
+                                                    $iva = $row->precioven * $piezas * IVA;
                                                 }else{
                                                     $iva = 0;
                                                 }
                                                 
-                                                $servicio = $piezas * 8.55;
-                                                $servicio_iva = $servicio * .16;
+                                                $servicio = $piezas * SERVICIO;
+                                                $servicio_iva = $servicio * IVA;
                                                 $subtotal = $importe + $iva + $servicio + $servicio_iva;
                                                 
                                                 $tImporte = $tImporte + $importe;
@@ -83,7 +83,7 @@
                                                 <td style="text-align: right;"><?php echo number_format($row->canreq, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->cansur, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>
-                                                <td style="text-align: right;"><?php echo number_format($row->preciosinser, 2); ?></td>
+                                                <td style="text-align: right;"><?php echo number_format($row->precioven, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($servicio, 2); ?></td>

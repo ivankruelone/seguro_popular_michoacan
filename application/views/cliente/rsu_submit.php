@@ -1,7 +1,7 @@
  							<div class="row-fluid">
 									<div class="span12">
                                     
-                                    <?php echo anchor('reportes/rsuExcel/'.$fecha1.'/'.$fecha2.'/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
+                                    <?php echo anchor('reportes/rsuExcel/'.$this->uri->segment(2), '<i class="icon-save"></i>Excel', array('class' => 'btn btn-success btn-app'));?>
 
                                         
                                     </div>

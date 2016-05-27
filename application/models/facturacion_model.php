@@ -104,7 +104,7 @@ where remision = 0 and fecha between ? and ? and clvsucursal = ? and iva = ? and
 
     function getListadoRemisiones($clvsucursal)
     {
-    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio
+    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus
 FROM remision r
 join sucursales s using(clvsucursal)
 join temporal_nivel_atencion a using(nivelatencion)
@@ -120,7 +120,7 @@ where clvsucursal = ?;";
 
     function getRemisionByRemision($remision)
     {
-    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio
+    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus
 FROM remision r
 join sucursales s using(clvsucursal)
 join temporal_nivel_atencion a using(nivelatencion)
@@ -232,6 +232,40 @@ order by anio, mes, clvsucursal;";
 		$query = $this->db->query($sql);
         
         return $query;
+    }
+
+    function existFactura($remision)
+    {
+        $this->db->where('remision', $remision);
+        $query  = $this->db->get('remision_factura');
+
+        return $query->num_rows();
+    }
+
+    function cancelaRemision($remision)
+    {
+        $this->db->trans_start();
+
+        if($this->existFactura($remision) == 0)
+        {
+            $rem = $this->getRemisionByRemision($remision);
+            $r = $rem->row();
+
+            if($r->remisionStatus == 1)
+            {
+                $sql1 = "UPDATE receta_detalle set remision = 0 where remision = ?;";
+                $this->db->query($sql1, array((int)$remision));
+
+                $sql2 = "UPDATE remision set remisionStatus = 0 where remision = ?;";
+                $this->db->query($sql2, array((int)$remision));
+            }
+
+        }else
+        {
+
+        }
+
+        $this->db->trans_complete();
     }
 
 }

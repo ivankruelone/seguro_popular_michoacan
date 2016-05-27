@@ -212,11 +212,7 @@ class Reportes extends CI_Controller
         header('Content-Type: application/vnd.ms-excel'); //mime type
         header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
         header('Cache-Control: max-age=0'); //no cache
-                     
-        //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
-        //if you want to save it as .XLSX Excel 2007 format
         $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
-        //force user to download the Excel file without writing it to server's HD
         $objWriter->save('php://output');
     }
     
@@ -877,6 +873,7 @@ function medicoAll_submit(){
     }
     
     function programa2Excel($reporte){
+        
         $this->reportes_model->getPrograma2Excel($reporte);
         $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
         header('Content-Type: application/vnd.ms-excel'); //mime type
@@ -896,8 +893,8 @@ function medicoAll_submit(){
         $objWriter->save('php://output');    
     }
     
-    function Paciente_Excel($reporte){
-        $this->reportes_model->getPacienteExcel($reporte);
+    function Paciente_Excel($expediente,$reporte){
+        $this->reportes_model->getPacienteExcel($expediente,$reporte);
         $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
         header('Content-Type: application/vnd.ms-excel'); //mime type
         header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
@@ -906,8 +903,8 @@ function medicoAll_submit(){
         $objWriter->save('php://output');      
     }
     
-    function Medico_Excel($reporte){
-      $this->reportes_model->getMedicoExcel($reporte);
+    function Medico_Excel($cveMedico,$reporte){
+      $this->reportes_model->getMedicoExcel($cveMedico,$reporte);
       $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
       header('Content-Type: application/vnd.ms-excel'); //mime type
       header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
@@ -949,9 +946,9 @@ function medicoAll_submit(){
     }
     
     
-    function rsuExcel($fecha1,$fecha2,$reporte)
+    function rsuExcel($reporte)
     {
-      $this->reportes_model->getRsuExcel($fecha1,$fecha2,$reporte);
+      $this->reportes_model->getRsuExcel($reporte);
       $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
       header('Content-Type: application/vnd.ms-excel'); //mime type
       header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
@@ -984,6 +981,16 @@ function medicoAll_submit(){
         $this->load->view('main', $data);
     }
     
+    function causesExcel($reporte){
+      $this->reportes_model->getCausesExcel($reporte);
+      $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+      header('Content-Type: application/vnd.ms-excel'); //mime type
+      header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+      header('Cache-Control: max-age=0'); //no cache
+      $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+      $objWriter->save('php://output');      
+    }
+    
     
      public function mayor()
     {
@@ -1006,6 +1013,17 @@ function medicoAll_submit(){
         $this->load->view('main', $data);
     }
     
+    function mayorExcel($reporte)
+    {
+      $this->reportes_model->getMayorExcel($reporte);
+      $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+      header('Content-Type: application/vnd.ms-excel'); //mime type
+      header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+      header('Cache-Control: max-age=0'); //no cache
+      $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+      $objWriter->save('php://output');     
+    }
+    
      public function menor()
     {
         $data['subtitulo'] = "";
@@ -1025,6 +1043,17 @@ function medicoAll_submit(){
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         //$data['js'] = "reportes/recetas_periodo_detalle_js";
         $this->load->view('main', $data);
+    }
+    
+    function menorExcel($reporte)
+    {
+      $this->reportes_model->getMenorExcel($reporte);
+      $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+      header('Content-Type: application/vnd.ms-excel'); //mime type
+      header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+      header('Cache-Control: max-age=0'); //no cache
+      $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+      $objWriter->save('php://output');    
     }
     
     
@@ -1067,7 +1096,7 @@ function medicoAll_submit(){
     }
     
     
-     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     function resumen_entradas()
     {
@@ -1092,7 +1121,7 @@ function medicoAll_submit(){
 }
 
 
-function entradas_por_clave()
+    function entradas_por_clave()
     {
         $data['subtitulo'] = "";
         $data['js'] = "reportes/entradas_por_clave_js";
@@ -1115,5 +1144,67 @@ function entradas_por_clave()
         $data['subtitulo'] = "Resumen De Entradas: " .$fecha1 . " al " . $fecha2;
         $this->load->view('main', $data);
 }
+
+    function resumen_salidas()
+    {
+        $data['subtitulo'] = "";
+        $data['js'] = "reportes/resumen_salidas_js";
+        $this->load->view('main', $data);
+    }
+
+    function resumen_salidas_submit()
+    {
+     set_time_limit(0);
+     ini_set('memory_limit', '-1');
+     $fecha1  = $this->input->post('fecha1');
+     $fecha2  = $this->input->post('fecha2');
+     $data['fecha1'] = $fecha1;
+     $data['fecha2'] = $fecha2;
+     $data['query'] = $this->reportes_model->reportes_resumen_salidas_detalle($fecha1, $fecha2);
+     $data['query2'] = $this->reportes_model->reportes_resumen_salidas($fecha1, $fecha2);
+     $data['subtitulo'] = "Resumen De Salidas: " .$fecha1 . " al " . $fecha2;
+     $this->load->view('main', $data);
+    
+}
+
+    function salidas_por_clave()
+    {
+        $data['subtitulo'] = "";
+        $data['js'] = "reportes/entradas_por_clave_js";
+        //$data['js'] = "reportes/esi_por_clave_js";
+        $this->load->view('main', $data);
+    }
+    
+    function salidas_por_clave_submit()
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        $fecha1 = $this->input->post('fecha1');
+        $fecha2 = $this->input->post('fecha2');
+        $cvearticulo = $this->input->post('cvearticulo');
+        //$articulo = $this->input->post('articulo');
+        $data['fecha1'] = $fecha1;
+        $data['fecha2'] = $fecha2;
+        $data['query'] = $this->reportes_model->salidas_por_clave_detalle($fecha1, $fecha2,$cvearticulo);
+        $data['query2'] = $this->reportes_model->salidas_por_clave($fecha1, $fecha2,$cvearticulo);
+        $data['subtitulo'] = "Resumen De Salidas: " .$fecha1 . " al " . $fecha2;
+        $this->load->view('main', $data);
+    }
+    
+    
+    function necesidades_excel($reporte)
+    {
+     $this->reportes_model->getNecesidadesExcel();
+     $filename = $this->uri->segment(2).'_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+     header('Content-Type: application/vnd.ms-excel'); //mime type
+     header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+     header('Cache-Control: max-age=0'); //no cache
+     $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');  
+     $objWriter->save('php://output');
+        
+    }
+
+
+
 
 }

@@ -71,7 +71,7 @@ class Facturacion extends CI_Controller
         }
 
         $data['subtitulo'] = "Ver remisiones generadas";
-        //$data['js'] = "catalogosweb/productos_por_secuencia_js";
+        $data['js'] = "facturacion/listado_remisiones_js";
         $data['query'] = $this->facturacion_model->getListadoRemisiones($clvsucursal);
         $this->load->view('main', $data);
     }
@@ -91,5 +91,11 @@ class Facturacion extends CI_Controller
         $data['query'] = $this->facturacion_model->getPanorama();
         //$data['js'] = "catalogosweb/productos_por_secuencia_js";
         $this->load->view('main', $data);
+    }
+
+    function eliminar_remision($remision, $clvsucursal)
+    {
+        $this->facturacion_model->cancelaRemision($remision);
+        redirect('facturacion/listado_remisiones/'.$clvsucursal);
     }
 }

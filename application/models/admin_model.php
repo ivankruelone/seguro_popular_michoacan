@@ -511,16 +511,16 @@ order by tipoprod, cvearticulo * 1;";
         $this->excel->setActiveSheetIndex(0);
         $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
             
-            //$this->excel->getActiveSheet()->setTitle($row->area);
+        $this->excel->getActiveSheet()->setTitle('CATALOGO GENERAL');
             
-        $this->excel->getActiveSheet()->mergeCells('A1:N1');
+        $this->excel->getActiveSheet()->mergeCells('A1:K1');
         $this->excel->getActiveSheet()->mergeCells('A2:K2');
             
-        $this->excel->getActiveSheet()->mergeCells('L2:N2');
+        $this->excel->getActiveSheet()->mergeCells('J2:K2');
 
         $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
         $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
-        $this->excel->getActiveSheet()->setCellValue('L2', date('d/M/Y H:i:s'));
+        $this->excel->getActiveSheet()->setCellValue('J2', date('d/M/Y H:i:s'));
 
 
         $num = 3;
@@ -562,7 +562,7 @@ order by tipoprod, cvearticulo * 1;";
                     
                     if($row->fcb == 1)
                     {
-                        $this->excel->getActiveSheet()->getStyle('A' . $num . ':N' . $num)->getFill()->applyFromArray(array(
+                        $this->excel->getActiveSheet()->getStyle('A' . $num . ':K' . $num)->getFill()->applyFromArray(array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
                             'startcolor' => array(
                                  'rgb' => 'FFA07A'
@@ -610,7 +610,250 @@ order by tipoprod, cvearticulo * 1;";
             
             
             }
+
+
+
+// Primer nivel
+        $sql = "SELECT a.id, clave as clave_ssa, cvearticulo as clave_fenix, susa, descripcion, pres, suministro, case when antibiotico = 1 then 'SI' else 'NO' end as antibiotico, case when cause = 1 then 'SI' else 'NO' end as cause, case when fcb = 0 then 'CUADRO' else 'FUERA DE CUADRO' end as cuadro, precioven as precio_unitario, servicio, fcb, ifnull(group_concat(programa), 'SIN COBERTURA') as cobertura
+FROM articulos a
+left join articulos_cobertura c on a.id = c.id and nivelatencion = 1
+left join programa p using(idprograma)
+left join temporal_suministro s on a.tipoprod = s.cvesuministro
+group by id
+having cobertura <> 'SIN COBERTURA'
+order by tipoprod, cvearticulo * 1;
+;";
+        
+        $query = $this->db->query($sql);
+
+        $this->excel->createSheet(1);
+        $this->excel->setActiveSheetIndex(1);
+        $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
             
+        $this->excel->getActiveSheet()->setTitle('CATALOGO DE 1ER NIVEL');
+            
+        $this->excel->getActiveSheet()->mergeCells('A1:L1');
+        $this->excel->getActiveSheet()->mergeCells('A2:J2');
+            
+        $this->excel->getActiveSheet()->mergeCells('K2:L2');
+
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
+        $this->excel->getActiveSheet()->setCellValue('K2', date('d/M/Y H:i:s'));
+
+
+        $num = 3;
+            
+        $data_empieza = $num + 1;
+            
+        $this->excel->getActiveSheet()->setCellValue('A'.$num, 'CLAVE SSA');
+        $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE FENIX');
+        $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+        $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+        $this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+        $this->excel->getActiveSheet()->setCellValue('F'.$num, 'SUMINISTRO');
+        $this->excel->getActiveSheet()->setCellValue('G'.$num, 'ANTIBIOTICO');
+        $this->excel->getActiveSheet()->setCellValue('H'.$num, 'CAUSES');
+        $this->excel->getActiveSheet()->setCellValue('I'.$num, 'CUADRO');
+        $this->excel->getActiveSheet()->setCellValue('J'.$num, 'PRECIO UNITARIO');
+        $this->excel->getActiveSheet()->setCellValue('K'.$num, 'SERVICIO');
+        $this->excel->getActiveSheet()->setCellValue('L'.$num, 'COBERTURA');
+            
+        $i = 1;
+
+            if($query->num_rows() > 0)
+            {
+                
+                foreach($query->result()  as $row)
+                {
+                    $num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $row->clave_ssa);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row->clave_fenix);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row->susa);
+                    $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->suministro);
+                    $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->antibiotico);
+                    $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->cause);
+                    $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->cuadro);
+                    $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->precio_unitario);
+                    $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->servicio);
+                    $this->excel->getActiveSheet()->setCellValue('L'.$num, $row->cobertura);
+                    
+                    if($row->fcb == 1)
+                    {
+                        $this->excel->getActiveSheet()->getStyle('A' . $num . ':L' . $num)->getFill()->applyFromArray(array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'startcolor' => array(
+                                 'rgb' => 'FFA07A'
+                            )
+                        ));
+                    }
+
+                    $i++;
+                    
+                }
+            
+                $data_termina = $num;
+            
+            
+                $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':K'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+            
+                $this->excel->getActiveSheet()->getStyle('C'.$data_empieza.':E'.$data_termina)->getAlignment()->setWrapText(true);
+            
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+            
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':L'.($data_termina + 1))->applyFromArray($styleArray);
+            
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':L'.($data_termina + 1));
+            
+            
+            }
+
+
+            
+// Segundo nivel
+        $sql = "SELECT a.id, clave as clave_ssa, cvearticulo as clave_fenix, susa, descripcion, pres, suministro, case when antibiotico = 1 then 'SI' else 'NO' end as antibiotico, case when cause = 1 then 'SI' else 'NO' end as cause, case when fcb = 0 then 'CUADRO' else 'FUERA DE CUADRO' end as cuadro, precioven as precio_unitario, servicio, fcb, ifnull(group_concat(programa), 'SIN COBERTURA') as cobertura
+FROM articulos a
+left join articulos_cobertura c on a.id = c.id and nivelatencion = 2
+left join programa p using(idprograma)
+left join temporal_suministro s on a.tipoprod = s.cvesuministro
+group by id
+having cobertura <> 'SIN COBERTURA'
+order by tipoprod, cvearticulo * 1;
+;";
+        
+        $query = $this->db->query($sql);
+
+        $this->excel->createSheet(2);
+        $this->excel->setActiveSheetIndex(2);
+        $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
+            
+        $this->excel->getActiveSheet()->setTitle('CATALOGO DE 2DO NIVEL');
+            
+        $this->excel->getActiveSheet()->mergeCells('A1:L1');
+        $this->excel->getActiveSheet()->mergeCells('A2:J2');
+            
+        $this->excel->getActiveSheet()->mergeCells('K2:L2');
+
+        $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+        $this->excel->getActiveSheet()->setCellValue('A2', APLICACION);
+        $this->excel->getActiveSheet()->setCellValue('K2', date('d/M/Y H:i:s'));
+
+
+        $num = 3;
+            
+        $data_empieza = $num + 1;
+            
+        $this->excel->getActiveSheet()->setCellValue('A'.$num, 'CLAVE SSA');
+        $this->excel->getActiveSheet()->setCellValue('B'.$num, 'CLAVE FENIX');
+        $this->excel->getActiveSheet()->setCellValue('C'.$num, 'SUSTANCIA ACTIVA');
+        $this->excel->getActiveSheet()->setCellValue('D'.$num, 'DESCRIPCION');
+        $this->excel->getActiveSheet()->setCellValue('E'.$num, 'PRESENTACION');
+        $this->excel->getActiveSheet()->setCellValue('F'.$num, 'SUMINISTRO');
+        $this->excel->getActiveSheet()->setCellValue('G'.$num, 'ANTIBIOTICO');
+        $this->excel->getActiveSheet()->setCellValue('H'.$num, 'CAUSES');
+        $this->excel->getActiveSheet()->setCellValue('I'.$num, 'CUADRO');
+        $this->excel->getActiveSheet()->setCellValue('J'.$num, 'PRECIO UNITARIO');
+        $this->excel->getActiveSheet()->setCellValue('K'.$num, 'SERVICIO');
+        $this->excel->getActiveSheet()->setCellValue('L'.$num, 'COBERTURA');
+            
+        $i = 1;
+
+            if($query->num_rows() > 0)
+            {
+                
+                foreach($query->result()  as $row)
+                {
+                    $num++;
+                    
+                    $this->excel->getActiveSheet()->setCellValue('A'.$num, $row->clave_ssa);
+                    $this->excel->getActiveSheet()->setCellValue('B'.$num, $row->clave_fenix);
+                    $this->excel->getActiveSheet()->setCellValue('C'.$num, $row->susa);
+                    $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->descripcion);
+                    $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->pres);
+                    $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->suministro);
+                    $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->antibiotico);
+                    $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->cause);
+                    $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->cuadro);
+                    $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->precio_unitario);
+                    $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->servicio);
+                    $this->excel->getActiveSheet()->setCellValue('L'.$num, $row->cobertura);
+                    
+                    if($row->fcb == 1)
+                    {
+                        $this->excel->getActiveSheet()->getStyle('A' . $num . ':L' . $num)->getFill()->applyFromArray(array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'startcolor' => array(
+                                 'rgb' => 'FFA07A'
+                            )
+                        ));
+                    }
+
+                    $i++;
+                    
+                }
+            
+                $data_termina = $num;
+            
+            
+                $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':K'.$data_termina)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+                $this->excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+            
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+            
+                $this->excel->getActiveSheet()->getStyle('C'.$data_empieza.':E'.$data_termina)->getAlignment()->setWrapText(true);
+            
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+            
+                $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':L'.($data_termina + 1))->applyFromArray($styleArray);
+            
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':L'.($data_termina + 1));
+            
+            
+            }
         
     }
 

@@ -34,7 +34,7 @@ class Captura_model extends CI_Model {
     {
         $sql = "SELECT consecutivoDetalle FROM receta_detalle d
 join receta r using(consecutivo)
-where folioreceta = ? and remision = 1;";
+where folioreceta = ? and remision > 0;";
         
         $query = $this->db->query($sql, array((string)$folioreceta));
 
@@ -987,6 +987,236 @@ where aleatorio = ?;";
         $this->reportes_model->insertaQuery($this->db->last_query());
         return $query;
         
+    }
+
+    function getSubida()
+    {
+        $data = array('fecha' => date('Y-m-d H:i:s'));
+        $this->db->insert('temporal_subida', $data);
+        return $this->db->insert_id();
+    }
+
+    function getSubidas()
+    {
+        $sql = "SELECT subida, suc, descsucursal, min(fechasurtido) as minimo, max(fechasurtido) as maximo, sum(req) as sumreq, sum(sur) as sumsur
+from temporal_receta r 
+join temporal_subida s using(subida) 
+join sucursales u on suc = u.clvsucursal
+where estatusSubida = 0
+group by subida, suc, descsucursal
+order by subida desc;";
+        $query = $this->db->query($sql);
+        return $query;
+    }
+
+    function getSubidaBySubida($subida)
+    {
+        $sql = "SELECT suc, descsucursal, folio, fechasurtido, cvepaciente, concat(nombre, ' ', paterno, ' ', materno) as nombrepaciente, p.programa, q.requerimiento, cvemedico, nombremedico, r.clave, concat(susa, ' ', descripcion, ' ', pres) as descri, req, sur, ifnull(c.idprograma, 'FC') as cobertura
+from temporal_receta r
+left join articulos a on a.cvearticulo = r.clave
+left join sucursales s on suc = clvsucursal
+left join articulos_cobertura c on a.id = c.id and s.nivelatencion = c.nivelatencion and r.programa = c.idprograma
+left join programa p on p.idprograma = r.programa
+left join temporal_requerimiento q on tiporequerimiento = r.requerimiento
+where subida = ?;";
+        $query = $this->db->query($sql, $subida);
+        return $query;
+    }
+
+    function cargaSubidaRecetas($subida)
+    {
+        $this->db->trans_start();
+        $sql = "SELECT * FROM temporal_receta t where subida = ? group by folio, receta;";
+        $query = $this->db->query($sql, array($subida));
+
+        foreach ($query->result() as $row) {
+            
+            if($this->validaRecetaCargaExist($row->suc, $row->folio) == 0)
+            {
+                $data = array(
+                    'folioreceta'       => $row->folio,
+                    'fechaexp'          => $row->fecha,
+                    'fecha'             => $row->fechasurtido,
+                    'idprograma'        => $row->programa,
+                    'tiporequerimiento' => $row->requerimiento,
+                    'cveservicio'       => 1,
+                    'cvepaciente'       => $row->cvepaciente,
+                    'nombre'            => $row->nombre,
+                    'apaterno'          => $row->paterno,
+                    'amaterno'          => $row->materno,
+                    'genero'            => $row->sexo,
+                    'edad'              => $row->edad,
+                    'cvemedico'         => $row->cvemedico,
+                    'nombremedico'      => $row->nombremedico,
+                    'usuario'           => $this->session->userdata('usuario'),
+                    'clvsucursal'       => $row->suc,
+                    'subida'            => $row->subida
+                );
+
+                $this->db->set('alta', 'now()', false);
+                $this->db->insert('receta', $data);
+
+                $consecutivo = $this->db->insert_id();
+
+                $query2 = $this->getDetalleSubida($row->subida, $row->receta);
+
+                foreach ($query2->result() as $row2) {
+                    
+                    $data2 = array(
+                        'consecutivo'   => $consecutivo,
+                        'id'            => $row2->id,
+                        'lote'          => 'SL',
+                        'caducidad'     => '9999-12-31',
+                        'canreq'        => $row2->req,
+                        'cansur'        => $row2->sur,
+                        'precio'        => $row2->precioven,
+                        'ubicacion'     => 0,
+                        'marca'         => '',
+                        'comercial'     => '',
+                        'costo'         => $row2->ultimo_costo,
+                        'servicio'      => $row2->servicio,
+                        'iva'           => $row2->tipoprod
+                    );
+
+                    $this->db->set('altaDetalle', 'now()', false);
+                    $this->db->insert('receta_detalle', $data2);
+                }
+
+
+            }
+
+        }
+
+        $this->db->update('temporal_subida', array('estatusSubida' => 1), array('subida' => $subida));
+
+        $this->db->trans_complete();
+    }
+
+    function getInventory($clvsucursal, $id, $sur)
+    {
+        $sql = "SELECT * FROM inventario i where clvsucursal = ? and id = ? and caducidad > date(now()) and cantidad >= ? order by caducidad asc limit 1;";
+        $query = $this->db->query($sql, array((int)$clvsucursal, (int)$id, (int)$sur));
+
+        return $query;
+    }
+
+    function getInventorySL($clvsucursal, $id)
+    {
+        $sql = "SELECT * FROM inventario i where clvsucursal = ? and id = ? and lote = 'SL' order by caducidad asc limit 1;";
+        $query = $this->db->query($sql, array((int)$clvsucursal, (int)$id));
+
+        return $query;
+    }
+
+    function descuentaInventario($subida)
+    {
+        $this->db->trans_start();
+
+        $sql = "SELECT d.*, clvsucursal FROM receta r join receta_detalle d using(consecutivo) where subida = ? and descontada = 0;";
+        $query = $this->db->query($sql, array($subida));
+
+        foreach ($query->result() as $row)
+        {
+            
+            $inv = $this->getInventory($row->clvsucursal, $row->id, $row->cansur);
+
+            if($inv->num_rows > 0)
+            {
+                $i = $inv->row();
+
+                $data = array(
+                    'cantidad'          => ($i->cantidad - $row->cansur),
+                    'tipoMovimiento'    => 2,
+                    'subtipoMovimiento' => 10,
+                    'receta'            => $row->consecutivo,
+                    'usuario'           => $this->session->userdata('usuario'),
+                    'movimientoID'      => 0
+                );
+
+                $this->db->set('ultimo_movimiento', now(), false);
+                $this->db->update('inventario', $data, array('inventarioID' => $i->inventarioID));
+                
+                $dataReceta = array(
+                    'lote'          => $i->lote,
+                    'caducidad'     => $i->caducidad,
+                    'descontada'    => 1,
+                    'ubicacion'     => $i->ubicacion,
+                    'marca'         => $i->marca,
+                    'comercial'     => $i->comercial
+                );
+
+                $this->db->update('receta_detalle', $dataReceta, array('consecutivoDetalle' => $row->consecutivoDetalle));
+
+
+            }else
+            {
+                $invSL = $this->getInventorySL($row->clvsucursal, $row->id);
+
+                if($invSL->num_rows() > 0)
+                {
+                    $i = $invSL->row();
+
+                    $data = array(
+                        'cantidad'          => ($i->cantidad - $row->cansur),
+                        'tipoMovimiento'    => 2,
+                        'subtipoMovimiento' => 10,
+                        'receta'            => $row->consecutivo,
+                        'usuario'           => $this->session->userdata('usuario'),
+                        'movimientoID'      => 0
+                    );
+
+                    $this->db->set('ultimo_movimiento', now(), false);
+                    $this->db->update('inventario', $data, array('inventarioID' => $i->inventarioID));
+                    
+                    $dataReceta = array(
+                        'lote'          => $i->lote,
+                        'caducidad'     => $i->caducidad,
+                        'descontada'    => 1,
+                        'ubicacion'     => $i->ubicacion,
+                        'marca'         => $i->marca,
+                        'comercial'     => $i->comercial
+                    );
+
+                    $this->db->update('receta_detalle', $dataReceta, array('consecutivoDetalle' => $row->consecutivoDetalle));
+                }else
+                {
+                    $data = array(
+                        'id'                => $row->id,
+                        'lote'              => 'SL',
+                        'caducidad'         => '9999-12-31',
+                        'cantidad'          => (0 - $row->cansur),
+                        'tipoMovimiento'    => 2,
+                        'subtipoMovimiento' => 10,
+                        'receta'            => $row->consecutivo,
+                        'usuario'           => $this->session->userdata('usuario'),
+                        'movimientoID'      => 0,
+                        'ean'               => 0,
+                        'marca'             => '',
+                        'comercial'         => '',
+                        'costo'             => 0,
+                        'clvsucursal'       => $row->clvsucursal,
+                        'ubicacion'         => 0
+                    );
+
+                    $this->db->set('ultimo_movimiento', now(), false);
+                    $this->db->insert('inventario', $data);
+                    
+                    $dataReceta = array(
+                        'lote'          => $i->lote,
+                        'caducidad'     => $i->caducidad,
+                        'descontada'    => 1,
+                        'ubicacion'     => $i->ubicacion,
+                        'marca'         => $i->marca,
+                        'comercial'     => $i->comercial
+                    );
+
+                    $this->db->update('receta_detalle', $dataReceta, array('consecutivoDetalle' => $row->consecutivoDetalle));
+                }
+            }
+
+        }
+
+        $this->db->trans_complete();
     }
 
 }

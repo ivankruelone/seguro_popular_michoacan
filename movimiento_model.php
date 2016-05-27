@@ -403,8 +403,7 @@ group by id;";
 join articulos a using(id)
 join movimiento o using(movimientoID)
 left join ubicacion u using(ubicacion)
-where movimientoID = ?
-order by a.tipoprod, a.cvearticulo * 1 asc;";
+where movimientoID = ?;";
         $query = $this->db->query($sql, $movimientoID);
         return $query;
     }
@@ -681,14 +680,6 @@ where movimientoDetalle = ?;";
             $suc = "";
             $suc_ref = "";
         }
-
-        if($row->subtipoMovimiento == 22)
-        {
-            $eti_referencia = 'FOLIO: ';
-        }else
-        {
-            $eti_referencia = 'REFERENCIA: ';
-        }
         
         
         $tabla = '<table cellpadding="1">
@@ -711,7 +702,7 @@ where movimientoDetalle = ?;";
                 <td width="95px" align="right">'.$row->orden.'</td>
             </tr>
             <tr>
-                <td width="75px">'.$eti_referencia.'</td>
+                <td width="75px">Referencia: </td>
                 <td width="95px" align="right">'.$row->referencia.'</td>
             </tr>
             <tr>
@@ -1984,31 +1975,7 @@ join subtipo_movimiento s using(tipoMovimiento) where tipoMovimiento = ? and sub
 
                     break;
                 case 2:
-
-
-                    $this->db->update('movimiento_detalle', array('piezas' => $piezasNueva), array('movimientoDetalle' => $movimientoDetalle));
-
-                    $diferencia = $piezasNueva - $row->piezas;
-                    //echo $diferencia . '<br />';
-
-                    if($diferencia < 0)
-                    {
-
-                        $data = array(
-                            'cantidad'          => ($i->cantidad + ($diferencia * -1)),
-                            'tipoMovimiento'    => 3,
-                            'subtipoMovimiento' => 11,
-                            'usuario'           => $this->session->userdata('usuario'),
-                            'movimientoID'      => $row->movimientoID
-                        );
-
-                        $this->db->set('ultimo_movimiento', 'now()', false);
-                        $this->db->update('inventario', $data, array('inventarioID' => $i->inventarioID));
-
-                        //print_r($data);
-
-                    }
-
+                    //echo "i es igual a 2";
                     break;
                 case 3:
                     //echo "i es igual a 3";
