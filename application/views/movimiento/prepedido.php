@@ -71,7 +71,7 @@
                                     
                                     <div class="widget-box">
 											<div class="widget-header">
-												<h4>Datos de los productos</h4>
+												<h4>Datos de los productos | Cobertura: <span style="color: blue; "><?php echo $row->programa; ?></span> (<span id="cobertura"><?php echo $row->cobertura; ?></span>) | Nivel de Atención: <span id="nivelatencionReferencia" style="color: blue;"><?php echo $row->nivelatencionReferencia; ?></span></h4>
 											</div>
                                     
                                     <div class="widget-body">
@@ -121,7 +121,7 @@
                                     
                                     <div class="widget-box">
 											<div class="widget-header">
-												<h4>Datos de los productos</h4>
+												<h4>Datos de los productos | Cobertura: <span style="color: blue; "><?php echo $row->programa; ?></span> (<span id="cobertura"><?php echo $row->cobertura; ?></span>) | Nivel de Atención: <span id="nivelatencionReferencia" style="color: blue;"><?php echo $row->nivelatencionReferencia; ?></span></h4>
 											</div>
                                     
                                     <div class="widget-body">
@@ -166,6 +166,6 @@
 							<div class="row-fluid">
                                 <div class="span12" id="detalle">
                                 
-                                
+                            
                                 </div>
                             </div>

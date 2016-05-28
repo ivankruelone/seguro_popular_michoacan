@@ -26,7 +26,7 @@ function inicio(){
     	
     $( "#articulo2" ).autocomplete({
         
-    source: '<?php echo site_url('movimiento/busca_articulo'); ?>',
+    source: '<?php echo site_url('movimiento/busca_articulo_salida'); ?>' + '/' + $("#nivelatencionReferencia").html() + '/' + $("#cobertura").html(),
     minLength: 2,
     select: function( event, ui ) {
         
@@ -249,20 +249,29 @@ function inicio(){
     function articuloValida2()
     {
         
-        $articulo = $('#articulo2').val();
+        var $articulo = $('#articulo2').val();
+        var $nivelatencionReferencia = $("#nivelatencionReferencia").html();
+        var $cobertura = $("#cobertura").html();
+
+        $("#cargando2").show();
         
-        var $url = '<?php echo site_url('movimiento/articuloValida'); ?>';
-        var $variables = { articulo: $articulo };
+        var $url = '<?php echo site_url('movimiento/articuloValidaSalida'); ?>';
+        var $variables = { articulo: $articulo, nivelatencionReferencia: $nivelatencionReferencia, cobertura: $cobertura };
         var posting = $.post( $url, $variables );
             
              posting.done(function( data ) {
                 
                 $var1 = data.split('|');
                 
+                $('#articulo2').val($var1[1]);
                 $('#susa').html($var1[2]);
                 $('#descripcion').html($var1[3]);
                 $('#pres').html($var1[4]);
-                cargaLote();
+
+                if(parseInt($var1[0]) == 0)
+                {
+                    $('#articulo2').val('').focus();
+                }
                 
              });
         

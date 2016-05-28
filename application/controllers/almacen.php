@@ -60,7 +60,7 @@ class Almacen extends CI_Controller
         $data['query2'] = $this->almacen_model->getArea($areaID);
         $data['query'] = $this->almacen_model->getPasillosByAreaID($areaID);
         $data['areaID'] = $areaID;
-        $data['js'] = "almacen/area_nueva_js";
+        $data['js'] = "almacen/area_ver_pasillos_js";
         $this->load->view('main', $data);
     }
     
@@ -132,6 +132,23 @@ class Almacen extends CI_Controller
         
         redirect('almacen/area_ver_pasillos/'.$areaID);
         
+    }
+
+    function elimina_pasillo($pasilloID, $areaID)
+    {
+        $query = $this->almacen_model->verificaInveantarioPasillo($pasilloID);
+
+        if($query->num_rows() == 0)
+        {
+            $this->db->delete('pasillo', array('pasilloID' => $pasilloID));
+            redirect('almacen/area_ver_pasillos/'.$areaID);
+        }
+
+        $data['subtitulo'] = "Eliminar el pasillo";
+        $data['query'] = $query;
+        $data['areaID'] = $areaID;
+        //$data['js'] = "almacen/pasillo_nuevo_js";
+        $this->load->view('main', $data);
     }
 
     function area_modulo($areaID, $pasilloID)

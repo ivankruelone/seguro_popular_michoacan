@@ -10,7 +10,7 @@
     
     if ( $count > 1 )
     {
-        $tittle = str_replace('_', ' ', $check_submethod[1]);;
+        $tittle = str_replace('_', ' ', $check_submethod[1]);
     }
     
     

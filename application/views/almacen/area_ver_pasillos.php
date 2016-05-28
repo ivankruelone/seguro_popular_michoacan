@@ -17,6 +17,7 @@
                                                 <th>Edita</th>
                                                 <th>Agrega Pasillos</th>
                                                 <th>Inventario</th>
+                                                <th>Eliminar</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -39,6 +40,7 @@
                                                 <td><?php if($this->session->userdata('consulta') == 0) echo anchor('almacen/pasillo_edita/'.$row->areaID.'/'.$row->pasilloID, 'Edita'); ?></td>
                                                 <td><?php echo anchor('almacen/area_modulo/'.$row->areaID.'/'.$row->pasilloID, 'Ver modulos'); ?></td>
                                                 <td><?php echo anchor('almacen/area_modulo_inventario/'.$row->areaID.'/'.$row->pasilloID, 'Ver inventario'); ?></td>
+                                                <td><?php echo anchor('almacen/elimina_pasillo/'.$row->pasilloID.'/'.$row->areaID, 'Eliminar', array('class' => 'eliminar')); ?></td>
                                             </tr>
                                             <?php 
                                             

@@ -527,5 +527,18 @@ order by clvsucursal, clvsucursal *1;";
         return $query;
     }
 
+    function verificaInveantarioPasillo($pasilloID)
+    {
+        $sql = "SELECT *
+FROM ubicacion u
+join articulos a using(id)
+join inventario i using(id, ubicacion)
+where pasilloID = ? and cantidad > 0;";
+
+        $query = $this->db->query($sql, array($pasilloID));
+
+        return $query;
+    }
+
 }
     

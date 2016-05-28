@@ -328,6 +328,11 @@ group by areaID;";
             $this->excel->setActiveSheetIndex($hoja);
             $this->excel->getActiveSheet()->getTabColor()->setRGB('FFFF00');
             
+            if($row->area == null)
+            {
+                $row->area = 'INDEFINIDA';
+            }
+
             $this->excel->getActiveSheet()->setTitle($row->area);
             
             $this->excel->getActiveSheet()->mergeCells('A1:O1');

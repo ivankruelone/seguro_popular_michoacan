@@ -18,6 +18,7 @@ class Movimiento_model extends CI_Model {
         $this->urlExchange = 'http://almacenoaxaca.homeip.net/index.php/Exchange/';
         $this->url = "http://189.203.201.184/oaxacacentral/index.php/catalogos/";
     }
+
     
     function __get_data($url, $referencia)
     {
@@ -1143,8 +1144,7 @@ where movimientoDetalle = ?;";
 <td colspan="2" rowspan="3"></td>
 </tr>
 <tr align="center">
-<td colspan="5"><br/><br/>Nombre,Cargo y Firma de quien recibe <br/><br/></td>
-<td colspan="2"></td>
+<td colspan="7">Nombre,Cargo y Firma de quien recibe <br/><br/><br/><br/><br/><br/><br/><br/><br/></td>
 </tr>
 <tr align="center">
 <td colspan="7">OBSERVACIONES:<br /><br /><br /></td>
