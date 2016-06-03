@@ -83,7 +83,7 @@ $sql = "SELECT pasilloID, pasillo, pasilloTipo FROM movimiento_prepedido m
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and cantidad > 0 and pasilloTipo <> 2 and u.clvsucursal = ?
+where m.movimientoID = ? and areaID = ? and pasilloTipo <> 2 and u.clvsucursal = ?
 group by areaID;";
 
 $query = $this->db->query($sql, array($movimientoID, $det->areaID, $this->session->userdata('clvsucursal')));
@@ -104,11 +104,11 @@ if($row->pasilloTipo == 3)
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and pasilloID = ? and cantidad > 0 and i.clvsucursal = ? and m.id not in (SELECT a.id FROM movimiento_prepedido m
+where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ? and m.id not in (SELECT a.id FROM movimiento_prepedido m
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and pasilloTipo in(1, 2) and cantidad > 0 and i.clvsucursal = ?
+where m.movimientoID = ? and pasilloTipo in(1, 2) and i.clvsucursal = ?
 group BY m.movimientoPrepedido)
 group BY m.movimientoPrepedido;";
     $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal'), $movimientoID, $this->session->userdata('clvsucursal')));
@@ -118,7 +118,7 @@ group BY m.movimientoPrepedido;";
     join articulos a using(id)
     left join inventario i using(id)
     left join ubicacion u using(ubicacion)
-    where m.movimientoID = ? and areaID = ? and pasilloID = ? and cantidad > 0 and i.clvsucursal = ?
+    where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ?
     group BY m.movimientoPrepedido;";
     $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal')));
 }
@@ -156,6 +156,8 @@ if($query2->num_rows() > 0)
             </tr>
         </thead>
         <tbody>';
+
+        $piezas = 0;
         
         foreach($query2->result() as $row2)
         {
@@ -173,10 +175,19 @@ if($query2->num_rows() > 0)
                         <td colspan="2"><br /><br /><br /></td>
                     </tr>';
 
+                    $piezas = $piezas + $row2->piezas;
+
         }
         
         $tabla .= '
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">Totales</td>
+                <td style="text-align: right; width: 10%; ">'.$piezas.'</td>
+                <td></td>
+            </tr>
+        </tfoot>
     </table>';
     
     

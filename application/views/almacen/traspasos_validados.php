@@ -1,4 +1,4 @@
-							<div class="row-fluid">
+                            <div class="row-fluid">
                                 <div class="span12">
                                     
                                     <table id="table" class="table table-striped table-bordered table-hover">

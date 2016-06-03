@@ -99,30 +99,11 @@ class Carga extends CI_Controller
         $this->load->view('main', $data);
     }
 
-    function validaRecetaCargaExist($clvsucursal, $folioreceta)
-    {
-    	$this->db->where('clvsucursal', (int)$clvsucursal);
-    	$this->db->where('folioreceta', (string)$folioreceta);
-    	$query = $this->db->get('receta');
-
-    	return $query->num_rows();
-    }
-
-    function getDetalleSubida($subida, $receta)
-    {
-    	$sql = "SELECT t.*, a.id, a.precioven, ultimo_costo, servicio, tipoprod
-FROM temporal_receta t
-join articulos a on t.clave = a.cvearticulo
-where subida = ? and receta = ?;";
-
-		$query = $this->db->query($sql, array((int)$subida, (int)$receta));
-
-		return $query;
-    }
-
     function subida_cargar($subida)
     {
     	$this->captura_model->cargaSubidaRecetas($subida);
+        $this->captura_model->descuentaInventario($subida);
+        redirect('carga/recetas');
     }
 
 }

@@ -568,10 +568,17 @@ join puesto p using(clvpuesto);";
 
     function getArticuloForStandAlone()
     {
-        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod, case when idprograma = 0 then 1 else 0 end as pa, case when idprograma = 1 then 1 else 0 end as sp, case when idprograma = 2 then 1 else 0 end as op, case when idprograma = 3 then 1 else 0 end as pp, case when idprograma = 4 then 1 else 0 end as bp, case when idprograma = 5 then 1 else 0 end as am, case when idprograma = 6 then 1 else 0 end as pq, case when idprograma = 7 then 1 else 0 end as sm
+        $sql = "SELECT id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 0) is not null then 1 else 0 end as pa
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 1) is not null then 1 else 0 end as sp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 2) is not null then 1 else 0 end as op
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 3) is not null then 1 else 0 end as pp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 4) is not null then 1 else 0 end as bp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 5) is not null then 1 else 0 end as am
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 6) is not null then 1 else 0 end as pq
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 1 and idprograma = 7) is not null then 1 else 0 end as sm
 FROM articulos a
-left join articulos_cobertura c on a.id = c.id and nivelatencion = 1
-group by id
+;
 ;";
         $query =  $this->db->query($sql);
         
@@ -592,10 +599,17 @@ group by id
 
     function getArticuloForStandAlone2()
     {
-        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod, case when idprograma = 0 then 1 else 0 end as pa, case when idprograma = 1 then 1 else 0 end as sp, case when idprograma = 2 then 1 else 0 end as op, case when idprograma = 3 then 1 else 0 end as pp, case when idprograma = 4 then 1 else 0 end as bp, case when idprograma = 5 then 1 else 0 end as am, case when idprograma = 6 then 1 else 0 end as pq, case when idprograma = 7 then 1 else 0 end as sm
+        $sql = "SELECT id, cvearticulo, susa, descripcion, pres, precioven, numunidades, tipoprod
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 0) is not null then 1 else 0 end as pa
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 1) is not null then 1 else 0 end as sp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 2) is not null then 1 else 0 end as op
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 3) is not null then 1 else 0 end as pp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 4) is not null then 1 else 0 end as bp
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 5) is not null then 1 else 0 end as am
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 6) is not null then 1 else 0 end as pq
+, case when (select idprograma from articulos_cobertura c where a.id = c.id and nivelatencion = 2 and idprograma = 7) is not null then 1 else 0 end as sm
 FROM articulos a
-left join articulos_cobertura c on a.id = c.id and nivelatencion = 2
-group by id
+;
 ;";
         $query =  $this->db->query($sql);
         

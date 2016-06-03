@@ -98,4 +98,91 @@ class Facturacion extends CI_Controller
         $this->facturacion_model->cancelaRemision($remision);
         redirect('facturacion/listado_remisiones/'.$clvsucursal);
     }
+
+    function remisiones()
+    {
+        $data['subtitulo'] = "Ver remisiones generadas";
+        $data['js'] = "facturacion/listado_remisiones_js";
+        $data['query'] = $this->facturacion_model->getRemisionesAll();
+        $this->load->view('main', $data);
+    }
+
+    function firmadas()
+    {
+        $data['subtitulo'] = "Ver remisiones firmadas";
+        $data['js'] = "facturacion/listado_remisiones_js";
+        $data['query'] = $this->facturacion_model->getRemisionesFirmadasAll();
+        $this->load->view('main', $data);
+    }
+
+    function valida_firma($remision)
+    {
+        $data['subtitulo'] = "Validar las firmas";
+        $data['js'] = "facturacion/listado_remisiones_js";
+        $data['query'] = $this->facturacion_model->getRemisionByRemision($remision);
+        $this->load->view('main', $data);
+    }
+
+    function guarda_validacion()
+    {
+        $remision = $this->input->post('remision');
+        $observaciones = strtoupper($this->input->post('observaciones'));
+
+        $this->facturacion_model->verificaFirma($remision, $observaciones);
+        redirect('facturacion/firmadas');
+    }
+
+    function facturar($remision)
+    {
+        $data['subtitulo'] = "Vista previa de la factura";
+        $data['remision'] = $remision;
+        $data['js'] = "facturacion/facturar_js";
+        $data['clientes'] = $this->facturacion_model->getClientesByRemisionCombo($remision);
+        $this->load->view('main', $data);
+    }
+
+    function getFacturaVistaPrevia()
+    {
+    	$contratoID = $this->input->post('contratoID');
+    	$remision = $this->input->post('remision');
+    	$data['remision'] = $remision;
+    	$data['query'] = $this->facturacion_model->getFacturaProductosByRemision($remision, 1);
+        $data['referencia'] = $this->facturacion_model->getFacturaReferencia($contratoID, $remision, 1);
+    	$this->load->view('facturacion/facturaVistaPrevia', $data);
+    }
+
+    function facturar_submit()
+    {
+    	$remision = $this->input->post('remision');
+    	$contratoID = $this->input->post('contratoID');
+    	$tipoFactura = 1;
+
+    	$this->facturacion_model->getFacturaRemota($contratoID, $remision, $tipoFactura);
+    	redirect('facturacion/firmadas');
+    }
+
+    function descargaXML($remision_facturaID)
+    {
+        $query = $this->facturacion_model->getFactura($remision_facturaID);
+        $row = $query->row();
+        
+        $this->load->helper('download');
+        $data = file_get_contents($row->xml); // Read the file's contents
+        $name = 'factura_'.$row->numfac.'.xml';
+        
+        force_download($name, $data); 
+    }
+
+    function descargaPDF($remision_facturaID)
+    {
+        $query = $this->facturacion_model->getFactura($remision_facturaID);
+        $row = $query->row();
+        
+        $this->load->helper('download');
+        $data = file_get_contents($row->pdf); // Read the file's contents
+        $name = 'factura_'.$row->numfac.'.pdf';
+        
+        force_download($name, $data); 
+    }
+
 }

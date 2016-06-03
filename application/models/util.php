@@ -2,7 +2,7 @@
 class Util extends CI_Model {
     
     var $urlPost = "http://189.203.201.184/oaxacacentral/index.php/catalogos/";
-    var $urlPostFacturacion = "http://192.168.1.200/fe/index.php/api/factura/";
+    var $urlPostFacturacion = "http://189.203.201.164/fe/index.php/api/factura/";
     var $version = '1.0.5';
     var $fechaVersion = '01/05/2015';
     var $formato_datos = "/format/json";
@@ -288,6 +288,24 @@ where clvsucursal= ?;";
         return $a;
     }
     
+    function getSucursalesColectivosCombo()
+    {
+        $this->db->where('activa', 1);
+        $this->db->where_in('tiposucursal', array(2, 3));
+        $this->db->where('numjurisd', $this->session->userdata('numjurisd'));
+        $this->db->order_by('tiposucursal, clvsucursal');
+        $query = $this->db->get('sucursales');
+        
+        $a = array();
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->clvsucursal] = $row->clvsucursal.' - '.$row->descsucursal;
+        }
+        
+        return $a;
+    }
+
     function getJurisCombo()
     {
         $this->db->where('jurisdiccionActiva', 1);
@@ -736,6 +754,34 @@ where movimientoID = ?;";
         {
             return false;
         }
+    }
+
+    function postFacturarGeneral($json)
+    {
+        //$username = 'admin';
+        //$password = '1234';
+         
+        // Alternative JSON version
+        // $url = 'http://twitter.com/statuses/update.json';
+        // Set up and execute the curl process
+        $curl_handle = curl_init();
+        $timeout = 2;
+        curl_setopt($curl_handle, CURLOPT_URL, $this->urlPostFacturacion.'facturar/format/json');
+        curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($curl_handle, CURLOPT_POST, 1);
+        curl_setopt($curl_handle, CURLOPT_POSTFIELDS, array('user' => USER_FACTURACION, 'pass' => PASS_FACTURACION, 'json' => $json));
+         
+        // Optional, delete this line if your API is open
+        //curl_setopt($curl_handle, CURLOPT_USERPWD, $username . ':' . $password);
+         
+        $buffer = curl_exec($curl_handle);
+        curl_close($curl_handle);
+         
+        $result = json_decode($buffer);
+        
+        
+        return $result;
     }
 
     function postInventarioReceta($receta)

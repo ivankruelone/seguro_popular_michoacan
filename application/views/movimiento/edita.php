@@ -62,8 +62,10 @@
                                     if($row->subtipoMovimiento == 22)
                                     {
                                         echo MY_form_dropdown2('Cobertura', 'idprograma', $programa, $row->cobertura, 6);
+                                        echo MY_form_input('colectivo', 'colectivo', 'Folio de Colectivo', 'text', 'Colectivo<br />(Uno por paquete)', 12, true, $row->colectivo);
                                     }else{
                                         echo form_hidden('idprograma', 100);
+                                        echo form_hidden('colectivo', null);
                                     }
                                     
                                      

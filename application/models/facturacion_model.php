@@ -104,23 +104,57 @@ where remision = 0 and fecha between ? and ? and clvsucursal = ? and iva = ? and
 
     function getListadoRemisiones($clvsucursal)
     {
-    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus
+    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus, firmada, facturada, observacionesFirma
 FROM remision r
 join sucursales s using(clvsucursal)
 join temporal_nivel_atencion a using(nivelatencion)
 join programa p using(idprograma)
 join temporal_requerimiento q using(tiporequerimiento)
 join temporal_suministro u on r.iva = u.cvesuministro
-where clvsucursal = ?;";
+where remisionStatus = 1 and clvsucursal = ?;";
 
 		$query = $this->db->query($sql, array($clvsucursal));
 
 		return $query;
     }
 
+    function getRemisionesAll()
+    {
+        $sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus, firmada, facturada, observacionesFirma
+FROM remision r
+join sucursales s using(clvsucursal)
+join temporal_nivel_atencion a using(nivelatencion)
+join programa p using(idprograma)
+join temporal_requerimiento q using(tiporequerimiento)
+join temporal_suministro u on r.iva = u.cvesuministro
+where remisionStatus = 1
+order by remision desc;";
+
+        $query = $this->db->query($sql);
+
+        return $query;
+    }
+
+    function getRemisionesFirmadasAll()
+    {
+        $sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus, firmada, facturada, observacionesFirma
+FROM remision r
+join sucursales s using(clvsucursal)
+join temporal_nivel_atencion a using(nivelatencion)
+join programa p using(idprograma)
+join temporal_requerimiento q using(tiporequerimiento)
+join temporal_suministro u on r.iva = u.cvesuministro
+where remisionStatus = 1 and firmada = 1
+order by remision desc;";
+
+        $query = $this->db->query($sql);
+
+        return $query;
+    }
+
     function getRemisionByRemision($remision)
     {
-    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus
+    	$sql = "SELECT remision, perini, perfin, nivelatencion, iva, tiporequerimiento, idprograma, clvsucursal, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa, canreq, cansur, importe, iva_producto, servicio, iva_servicio, remisionStatus, firmada, facturada, observacionesFirma
 FROM remision r
 join sucursales s using(clvsucursal)
 join temporal_nivel_atencion a using(nivelatencion)
@@ -266,6 +300,180 @@ order by anio, mes, clvsucursal;";
         }
 
         $this->db->trans_complete();
+    }
+
+    function verificaFirma($remision, $observaciones)
+    {
+        $data = array('firmada' => 1, 'observacionesFirma' => $observaciones, 'usuarioValidaFirma' => $this->session->userdata('usuario'));
+        $this->db->set('fechaValidaFirma', 'now()', false);
+        $this->db->update('remision', $data, array('remision' => $remision));
+    }
+
+    function getFacturasByRemision($remision)
+    {
+        $sql = "SELECT *
+FROM remision_factura r
+join remision_tipo_factura t using(tipoFactura)
+where remision = ?;";
+        $query = $this->db->query($sql, array((int)$remision));
+
+        return $query;
+    }
+
+    function getFacturaJSON($contratoID, $remision, $tipoFactura)
+    {
+        $referencia = $this->getFacturaReferencia($contratoID, $remision, $tipoFactura);
+        
+        $contrato = $this->Catalogosweb_model->getContratoByContratoID($contratoID);
+        $c = $contrato->row();
+        
+        $dat = array('rfc' => $c->rfc, 'idFactura' => 0);
+        
+        $productos = $this->getFacturaProductosByRemision($remision, $tipoFactura);
+        
+        $i = 0;
+        
+        foreach($productos->result() as $p)
+        {
+            $b[$i]['item'] = $i;
+            $b[$i]['piezas'] = $p->cansur;
+            $b[$i]['unidad'] = 'PIEZAS';
+            $b[$i]['ean'] = $p->cvearticulo;
+            $b[$i]['descripcion'] = $p->descripcion; 
+            $b[$i]['precio'] = $p->precio;
+            $b[$i]['iva'] = $p->iva;
+            $i++;
+        }
+        
+        $a = array();
+        $a['json']['datos'] = $dat;
+        $a['json']['referencia'] = $referencia;
+        $a['json']['productos'] = $b;
+        
+        return json_encode($a);
+    }
+
+    function getClientesByRemision($remision)
+    {
+        $sql = "SELECT * FROM receptores_sucursal r
+JOIN receptores e using(rfc)
+where clvsucursal = (select clvsucursal from remision where remision = ?);";
+
+        $query = $this->db->query($sql, (int)$remision);
+        
+        return $query;
+    }
+    
+    function getClientesByRemisionCombo($remision)
+    {
+        $query = $this->getClientesByRemision($remision);
+        
+        $a = array();
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->rfc] = $row->rfc . ' - ' . $row->razon;
+        }
+        
+        return $a;
+    }
+
+    function getFacturaProductosByRemision($remision, $tipoFactura)
+    {
+        switch ($tipoFactura) {
+            case 1:
+
+                $sql = "SELECT r.id, a.cvearticulo, a.clave, trim(concat(a.susa, ' ', a.descripcion, ' ', a.pres)) as descripcion, r.precio, sum(cansur) as cansur, iva
+        FROM receta_detalle r
+        join articulos a using(id)
+        where remision = ?
+        group by id
+        order by cvearticulo * 1;";
+                break;
+
+            case 2:
+
+                $sql = "SELECT sum(cansur) as cansur, '16000C' as cvearticulo, '16000C' as clave, 'SERVICIO' as descripcion, servicio as precio, 1 as iva
+FROM receta_detalle r
+where remision = ?;";
+                break;
+        }
+
+        $query = $this->db->query($sql, array($remision));
+
+        return $query;
+    }
+
+    function getFacturaReferencia($contratoID, $remision, $tipoFactura)
+    {
+        $referencia = null;
+        $this->load->model('Catalogosweb_model');
+
+        $contrato = $this->Catalogosweb_model->getContratoByContratoID($contratoID);
+        $c = $contrato->row();
+
+        $rem = $this->getRemisionByRemision($remision);
+        $r = $rem->row();
+
+        switch ($tipoFactura) {
+            case 1:
+                $referencia .= "FACTURA DEL SUMINISTRO Y DISTRIBUCION DE " . $r->suministro . " PRESTADO A " . $c->razon . ", MISMA QUE AMPARA LA REMISION NO. " . $r->remision . " CORRESPONDIENTE AL PERIODO DEL " . $r->perini . " AL " . $r->perfin . " DEL " . $r->descsucursal . " CON CLAVE " . $r->clvsucursal . " DEL PROGRAMA " . $r->programa . ", TIPO DE REMISION \"" . substr($r->requerimiento, 0, 1) . "\"";
+                break;
+            case 2:
+                $referencia .= "FACTURA DEL SERVICIO DE DISTRIBUCION DE " . $r->suministro . " PRESTADO A " . $c->razon . ", MISMA QUE AMPARA LA REMISION NO. " . $r->remision . " CORRESPONDIENTE AL PERIODO DEL " . $r->perini . " AL " . $r->perfin . " DEL " . $r->descsucursal . " CON CLAVE " . $r->clvsucursal . " DEL PROGRAMA " . $r->programa . ", TIPO DE REMISION \"" . substr($r->requerimiento, 0, 1) . "\"";
+                break;
+        }
+
+        return $referencia;
+
+    }
+
+    function getFacturaRemota($contratoID, $remision, $tipoFactura)
+    {
+        $json = $this->getFacturaJSON($contratoID, $remision, $tipoFactura);
+
+        $result = $this->util->postFacturarGeneral($json);
+
+        if(isset($result->exito) && $result->exito == '1')
+        {
+            $this->saveFactura($result, $remision, $tipoFactura);
+        }
+        else
+        {
+
+        }
+    }
+
+    function saveFactura($result, $remision, $tipoFactura)
+    {
+        if($tipoFactura == 1)
+        {
+            $facturaProducto = '';
+        }else
+        {
+            $facturaProducto = '';
+        }
+
+        $data = array(
+            'remision'          => $remision,
+            'tipoFactura'       => $tipoFactura,
+            'f_id'              => $result->idFactura,
+            'numfac'            => $result->factura,
+            'xml'               => $result->urlxml,
+            'pdf'               => $result->urlpdf,
+            'facturaProducto'   => $facturaProducto,
+            'fechaFactura'      => $result->fecha,
+        );
+            
+        $this->db->insert('remision_factura', $data);
+    }
+
+    function getFactura($remision_facturaID)
+    {
+        $this->db->where('remision_facturaID', $remision_facturaID);
+        $query = $this->db->get('remision_factura');
+
+        return $query;
     }
 
 }

@@ -402,8 +402,16 @@ class Almacen extends CI_Controller
 
     function transito()
     {
-        $data['subtitulo'] = "Entradas en transito";
+        $data['subtitulo'] = "Traspasos en transito";
         $data['query'] = $this->util->getDataOficina('transito', array('clvsucursal' => ALMACEN));
+        //$data['js'] = "inventario/por_sucursal_js";
+        $this->load->view('main', $data);
+    }
+
+    function traspasos_validados()
+    {
+        $data['subtitulo'] = "Traspasos validados";
+        $data['query'] = $this->util->getDataOficina('traspasos_validados', array('clvsucursal' => ALMACEN));
         //$data['js'] = "inventario/por_sucursal_js";
         $this->load->view('main', $data);
     }

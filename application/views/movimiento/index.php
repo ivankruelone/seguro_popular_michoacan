@@ -68,7 +68,7 @@
                                                 
                                                 if($row->statusMovimiento == 0)
                                                 {
-                                                    $status = '<span style="color: green; ">ABIERTO</span>';
+                                                    $status = '<span style="color: green; ">'.$row->statusMovimientoDescripcion.'</span>';
                                                     if($this->session->userdata('consulta') == 0)
                                                     {
                                                         $link_edita = anchor('movimiento/edita/'.$row->movimientoID, 'Edita <i class="icon-pencil bigger-130"> </i>');
@@ -78,11 +78,29 @@
                                                     }
                                                     
                                                     $imprime = null;
-                                                    
-                                                }else{
-                                                    $status = '<span style="color: red; ">CERRADO</span>';
+                                                    $cancela = anchor('movimiento/cancela/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: red;">Cancelar</span>', array('class' => 'cancelar'));
+                                                    $abrir = null;
+                                                }elseif($row->statusMovimiento == 1){
+                                                    $status = '<span style="color: blue; ">'.$row->statusMovimientoDescripcion.'</span>';
                                                     $link_edita = null;
                                                     $imprime = anchor('movimiento/imprime/'.$row->movimientoID.'/'.$tipoMovimiento.'/'.$subtipoMovimiento, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
+                                                    $cancela = null;
+
+                                                    if($this->session->userdata('superuser') == 1)
+                                                    {
+                                                        $abrir = anchor('movimiento/abrir/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: blue;">Abrir</span>', array('class' => 'abrir', 'movimientoID' => $row->movimientoID));
+                                                    }else
+                                                    {
+                                                        $abrir = null;
+                                                    }
+
+                                                }elseif($row->statusMovimiento == 2)
+                                                {
+                                                    $status = '<span style="color: red; ">'.$row->statusMovimientoDescripcion.'</span>';
+                                                    $link_edita = null;
+                                                    $imprime = null;
+                                                    $cancela = null;
+                                                    $abrir = null;
                                                 }
                                                 
                                                 if($subtipoMovimiento == 13 || $subtipoMovimiento == 21 || $subtipoMovimiento == 22 || $subtipoMovimiento == 23)
@@ -174,7 +192,7 @@
                                                 <td><?php echo $row->fecha; ?></td>
                                                 <td><?php echo $row->razon; ?></td>
                                                 <td><?php echo $row->sucursal; ?></td>
-                                                <td><?php echo $row->sucursal_referencia . '<br /><span style="color: blue;">' . $row->programa . '</span>'; ?></td>
+                                                <td><?php echo $row->sucursal_referencia . '<br /><span style="color: blue;">' . $row->programa . '</span>'. '<br /><span style="color: green;">' . $row->colectivo . '</span>'; ?></td>
                                                 <td><?php echo $row->nombreusuario; ?></td>
                                                 <td><?php echo $row->fechaAlta.'<br />'.$row->fechaCierre.'<br />'.$row->fechaCancelacion; ?></td>
                                                 <td><?php echo $row->observaciones; ?></td>
@@ -191,7 +209,7 @@
                                                 <td><?php echo $folioFactura; ?></td>
                                                 <td><?php echo $descargaXML; ?></td>
                                                 <td><?php echo $descargaPDF; ?></td>
-                                                <td><?php echo $fechaFactura; ?></td>
+                                                <td><?php echo $fechaFactura . $cancela . $abrir; ?></td>
                                             </tr>
                                             <?php }?>
                                         </tbody>

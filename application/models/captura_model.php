@@ -272,9 +272,27 @@ where r.consecutivo = ?;";
         having valida >= date(now())
         order by case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end, cantidad
         ;";
-        $query = $this->db->query($sql, array((string)$cveArticulo, $this->session->userdata('clvsucursal'))); 
+        $query = $this->db->query($sql, array((string)$cveArticulo, $this->session->userdata('clvsucursal')));
+
+        if($query->num_rows() > 0)
+        {
+            return $query; 
+        }
+        else
+        {
+            $sql2 = "SELECT lote, caducidad, cantidad, case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end as valida
+            FROM inventario i
+            join articulos a using(id)
+            where cvearticulo = ? and i.clvsucursal = ? and lote = 'SL'
+            having valida >= date(now())
+            order by case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end, cantidad
+            ;";
+            $query2 = $this->db->query($sql2, array((string)$cveArticulo, $this->session->userdata('clvsucursal')));
+
+            return $query2;
+        }
         
-        return $query;      
+             
     }
 
     function getLoteDrop($cveArticulo)
@@ -400,7 +418,7 @@ where r.consecutivo = ?;";
     {
         $sql = "SELECT cvearticulo, precioven, ifnull(lote, 'SL') as lote, ifnull(caducidad, '9999-12-31') as caducidad, a.id, ifnull(inventarioID, 0) as inventarioID
 FROM articulos a
-left join inventario i on a.id = i.id and clvsucursal = ? and lote = ? and cantidad > 0
+left join inventario i on a.id = i.id and clvsucursal = ? and lote = ?
 where cvearticulo = ?;";
 
         $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), (string)$lote, (string)$cveArticulo));
@@ -973,8 +991,7 @@ where aleatorio = ?;";
         }
         
         $s = "SELECT descsucursal, preciosinser, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
-             cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
-            fecha, fechaexp
+             cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico, fecha, fechaexp, x.precioven, x.servicio
             from receta r
             join sucursales s on r.clvsucursal=s.clvsucursal
             join programa p on r.idprograma = p.idprograma
@@ -984,7 +1001,7 @@ where aleatorio = ?;";
             where fecha between ? and ?  and r.clvsucursal = ? $pro  $req $sumis
             order by r.fecha, r.folioreceta";
         $query = $this->db->query($s, array($fecha1, $fecha2, (int)$this->session->userdata('clvsucursal')));
-        $this->reportes_model->insertaQuery($this->db->last_query());
+        $this->reportes_model->insertaQuery($this->db->last_query(), 'REPORTE DE RECETA DEL PERIODO DEL ' . $fecha1 . ' AL ' . $fecha2);
         return $query;
         
     }
@@ -1020,6 +1037,27 @@ left join programa p on p.idprograma = r.programa
 left join temporal_requerimiento q on tiporequerimiento = r.requerimiento
 where subida = ?;";
         $query = $this->db->query($sql, $subida);
+        return $query;
+    }
+
+    function validaRecetaCargaExist($clvsucursal, $folioreceta)
+    {
+        $this->db->where('clvsucursal', (int)$clvsucursal);
+        $this->db->where('folioreceta', (string)$folioreceta);
+        $query = $this->db->get('receta');
+
+        return $query->num_rows();
+    }
+
+    function getDetalleSubida($subida, $receta)
+    {
+        $sql = "SELECT t.*, a.id, a.precioven, ultimo_costo, servicio, tipoprod
+FROM temporal_receta t
+join articulos a on t.clave = a.cvearticulo
+where subida = ? and receta = ?;";
+
+        $query = $this->db->query($sql, array((int)$subida, (int)$receta));
+
         return $query;
     }
 
@@ -1133,7 +1171,7 @@ where subida = ?;";
                     'movimientoID'      => 0
                 );
 
-                $this->db->set('ultimo_movimiento', now(), false);
+                $this->db->set('ultimo_movimiento', 'now()', false);
                 $this->db->update('inventario', $data, array('inventarioID' => $i->inventarioID));
                 
                 $dataReceta = array(
@@ -1165,7 +1203,7 @@ where subida = ?;";
                         'movimientoID'      => 0
                     );
 
-                    $this->db->set('ultimo_movimiento', now(), false);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
                     $this->db->update('inventario', $data, array('inventarioID' => $i->inventarioID));
                     
                     $dataReceta = array(
@@ -1198,7 +1236,7 @@ where subida = ?;";
                         'ubicacion'         => 0
                     );
 
-                    $this->db->set('ultimo_movimiento', now(), false);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
                     $this->db->insert('inventario', $data);
                     
                     $dataReceta = array(

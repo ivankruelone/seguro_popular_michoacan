@@ -404,7 +404,15 @@ where clvsucursal = ?;";
             $row2 = $query2->row();
             $sucursal = $row2->descsucursal;
             $tiposucursal = $row2->tiposucursal;
-            $numjurisd = $row2->numjurisd;
+
+            if($row->clvsucursal == 0)
+            {
+                $numjurisd = $row->numjurisd;
+            }else
+            {
+                $numjurisd = $row2->numjurisd;
+            }
+            
             $diaped = $row2->diaped;
             $nivelAtencion = $row2->nivelAtencion;
             $diaDescripcion = $row2->diaDescripcion;

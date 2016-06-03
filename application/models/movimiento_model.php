@@ -120,7 +120,7 @@ where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ?;";
     
     function getMovimientos($tipoMovimiento, $subtipoMovimiento, $limit, $offset = 0)
     {
-        $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml, IFNULL(o.programa, 'TODAS') as programa
+        $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml, IFNULL(o.programa, 'TODAS') as programa, colectivo, statusMovimientoDescripcion
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -143,7 +143,7 @@ limit ? offset ?
     
     function getMovimientoByMovimientoID($movimientoID)
     {
-        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura, s2.nivelatencion as nivelatencionReferencia
+        $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura, s2.nivelatencion as nivelatencionReferencia, colectivo
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
 join subtipo_movimiento s using(subtipoMovimiento)
@@ -168,7 +168,7 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
         return $query;
     }
     
-    function insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma)
+    function insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma, $colectivo)
     {
 
         if($subtipoMovimiento == 22 && $referencia == 'AUTO')
@@ -189,7 +189,8 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
             'usuario'           => $this->session->userdata('usuario'),
             'observaciones'     => $observaciones,
             'remision'          => $remision,
-            'cobertura'         => $idprograma
+            'cobertura'         => $idprograma,
+            'colectivo'         => strtoupper($colectivo)
             );
         
         $this->db->set('fechaAlta', 'now()', false);
@@ -491,21 +492,7 @@ where movimientoDetalle = ?;";
             if($row->activo == 1)
             {
                 
-                $datos = $this->getOrdenDetalleByClave($orden, $cvearticulo);
-                
-                if(isset($datos->error) || $orden == 0)
-                {
-                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|-1|0|0';
-                }else{
-                    
-                    foreach($datos as $datos)
-                    {
-                        
-                    }
-                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|'.($datos->cans - $row->aplica).'|'.$datos->codigo.'|'.$datos->costo;
-                }
-                
-                
+                return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|-1|0|0';
                 
             }else{
                 return '0|0|NO ENCONTRADO O FUERA DE COBERTURA|NO ENCONTRADO|NO ENCONTRADO|-1|0|0';
@@ -686,10 +673,16 @@ where movimientoDetalle = ?;";
         if($row->subtipoMovimiento == 22)
         {
             $eti_referencia = 'FOLIO: ';
+            $eti_colectivo = 'COLECTIVO: ';
+            $dato_colectivo = $row->colectivo;
         }else
         {
             $eti_referencia = 'REFERENCIA: ';
+            $eti_colectivo = 'Fol CxP: ';
+            $dato_colectivo = $row->nuevo_folio;
         }
+
+
         
         
         $tabla = '<table cellpadding="1">
@@ -720,8 +713,8 @@ where movimientoDetalle = ?;";
                 <td width="95px" align="right">'.$row->remision.'</td>
             </tr>
             <tr>
-                <td width="75px">Fol CxP: </td>
-                <td width="95px" align="right">'.$row->nuevo_folio.'</td>
+                <td width="75px">'.$eti_colectivo.'</td>
+                <td width="95px" align="right">'.$dato_colectivo.'</td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right;">ID: '.barras($row->movimientoID).'</td>
@@ -1067,11 +1060,11 @@ where movimientoDetalle = ?;";
 </tr>
 
 <tr >
-<td colspan="9" style="font-size: xx-large">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numero de Cajas:'.$cajas.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numero de Hieleras:'.$hieleras.'</td>
+<td colspan="9" style="font-size: large">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numero de Cajas:'.$cajas.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Numero de Hieleras:'.$hieleras.'</td>
 </tr>
 
 <tr >
-<td colspan="9" style="font-size: xx-large">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Surtio:'.$surtio.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Validado por:'.$valido.'</td>
+<td colspan="9" style="font-size: large">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Surtio:'.$surtio.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Validado por:'.$valido.'</td>
 </tr>
 
 
@@ -1080,7 +1073,7 @@ where movimientoDetalle = ?;";
 </tr>
 
 <tr align="LEFT">
-<td colspan="9" style="font-size: xx-large" ><br/>Observaciones:<br/> '.$observaciones.'</td>
+<td colspan="9" style="font-size: large" ><br/>Observaciones:<br/> '.$observaciones.'</td>
 </tr>
 
 
@@ -1149,10 +1142,6 @@ where movimientoDetalle = ?;";
 <tr align="center">
 <td colspan="7">OBSERVACIONES:<br /><br /><br /></td>
 </tr>
-<tr align="center">
-<td colspan="9" bgcolor="#666666"></td>
-</tr>
-
 </table>';
 
         return $alm_formato;
@@ -1617,7 +1606,7 @@ where movimientoDetalle = ?;";
 join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and cantidad > 0 and pasilloTipo <> 2 and i.clvsucursal = ?
+where m.movimientoID = ? and pasilloTipo <> 2 and i.clvsucursal = ?
 group by areaID;";
         $query = $this->db->query($sql, array((int)$movimientoID, $this->session->userdata('clvsucursal')));
 
@@ -2029,6 +2018,449 @@ join subtipo_movimiento s using(tipoMovimiento) where tipoMovimiento = ? and sub
         $query = $this->db->query($sql);
         $row = $query->row();
         return 'P-' . str_pad(($row->maximo + 1), 4, '0', STR_PAD_LEFT);
+    }
+
+    function getJSONByMovimientoID($movimientoID)
+    {
+        $sql = "SELECT movimientoID, movimientoDetalle, referencia, clvsucursal, clvsucursalReferencia, piezas, cvearticulo
+FROM movimiento m
+join movimiento_detalle d using(movimientoID)
+join articulos a using(id)
+where subtipoMovimiento = 2 and statusMovimiento = 1 and clvsucursal = ? and movimientoID = ?;";
+
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
+
+        return json_encode($query->result_array());
+    }
+
+    function getColectivosCuenta()
+    {
+        $sql = "SELECT count(*) as cuenta FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+where usuario = ?;";
+        
+        $query = $this->db->query($sql, array($this->session->userdata('usuario')));
+        $row = $query->row();
+
+        return $row->cuenta;
+    }
+
+    function getColectivos($limit, $offset = 0)
+    {
+        $sql = "SELECT c.*, descsucursal, nombreusuario, programa, etapa, nivelatencion as nivelatencionReferencia, referencia
+FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where c.usuario = ?
+limit ? offset ?;";
+        
+        $query = $this->db->query($sql, array($this->session->userdata('usuario'), (int)$limit, (int)$offset));
+
+        return $query;
+    }
+
+    function getColectivoByColectivoID($colectivoID)
+    {
+        $sql = "SELECT c.*, descsucursal, nombreusuario, programa, etapa, nivelatencion as nivelatencionReferencia, s.numjurisd, jurisdiccion, referencia
+FROM colectivo c
+join sucursales s using(clvsucursal)
+join jurisdiccion j using(numjurisd)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where colectivoID = ?;";
+        
+        $query = $this->db->query($sql, array($colectivoID));
+
+        return $query;
+    }
+
+    function insertColectivo($data)
+    {
+        $this->db->insert('colectivo', $data);
+        return $this->db->insert_id();
+    }
+
+    function updateColectivo($data, $colectivoID)
+    {
+        $this->db->update('colectivo', $data, array('colectivoID' => $colectivoID));
+    }
+
+    function getDetalleColectivo($colectivoID)
+    {
+        $sql = "SELECT d.*, d.id, cvearticulo, susa, descripcion, pres, statusColectivo, case when o.idprograma is null then 0 else 1 end as cubierto
+FROM colectivo_detalle d
+join colectivo c using(colectivoID)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+left join articulos_cobertura o on a.id = o.id and s.nivelatencion = o.nivelatencion and c.idprograma = o.idprograma
+where colectivoID = ?;";
+        
+        $query = $this->db->query($sql, array($colectivoID));
+
+        return $query;
+    }
+
+    function insertDetalleColectivo($colectivoID, $cveArticulo, $piezas)
+    {
+        $query = $this->getArticuloByClave($cveArticulo);
+            
+        if($query->num_rows() > 0)
+        {
+
+            $row = $query->row();    
+
+            $this->db->where('colectivoID', $colectivoID);
+            $this->db->where('id', $row->id);
+            $query = $this->db->get('colectivo_detalle');
+
+            if($query->num_rows() == 0)
+            {
+                $data = array(
+                    'colectivoID'   => $colectivoID,
+                    'id'            => $row->id,
+                    'piezas'        => $piezas
+                    );
+                
+                $this->db->insert('colectivo_detalle', $data);
+                return $this->db->insert_id();
+            }else
+            {
+                return 0;
+            }
+            
+            
+        }
+    }
+
+    function deleteDetalle($colectivoDetalle)
+    {
+        $this->db->delete('colectivo_detalle', array('colectivoDetalle' => $colectivoDetalle));
+    }
+
+    function cierraColectivo($colectivoID)
+    {
+        $data = array(
+            'statusColectivo'   => 1
+        );
+        $this->db->set('fechaCierre', 'now()', false);
+        $this->db->update('colectivo', $data, array('colectivoID' => $colectivoID));
+    }
+
+    function headerColectivo($colectivoID)
+    {
+        $query = $this->getColectivoByColectivoID($colectivoID);
+        $row = $query->row();
+
+        
+        $logo = array(
+                                  'src' => base_url().'assets/img/logo.png',
+                                  'width' => '120'
+                        );
+                        
+        $tabla = '<table cellpadding="1">
+            <tr>
+                <td rowspan="5" width="100px">'.img($logo).'</td>
+                <td rowspan="5" width="450px" align="center"><font size="8">'.COMPANIA.'<br />SUCURSAL: '.$row->clvsucursal.' - '.$row->descsucursal.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />COBERTURA: '.$row->programa.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->folio).'</td>
+                <td width="75px">ID Movimiento: </td>
+                <td width="95px" align="right">'.$row->colectivoID.'</td>
+            </tr>
+            <tr>
+                <td width="75px">FECHA: </td>
+                <td width="95px" align="right">'.$row->fecha.'</td>
+            </tr>
+            <tr>
+                <td width="75px"># Sucursal: </td>
+                <td width="95px" align="right">'.$row->clvsucursal.'</td>
+            </tr>
+            <tr>
+                <td width="75px">FOLIO: </td>
+                <td width="95px" align="right">'.$row->folio.'</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right;">ID: '.barras($row->movimientoID).'</td>
+            </tr>
+        </table>';
+        
+        return $tabla;
+    }
+
+    function detalleColectivo($colectivoID)/*HOJA DE PEDIDO hoja 1*/
+    {
+        $query = $this->getDetalleColectivo($colectivoID);
+
+        
+        $tabla = '
+        <style>
+        table
+        {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        }
+        th
+        {
+            font-weight: normal;
+            border-bottom: 2px solid #000000;
+        }
+        td
+        {
+            border-bottom: 1px solid #000000;
+        }
+        </style>';
+        
+        $tabla.= '<table cellpadding="4">
+         
+        <thead>
+        
+
+              
+          
+            <tr>
+                <th width="50px">Clave</th>
+                <th width="210px">Nom. Generico</th>
+                <th width="240px">Descripci&oacute;n</th>
+                <th width="160px">Presentacion</th>
+                <th width="50px" align="right">Requerido</th>
+            </tr>
+        </thead>
+        <tbody>
+        ';
+
+        $piezas = 0;
+
+        foreach($query->result() as $row)
+        {
+
+            
+            
+            $tabla.= '<tr>
+                <td width="50px">'.$row->cvearticulo.'</td>
+                <td width="210px">'.trim($row->susa).'</td>
+                <td width="240px">'.$row->descripcion.'</td>
+                <td width="160px">'.$row->pres.'</td>
+                <td width="50px" align="right">'.number_format($row->piezas, 0).'</td>
+            </tr>
+            ';
+
+
+            $piezas = $piezas + $row->piezas;
+
+        }
+            
+        
+
+        
+        $tabla.= '</tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" align="right">Subtotales</td>
+                <td align="right">'.number_format($piezas, 0).'</td>
+            </tr>
+            
+           
+        </tfoot>
+        </table>';
+        
+     
+        
+        return $tabla;
+    }
+
+    function getColectivosAprobarCuenta()
+    {
+        $sql = "SELECT count(*) as cuenta FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+where statusColectivo = 1;";
+        
+        $query = $this->db->query($sql);
+        $row = $query->row();
+
+        return $row->cuenta;
+    }
+
+    function getColectivosAprobar($limit, $offset = 0)
+    {
+        $sql = "SELECT c.*, descsucursal, nombreusuario, programa, etapa, nivelatencion as nivelatencionReferencia, referencia
+FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where statusColectivo = 1
+limit ? offset ?;";
+        
+        $query = $this->db->query($sql, array((int)$limit, (int)$offset));
+
+        return $query;
+    }
+
+    function aprobarPaquete($colectivoID)
+    {
+        $this->db->trans_start();
+        $query = $this->getColectivoByColectivoID($colectivoID);
+        $row = $query->row();
+
+        $referencia = $this->getFolioPaquete();
+
+        $data = array(
+            'tipoMovimiento'        => 2,
+            'subtipoMovimiento'     => 22,
+            'orden'                 => 0,
+            'referencia'            => $referencia,
+            'fecha'                 => $row->fecha,
+            'statusMovimiento'      => 0,
+            'proveedorID'           => 0,
+            'clvsucursal'           => ALMACEN,
+            'clvsucursalReferencia' => $row->clvsucursal,
+            'usuario'               => $this->session->userdata('usuario'),
+            'observaciones'         => 'COLECTIVO ' . $row->folio,
+            'remision'              => 0,
+            'cobertura'             => $row->idprograma,
+            'colectivo'             => $row->folio
+        );
+        
+        $this->db->set('fechaAlta', 'now()', false);
+        $this->db->insert('movimiento', $data);
+        $movimientoID = $this->db->insert_id();
+
+        $detalle = $this->getDetalleColectivo($colectivoID);
+
+        foreach ($detalle->result() as $det) {
+            $dataDetalle = array(
+                'movimientoID'  => $movimientoID,
+                'id'            => $det->id,
+                'piezas'        => $det->piezas
+            );
+
+            $this->db->insert('movimiento_prepedido', $dataDetalle);
+        }
+
+        $dataColectivo = array('statusColectivo' => 2, 'movimientoID' => $movimientoID);
+        $this->db->set('fechaGuia', 'now()', false);
+        $this->db->update('colectivo', $dataColectivo, array('colectivoID' => $colectivoID));
+
+        $dataPrepedido = array(
+            'statusPrepedido' => 1,
+        );
+        
+        $this->db->update('movimiento', $dataPrepedido, array('movimientoID' => $movimientoID));
+        $this->db->trans_complete();
+    }
+
+    function getColectivosSurtirCuenta()
+    {
+        $sql = "SELECT count(*) as cuenta FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+where statusColectivo = 2;";
+        
+        $query = $this->db->query($sql);
+        $row = $query->row();
+
+        return $row->cuenta;
+    }
+
+    function getColectivosSurtir($limit, $offset = 0)
+    {
+        $sql = "SELECT c.*, descsucursal, nombreusuario, programa, etapa, nivelatencion as nivelatencionReferencia, referencia
+FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where statusColectivo = 2
+limit ? offset ?;";
+        
+        $query = $this->db->query($sql, array((int)$limit, (int)$offset));
+
+        return $query;
+    }
+
+    function cancelaMovimiento($movimientoID)
+    {
+        $data = array('statusMovimiento' => 2);
+        $this->db->set('fechaCancelacion', 'now()', false);
+        $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
+    }
+
+    function getDetalleAbrir($movimientoID)
+    {
+        $sql = "SELECT m.id, inventarioID, piezas, cantidad
+FROM movimiento_detalle m
+left join inventario i using(ubicacion, id, lote)
+where m.movimientoID = ?;";
+        $query = $this->db->query($sql, array($movimientoID));
+
+        return $query;
+    }
+
+    function abrirMovimiento($movimientoID)
+    {
+        $this->db->trans_start();
+
+        $query = $this->getMovimientoByMovimientoID($movimientoID);
+
+        if($query->num_rows() > 0)
+        {
+            $row = $query->row();
+
+            $det = $this->getDetalleAbrir($movimientoID);
+
+            foreach ($det->result() as $d)
+            {
+
+                if($row->tipoMovimiento == 1)
+                {
+
+                    $inv = $d->cantidad - $d->piezas;
+                    $tipoMovimiento = 2;
+                    $subtipoMovimiento = 25;
+
+                }elseif($row->tipoMovimiento == 2)
+                {
+
+                    $inv = $d->cantidad + $d->piezas;
+                    $tipoMovimiento = 1;
+                    $subtipoMovimiento = 24;
+
+                }else
+                {
+
+                }
+
+                $data = array(
+                    'cantidad'          => $inv,
+                    'tipoMovimiento'    => $tipoMovimiento,
+                    'subtipoMovimiento' => $subtipoMovimiento,
+                    'receta'            => 0,
+                    'usuario'           => $this->session->userdata('usuario'),
+                    'movimientoID'      => $movimientoID
+                );
+
+                $this->db->set('ultimo_movimiento', 'now()', false);
+
+                $this->db->update('inventario', $data, array('inventarioID' => $d->inventarioID));
+            }
+
+
+            $this->db->update('movimiento', array('statusMovimiento' => 0), array('movimientoID' => $movimientoID));
+
+        }
+
+        $this->db->trans_complete();
     }
 
 }

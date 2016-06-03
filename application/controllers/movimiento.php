@@ -30,6 +30,7 @@ class Movimiento extends CI_Controller
         $config['uri_segment'] = 5;
         
         $data['query'] = $this->movimiento_model->getMovimientos($tipoMovimiento, $subtipoMovimiento, $config['per_page'], $this->uri->rsegment(5));
+        $data['js'] = 'movimiento/index_js';
 
         $this->pagination->initialize($config); 
         
@@ -75,8 +76,9 @@ class Movimiento extends CI_Controller
         $proveedor = $this->input->post('proveedor');
         $observaciones = $this->input->post('observaciones');
         $idprograma = $this->input->post('idprograma');
+        $colectivo = $this->input->post('colectivo');
         
-        $this->movimiento_model->insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma);
+        $this->movimiento_model->insertMovimiento($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma, $colectivo);
         redirect('movimiento/index/'.$tipoMovimiento.'/'.$subtipoMovimiento);
     }
     
@@ -547,6 +549,12 @@ group by id, lote, i.ubicacion;";
         $data2  = array('statusMovimiento' => 1, 'nuevo_folio' => $folio->folio);
         $this->db->set('fechaCierre', 'now()', false);
         $this->db->update('movimiento', $data2, array('movimientoID' => $movimientoID));
+
+        if($subtipoMovimiento == 22)
+        {
+            $dataColectivo = array('statusColectivo' => 3);
+            $this->db->update('colectivo', $dataColectivo, array('movimientoID' => $movimientoID));
+        }
         
         
         
@@ -555,23 +563,41 @@ group by id, lote, i.ubicacion;";
         
         if ($this->db->trans_status() === TRUE)
         {
-            $json = $this->util->getOrdenPostJson($movimientoID);
-            $res = $this->util->postDataOficina('orden', $json);
-        
-            if($res == null)
+            if($subtipoMovimiento == 1 || $subtipoMovimiento == 3)
             {
-                
-            }else{
-                $this->db->update('movimiento', array('aplicada' => 1), array('movimientoID' => $movimientoID));
+                $json = $this->util->getOrdenPostJson($movimientoID);
+                $res = $this->util->postDataOficina('orden', $json);
+            
+                if($res == null)
+                {
+                    
+                }else{
+                    $this->db->update('movimiento', array('aplicada' => 1), array('movimientoID' => $movimientoID));
+                }
+            }elseif($subtipoMovimiento == 2)
+            {
+                $json = $this->movimiento_model->getJSONByMovimientoID($movimientoID);
+                $this->util->postDataOficina('traspaso', $json);
             }
         
-            $this->util->postMovimiento($movimientoID);
-            $this->util->postInventario();// generate an error... or use the log_message() function to log your error
+            //$this->util->postMovimiento($movimientoID);
+            //$this->util->postInventario();// generate an error... or use the log_message() function to log your error
         } 
         
         
         redirect('movimiento/index/'.$tipoMovimiento.'/'.$subtipoMovimiento);
         
+    }
+
+    function pruebaTraspaso()
+    {
+        $sql = "SELECT movimientoID FROM movimiento m where subtipoMovimiento = 2 and clvsucursal = 12000 and statusMovimiento = 1;";
+        $query = $this->db->query($sql);
+
+        foreach ($query->result() as $row) {
+            //$json = $this->movimiento_model->getJSONByMovimientoID($row->movimientoID);
+            //$res = $this->util->postDataOficina('traspaso', $json);
+        }
     }
 
     function imprime($movimientoID, $tipoMovimiento, $subtipoMovimiento)
@@ -1033,34 +1059,16 @@ where tipoMovimiento = 2 and referencia = ? and clvsucursalReferencia = ?;";
 
     }
 
-    function correOrdenes()
+    function cancela($movimientoID, $tipoMovimiento, $subtipoMovimiento)
     {
-        $sql = "SELECT movimientoID FROM movimiento m where orden > 0 and statusMovimiento = 1 and aplicada = 0;";
-        $query = $this->db->query($sql);
-        
-        foreach($query->result() as $row)
-        {
-            $this->pruebaOrden($row->movimientoID);
-        }
+    	$this->movimiento_model->cancelaMovimiento($movimientoID);
+    	redirect('movimiento/index/' . $tipoMovimiento . '/' . $subtipoMovimiento);
     }
-    
-    function pruebaOrden($movimientoID = 421)
+
+    function abrir($movimientoID, $tipoMovimiento, $subtipoMovimiento)
     {
-        $json = $this->util->getOrdenPostJson($movimientoID);
-        $res = $this->util->postDataOficina('orden', $json);
-        
-        if($res == null)
-        {
-            
-        }else{
-            $this->db->update('movimiento', array('aplicada' => 1), array('movimientoID' => $movimientoID));
-        }
-        
-    }
-    
-    function pru()
-    {
-        $this->movimiento_model->getProductosFolprv(28685);
+    	$this->movimiento_model->abrirMovimiento($movimientoID);
+    	redirect('movimiento/index/' . $tipoMovimiento . '/' . $subtipoMovimiento);
     }
 
 }

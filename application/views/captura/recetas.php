@@ -44,7 +44,7 @@
     <tr>
         <td><?php echo MY_form_input('expediente', 'expediente', 'Numero de expediente', 'text', 'Numero de expediente:', 12); ?></td>
         <td><?php echo MY_form_input('pat', 'pat', 'Paterno', 'text', 'Paterno:', 12); ?></td>
-        <td><?php echo MY_form_input('mat', 'mat', 'Materno', 'text', 'Materno:', 12); ?></td>
+        <td><?php echo MY_form_input('mat', 'mat', 'Materno', 'text', 'Materno:', 12, false); ?></td>
     </tr>
 
     <tr>

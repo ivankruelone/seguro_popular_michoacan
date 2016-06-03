@@ -27,6 +27,8 @@
         <p>Fecha y hora Apache: <?php echo date('Y-m-d H:i:s'); ?></p>
 
         <p>Fecha y hora MySQL: <?php echo $fhmysql; ?></p>
+
+        <p>Aleatorio: <?php echo $this->session->userdata('aleatorio'); ?></p>
         
         <?php
         

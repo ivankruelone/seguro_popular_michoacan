@@ -157,8 +157,11 @@ function checkFecha(event)
 }
 
 $('#tipoReq').on('change', tiporeq);
+
 function tiporeq(data){
     var $tiporeq = parseInt($('#tipoReq').val());
+    var $tipoReceta = parseInt($('#tipoReceta').val());
+
     if ($tiporeq == 2 || $tiporeq == 3)
     {
        $("#expediente").attr('disabled', 'disabled');
@@ -185,7 +188,21 @@ function tiporeq(data){
            $("#pat").val('PAQUETE');
        }
     }
-    else
+    else if($tiporeq == 1 && $tipoReceta == 0)
+    {
+       $("#expediente").val('PA');
+       $("#nombre").val('');
+       $("#mat").val('');
+       $("#pat").val('');
+       $("#sexo").val('1');
+       $("#edad").val('0');
+       $("#expediente").attr('disabled', 'disabled');
+       $("#nombre").removeAttr("disabled");
+       $("#mat").removeAttr("disabled");
+       $("#pat").removeAttr("disabled");
+       $("#sexo").removeAttr("disabled");
+       $("#edad").removeAttr("disabled"); 
+    }else
     {   
        $("#expediente").val('');
        $("#nombre").val('');
@@ -261,6 +278,8 @@ function getPrograma()
     var $tipoReceta = $("#tipoReceta").val();
     return $tipoReceta;
 }
+
+$("#tipoReceta").on("change", tiporeq);
 
 $('#lote').on('change', checklote);
 
