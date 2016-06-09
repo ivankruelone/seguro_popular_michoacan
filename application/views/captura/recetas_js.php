@@ -660,15 +660,16 @@ function cantsur()
     }
 }
 
-$('#elimina_receta_unitaria').on('click', elimina_receta_unitaria);
+$('.eliminar_receta').on('click', elimina_receta_unitaria);
 
 function elimina_receta_unitaria(event)
 {
     if(confirm("Deseas eliminar esta receta en su totalidad??"))
     {
-        
+        return true;
     }else{
         event.preventDefault();
+        return false;
     }
 }
 

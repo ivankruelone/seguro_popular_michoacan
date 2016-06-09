@@ -1,7 +1,7 @@
 							<div class="row-fluid">
                                 <div class="span12">
                                     
-                                    <table id="table" class="table table-striped table-bordered table-hover">
+                                    <table id="table" class="table table-bordered table-hover">
                                         <caption>Registros: <?php echo count($query); ?></caption>
                                         <thead>
                                             <tr>
@@ -26,8 +26,16 @@
 
                                             foreach($query as $row){
 
+                                                if($row->piezas <> $row->aplicadas)
+                                                {
+                                                    $color = ROJO_PASTEL;
+                                                }else
+                                                {
+                                                    $color = null;
+                                                }
+
                                             ?>
-                                            <tr>
+                                            <tr style="background-color: <?php echo $color;?>;">
                                                 <td><?php echo $n; ?></td>
                                                 <td><?php echo $row->id; ?></td>
                                                 <td><?php echo $row->cvearticulo; ?></td>

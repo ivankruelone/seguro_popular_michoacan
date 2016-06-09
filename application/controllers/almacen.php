@@ -15,6 +15,7 @@ class Almacen extends CI_Controller
         $this->load->model('almacen_model');
         $this->load->model('Inventario_model');
         $this->load->helper('utilities');
+        $this->load->model('movimiento_model');
 
     }
 
@@ -444,6 +445,76 @@ class Almacen extends CI_Controller
         $data['subtitulo'] = "Caducados en Farmacias.";
         $data['query'] = $this->almacen_model->getCaducadosFarmacias();
         $this->load->view('main', $data);
+    }
+
+    function pedido_sucursal()
+    {
+        $tipoMovimiento = 2;
+        $subtipoMovimiento = 13;
+        $this->load->library('pagination');
+        $data['subtitulo'] = "Movimientos: " . $this->movimiento_model->getTitulosByTipoSubtipo($tipoMovimiento, $subtipoMovimiento);
+        $data['tipoMovimiento'] = $tipoMovimiento;
+        $data['subtipoMovimiento'] = $subtipoMovimiento;
+        
+        $config['base_url'] = site_url('almacen/pedido_sucursal');
+        $config['total_rows'] = $this->movimiento_model->getMovimientosSucursalCuenta($tipoMovimiento, $subtipoMovimiento);
+        $config['per_page'] = 50;
+        $config['uri_segment'] = 5;
+        
+        $data['query'] = $this->movimiento_model->getMovimientosSucursal($tipoMovimiento, $subtipoMovimiento, $config['per_page'], $this->uri->rsegment(5));
+        $data['js'] = 'movimiento/index_js';
+
+        $this->pagination->initialize($config); 
+        
+        $this->load->view('main', $data);
+    }
+
+    function nuevo_pedido($tipoMovimiento, $subtipoMovimiento)
+    {
+        if(PATENTE == 1)
+        {
+            $this->util->actArticulo();
+        }
+        
+        $data['subtitulo'] = "Nuevo Movimiento: " . $this->movimiento_model->getTitulosByTipoSubtipo($tipoMovimiento, $subtipoMovimiento);
+        $data['tipoMovimiento'] = $tipoMovimiento;
+        $data['subtipoMovimiento'] = $subtipoMovimiento;
+        $data['sucursales'] = $this->util->getSucursalesCombo();
+        $data['proveedores'] = $this->util->getProveedorCombo();
+        $data['programa'] = $this->util->getProgramaCombo();
+        $data['validaUbicacion'] = $this->util->getValidaUbicacion($tipoMovimiento);
+        $data['js'] = "movimiento/nuevo_js";
+        $this->load->view('main', $data);
+    }
+
+    function nuevo_pedido_submit()
+    {
+        $tipoMovimiento = $this->input->post('tipoMovimiento');
+        $subtipoMovimiento = $this->input->post('subtipoMovimiento');
+        $fecha = $this->input->post('fecha');
+        $orden = $this->input->post('orden');
+        $referencia = $this->input->post('referencia');
+        $remision = $this->input->post('remision');
+        $sucursal_referencia = $this->input->post('sucursal_referencia');
+        $proveedor = $this->input->post('proveedor');
+        $observaciones = $this->input->post('observaciones');
+        $idprograma = $this->input->post('idprograma');
+        $colectivo = $this->input->post('colectivo');
+        
+        $this->movimiento_model->insertMovimientoSucursal($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma, $colectivo);
+        redirect('almacen/pedido_sucursal/'.$tipoMovimiento.'/'.$subtipoMovimiento);
+    }
+
+    function cierrePrepedido($movimientoID, $tipoMovimiento, $subtipoMovimiento)
+    {
+        $this->movimiento_model->cierrePrepedidoSucursal($movimientoID);
+        redirect('almacen/pedido_sucursal');
+    }
+
+    function aprobar_pedido($movimientoID, $tipoMovimiento, $subtipoMovimiento)
+    {
+        $this->movimiento_model->aprobarPedido($movimientoID);
+        redirect('almacen/pedido_sucursal');
     }
 
 }

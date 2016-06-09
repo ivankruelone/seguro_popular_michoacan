@@ -32,8 +32,13 @@ class Carga extends CI_Controller
         $this->load->helper('file');
         $string = read_file($path);
 
+        $arrayIn = array('<', '>');
+        $arrayOut = array('', '');
+
+        $string = str_replace($arrayIn, $arrayOut, $string);
+
         $arreglo = json_decode($string);
-        
+
         $subida = $this->captura_model->getSubida();
         
         foreach($arreglo->Table1 as $r)
@@ -103,6 +108,12 @@ class Carga extends CI_Controller
     {
     	$this->captura_model->cargaSubidaRecetas($subida);
         $this->captura_model->descuentaInventario($subida);
+        redirect('carga/recetas');
+    }
+
+    function subida_eliminar($subida)
+    {
+    	$this->db->delete('temporal_subida', array('subida'=>$subida));
         redirect('carga/recetas');
     }
 

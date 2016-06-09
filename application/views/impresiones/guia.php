@@ -84,7 +84,7 @@ join articulos a using(id)
 left join inventario i using(id)
 left join ubicacion u using(ubicacion)
 where m.movimientoID = ? and areaID = ? and pasilloTipo <> 2 and u.clvsucursal = ?
-group by areaID;";
+group by pasilloID;";
 
 $query = $this->db->query($sql, array($movimientoID, $det->areaID, $this->session->userdata('clvsucursal')));
 

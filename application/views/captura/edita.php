@@ -30,7 +30,7 @@
         <!--<td><?php //echo MY_form_datepicker('Fecha de Consulta', 'fechaCon', 6, true);?></td>-->
         <td><?php echo MY_form_datepicker('Fecha de surtido', 'fechaSur', 6, true, $receta->fecha);?></td>
         <td><?php echo MY_form_input('folioReceta', 'folioReceta', 'Folio Receta', 'text', 'Folio Receta:', 12, true, $receta->folioreceta); ?></td>
-        <td>Usuario: <span style="color: red;"><?php echo $this->session->userdata('usuario'); ?></span> - <?php echo date('Y-m-d H:i:s'); ?> - <span id="diferencia"><?php echo $config['dias_diferencia']; ?></span></td>
+        <td>Usuario: <span style="color: red;"><?php echo $this->session->userdata('usuario'); ?></span> - <?php echo date('Y-m-d H:i:s'); ?> - <span id="diferencia"><?php echo $config['dias_diferencia']; ?></span> <?php echo anchor('captura/eliminar_receta_completa/' . $receta->consecutivo, ' Eliminar receta <i class="icon-trash bigger-130"> </i>', array('class' => 'eliminar_receta'))?></td>
 
     </tr>
     

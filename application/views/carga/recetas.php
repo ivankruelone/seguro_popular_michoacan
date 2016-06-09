@@ -49,7 +49,7 @@
                                             <td style="text-align: right;"><?php echo number_format($row->sumsur, 0); ?></td>
                                             <td><?php echo anchor('carga/subida_detalle/' . $row->subida, 'Detalle'); ?></td>
                                             <td><?php echo anchor('carga/subida_cargar/' . $row->subida, 'Carga a principal', array('class' => 'cargar')); ?></td>
-                                            <td><?php echo anchor('subida_cargar/subida_eliminar/' . $row->subida, 'Eliminar', array('class' => 'eliminar')); ?></td>
+                                            <td><?php echo anchor('carga/subida_eliminar/' . $row->subida, 'Eliminar', array('class' => 'eliminar')); ?></td>
                                         </tr>
                                         <?php }?>
                                     </tbody>

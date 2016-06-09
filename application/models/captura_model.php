@@ -1099,25 +1099,29 @@ where subida = ? and receta = ?;";
                 $query2 = $this->getDetalleSubida($row->subida, $row->receta);
 
                 foreach ($query2->result() as $row2) {
-                    
-                    $data2 = array(
-                        'consecutivo'   => $consecutivo,
-                        'id'            => $row2->id,
-                        'lote'          => 'SL',
-                        'caducidad'     => '9999-12-31',
-                        'canreq'        => $row2->req,
-                        'cansur'        => $row2->sur,
-                        'precio'        => $row2->precioven,
-                        'ubicacion'     => 0,
-                        'marca'         => '',
-                        'comercial'     => '',
-                        'costo'         => $row2->ultimo_costo,
-                        'servicio'      => $row2->servicio,
-                        'iva'           => $row2->tipoprod
-                    );
 
-                    $this->db->set('altaDetalle', 'now()', false);
-                    $this->db->insert('receta_detalle', $data2);
+                    if($this->validaCargaRecetasDetalle($consecutivo, $row2->id, 'SL', $row2->sur) == 0)
+                    {
+                        $data2 = array(
+                            'consecutivo'   => $consecutivo,
+                            'id'            => $row2->id,
+                            'lote'          => 'SL',
+                            'caducidad'     => '9999-12-31',
+                            'canreq'        => $row2->req,
+                            'cansur'        => $row2->sur,
+                            'precio'        => $row2->precioven,
+                            'ubicacion'     => 0,
+                            'marca'         => '',
+                            'comercial'     => '',
+                            'costo'         => $row2->ultimo_costo,
+                            'servicio'      => $row2->servicio,
+                            'iva'           => $row2->tipoprod
+                        );
+
+                        $this->db->set('altaDetalle', 'now()', false);
+                        $this->db->insert('receta_detalle', $data2);
+                    }
+                    
                 }
 
 
@@ -1128,6 +1132,17 @@ where subida = ? and receta = ?;";
         $this->db->update('temporal_subida', array('estatusSubida' => 1), array('subida' => $subida));
 
         $this->db->trans_complete();
+    }
+
+    function validaCargaRecetasDetalle($consecutivo, $id, $lote, $cansur)
+    {
+        $this->db->where('consecutivo', $consecutivo);
+        $this->db->where('id', $id);
+        $this->db->where('lote', $lote);
+        $this->db->where('cansur', $cansur);
+        $query = $this->db->get('receta_detalle');
+
+        return $query->num_rows();
     }
 
     function getInventory($clvsucursal, $id, $sur)
@@ -1255,6 +1270,45 @@ where subida = ? and receta = ?;";
         }
 
         $this->db->trans_complete();
+    }
+
+    function validaBorrado($consecutivo)
+    {
+        $sql = "SELECT * FROM receta_detalle r where consecutivo = ? and remision > 0;";
+        $query = $this->db->query($sql, array($consecutivo));
+
+        return $query->num_rows();
+    }
+
+    function getProductosEliminar()
+    {
+        $sql = "SELECT * FROM productos_temporal p where usuario = ?;";
+        $query = $this->db->query($sql, array($this->session->userdata('aleatorio')));
+
+        return $query;
+    }
+
+    function deleteRecetaCompleta($consecutivo)
+    {
+        
+        if($this->validaBorrado($consecutivo) == 0)
+        {
+            $this->db->trans_start();
+            $query = $this->getProductosEliminar();
+
+            foreach ($query->result() as $row) {
+                $this->deleteProducto($row->serie);
+            }
+
+            $this->db->delete('receta', array('consecutivo' => $consecutivo));
+            $this->db->trans_complete();
+
+            return 'Eliminada correctamente.';
+        }else
+        {
+            return 'Esta receta tiene productos remisionados';
+        }
+        
     }
 
 }

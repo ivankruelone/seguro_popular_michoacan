@@ -155,9 +155,15 @@ class Facturacion extends CI_Controller
     {
     	$remision = $this->input->post('remision');
     	$contratoID = $this->input->post('contratoID');
-    	$tipoFactura = 1;
 
-    	$this->facturacion_model->getFacturaRemota($contratoID, $remision, $tipoFactura);
+    	$f1 = $this->facturacion_model->getFacturaRemota($contratoID, $remision, 1);
+    	$f2 = $this->facturacion_model->getFacturaRemota($contratoID, $remision, 2);
+
+
+        if($f1 === TRUE && $f2 === TRUE)
+        {
+            $this->facturacion_model->setFacturada($remision);
+        }
     	redirect('facturacion/firmadas');
     }
 
@@ -183,6 +189,28 @@ class Facturacion extends CI_Controller
         $name = 'factura_'.$row->numfac.'.pdf';
         
         force_download($name, $data); 
+    }
+
+    function paquetes()
+    {
+        $data['subtitulo'] = "Paquetes";
+        $data['query'] = $this->facturacion_model->getPaquetes();
+        $this->load->view('main', $data);
+    }
+
+    function recetas()
+    {
+        $data['subtitulo'] = "Recetas";
+        $data['query'] = $this->facturacion_model->getRecetas();
+        $this->load->view('main', $data);
+    }
+
+    function facturadas()
+    {
+        $data['subtitulo'] = "Ver remisiones facturadas";
+        $data['js'] = "facturacion/listado_remisiones_js";
+        $data['query'] = $this->facturacion_model->getRemisionesFacturadasAll();
+        $this->load->view('main', $data);
     }
 
 }

@@ -18,6 +18,10 @@ $row = $query->row();
 
                                     <?php echo MY_form_input('observaciones', 'observaciones', 'Observaciones', 'text', 'Observaciones', 12, false, $row->observaciones); ?>
 
+                                    <?php echo MY_form_input('cvemedico', 'cvemedico', 'Clave de Médico', 'text', 'Clave de médico', 3, true, $row->cvemedico); ?>
+
+                                    <?php echo MY_form_input('nombremedico', 'nombremedico', 'Nombre de médico', 'text', 'Nombre de Médico', 12, true, $row->nombremedico); ?>
+
                                     <?php echo MY_form_submit(); ?>
 
                                     <?php echo form_hidden('colectivoID', $row->colectivoID); ?>

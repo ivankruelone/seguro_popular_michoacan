@@ -860,4 +860,11 @@ function valida_fecha()
         $this->load->view('main', $data);
     }
 
+    function eliminar_receta_completa($consecutivo)
+    {
+        $mensaje = $this->captura_model->deleteRecetaCompleta($consecutivo);
+        $this->session->set_flashdata('mensaje', $mensaje);
+        redirect('captura/edicion');
+    }
+
 }

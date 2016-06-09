@@ -26,7 +26,7 @@
         
         foreach($query->result() as $row){
             
-            if($row->statusMovimiento == 0)
+            if($row->statusMovimiento == 0 || $row->statusMovimiento == 3)
             {
                 $link_elimina = anchor('movimiento/elimina_detalle_prepedido/'.$row->movimientoPrepedido, 'Elimina', array('class' => 'elimina_detalle'));
             }else{

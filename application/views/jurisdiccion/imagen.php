@@ -1,4 +1,6 @@
-                                    <p style="text-align: center;"><?php echo $this->pagination->create_links(); ?></p>
+                            <div class="row-fluid">
+                                <div class="span12">
+
                                     <table class="table table-condensed">
                                         <thead>
                                             <tr>
@@ -13,13 +15,12 @@
                                                 <th>Status</th>
                                                 <th>Alta/Cierre/Guia</th>
                                                 <th>Observaciones</th>
-                                                <th>Imagen</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php 
                                             
-                                            foreach($query->result() as $row){
+                                            foreach($colectivo->result() as $row){
                                                 
                                                 $factura = null;
                                                 $descargaXML = null;
@@ -36,14 +37,7 @@
                                                     case 1:
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
-                                                        if($this->session->userdata('clvpuesto') == 4 || $this->session->userdata('superuser') == 1)
-                                                        {
-                                                            $aprobar = anchor('jurisdiccion/aprobar/'.$row->colectivoID, 'Aprobar <i class="icon-check bigger-130"> </i>', array('class' => 'aprobar'));
-                                                        }else
-                                                        {
-                                                            $aprobar = null;
-                                                        }
-                                                        
+                                                        $aprobar = anchor('jurisdiccion/aprobar/'.$row->colectivoID, 'Aprobar <i class="icon-check bigger-130"> </i>', array('class' => 'aprobar'));
                                                         break;
                                                     case 2:
                                                         $link_edita = null;
@@ -81,19 +75,58 @@
                                                 <td><span style="color: blue;"><?php echo $row->etapa; ?></span><br />Paquete: <span style="color: green;"><?php echo $row->referencia; ?></span></td>
                                                 <td><?php echo $row->altaColectivo . '<br />' . $row->fechaCierre . '<br />' . $row->fechaGuia; ?></td>
                                                 <td><?php echo $row->observaciones; ?></td>
-                                                <td><?php echo anchor('jurisdiccion/imagen/'.$row->colectivoID, 'Imagen <i class="icon-camera bigger-130"> </i>'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td><?php echo $link_edita; ?></td>
-                                                <td><?php echo $imprime; ?></td>
-                                                <td><?php echo anchor('jurisdiccion/captura/'.$row->colectivoID, 'Captura <i class="icon-barcode bigger-130"> </i>'); ?></td>
-                                                <td><?php echo $aprobar; ?></td>
-                                                <td><?php echo $folioFactura; ?></td>
-                                                <td><?php echo $descargaXML; ?></td>
-                                                <td><?php echo $descargaPDF; ?></td>
-                                                <td><?php echo $fechaFactura; ?></td>
-                                                <td colspan="4"></td>
                                             </tr>
                                             <?php }?>
                                         </tbody>
                                     </table>
+
+
+                                </div>
+                            </div>
+							
+                            <div class="row-fluid">
+                                <div class="span12">
+                                
+                                <?php
+                                
+                                echo form_open('jurisdiccion/imagen_submit', array('enctype' => 'multipart/form-data'));
+                                
+                                ?>
+                                
+                                Please choose a file: <input type="file" name="uploadFile" /><br />
+                                <input type="submit" value="Subir archivo" />
+                                
+                                <?php
+
+                                echo form_hidden('colectivoID', $colectivoID);
+                                
+                                echo form_close();
+                                
+                                ?>
+                                
+                                
+                                </div>
+                            </div>
+
+                            <div class="row-fluid">
+                                <div class="span12">
+
+                                <?php
+
+                                foreach ($query->result() as $row2) {
+                                    echo '<div>';
+                                    
+                                    if($row2->usuario == $this->session->userdata('usuario'))
+                                        echo anchor('jurisdiccion/eliminar_imagen/' . $row2->colectivo_imagenID . '/' . $colectivoID, 'Eliminar <i class="icon-trash bigger-130"> </i>', array('class' => 'eliminar'));
+
+                                    
+                                    echo '<br />';
+                                    echo img($row2->rutaImagen);
+                                    echo '<br />';
+                                    echo '</div>';
+                                }
+
+                                ?>
+
+                                </div>
+                            </div>

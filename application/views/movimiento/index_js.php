@@ -29,4 +29,19 @@
 		}
 	}
 
+	$(".aprobar_pedido").on("click", aprobar_pedido);
+
+	function aprobar_pedido(event)
+	{
+
+		var $movimientoID = event.currentTarget.attributes.movimientoID.value;
+		if(confirm("Estas seguro que deseas APROBAR este MOVIMIENTO(PEDIDO DE SUCURSAL): " + $movimientoID + " ??"))
+		{
+			return true;
+		}else{
+			event.preventDefault();
+			return false;
+		}
+	}
+
 </script>

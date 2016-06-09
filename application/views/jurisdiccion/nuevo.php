@@ -11,6 +11,10 @@
 
                                     <?php echo MY_form_dropdown2('Cobertura', 'idprograma', $programa, null, 6); ?>
 
+                                    <?php echo MY_form_input('cvemedico', 'cvemedico', 'Clave de Médico', 'text', 'Clave de médico', 3); ?>
+
+                                    <?php echo MY_form_input('nombremedico', 'nombremedico', 'Nombre de médico', 'text', 'Nombre de Médico', 12); ?>
+
                                     <?php echo MY_form_input('observaciones', 'observaciones', 'Observaciones', 'text', 'Observaciones', 12, false); ?>
 
                                     <?php echo MY_form_submit(); ?>

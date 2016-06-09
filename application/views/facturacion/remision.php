@@ -1,4 +1,5 @@
                                     <table id="ventas-table" class="table table-bordered table-hover">
+                                        <caption>Registros: <?php echo $query->num_rows(); ?></caption>
                                         <thead>
                                             <tr>
                                                 <th style="text-align: right;">Remision</th>
@@ -14,6 +15,10 @@
                                                 <th>Importe</th>
                                                 <th>IVA</th>
                                                 <th>Subtotal</th>
+                                                <th>Servicio</th>
+                                                <th>IVA Servicio</th>
+                                                <th>Total Servicio</th>
+                                                <th>Total</th>
                                                 <th>Imprimir</th>
                                                 <th>Eliminar</th>
                                                 <th>Firmada</th>
@@ -85,9 +90,13 @@
                                                 <td style="text-align: right;"><?php echo number_format ($row->importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->iva_producto, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format ($row->importe + $row->iva_producto, 2); ?></td>
-                                                <td><?php echo $imprime; ?></td>
-                                                <td><?php echo $cancela; ?></td>
-                                                <td><?php echo $firmada; ?></td>
+                                                <td style="text-align: right;"><?php echo number_format ($row->servicio, 2); ?></td>
+                                                <td style="text-align: right;"><?php echo number_format ($row->iva_servicio, 2); ?></td>
+                                                <td style="text-align: right;"><?php echo number_format ($row->servicio + $row->iva_servicio, 2); ?></td>
+                                                <td style="text-align: right;"><?php echo number_format ($row->importe + $row->iva_producto + $row->servicio + $row->iva_servicio, 2); ?></td>
+                                                <td style="text-align: center;"><?php echo $imprime; ?></td>
+                                                <td style="text-align: center;"><?php echo $cancela; ?></td>
+                                                <td style="text-align: center;"><?php echo $firmada; ?></td>
                                             </tr>
 
                                             <?php
@@ -110,7 +119,7 @@
                                             <tr style="background-color: <?php echo $color; ?>;">
                                                 <td><?php echo $facturar; ?></td>
                                                 <td colspan="15">
-                                                    <table>
+                                                    <table class="table table-condensed">
                                                         <thead>
                                                             <tr>
                                                                 <th>Tipo</th>
@@ -119,6 +128,10 @@
                                                                 <th>XML</th>
                                                                 <th>PDF</th>
                                                                 <th>Factura Producto</th>
+                                                                <th>Folio fiscal</th>
+                                                                <th style="text-align: right;">Total Factura</th>
+                                                                <th style="text-align: right;">Iva Factura</th>
+                                                                <th style="text-align: center;">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -129,14 +142,28 @@
                                                             $descargaXML = anchor('facturacion/descargaXML/'.$r->remision_facturaID, 'Descarga XML <i class="icon-download bigger-130"> </i>');
                                                             $descargaPDF = anchor('facturacion/descargaPDF/'.$r->remision_facturaID, 'Descarga PDF <i class="icon-download bigger-130"> </i>');
 
+                                                            if($r->statusFactura == 1)
+                                                            {
+                                                                $statusFactura = 'ACTIVA';
+                                                                $colorFactura = null;
+                                                            }else
+                                                            {
+                                                                $statusFactura = 'CANCELADA';
+                                                                $colorFactura = ROJO_PASTEL;
+                                                            }
+
                                                             ?>
-                                                            <tr>
+                                                            <tr style="background-color: <?php echo $colorFactura; ?>;">
                                                                 <td><?php echo $r->tipoFacturaDescripcion; ?></td>
                                                                 <td><?php echo $r->f_id; ?></td>
                                                                 <td><?php echo $r->numfac; ?></td>
                                                                 <td><?php echo $descargaXML; ?></td>
                                                                 <td><?php echo $descargaPDF; ?></td>
                                                                 <td><?php echo $r->facturaProducto; ?></td>
+                                                                <td><?php echo $r->uuid; ?></td>
+                                                                <td style="text-align: right;"><?php echo number_format($r->totalFactura, 2); ?></td>
+                                                                <td style="text-align: right;"><?php echo number_format($r->ivaFactura, 2); ?></td>
+                                                                <td style="text-align: center;"><?php echo $statusFactura; ?></td>
                                                             </tr>
 
                                                             <?php
@@ -174,32 +201,43 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="8" style="text-align: right;">Productos</td>
+                                                <td colspan="8" style="text-align: right;">Totales</td>
                                                 <td style="text-align: right;"><?php echo number_format($req, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($sur, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($importe, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva_producto, 2); ?></td>
                                                 <td style="text-align: right;" style="font-size: large;"><?php echo number_format($total, 2); ?></td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="9" style="text-align: right;">Servicio</td>
-                                                <td style="text-align: right;"><?php echo number_format($sur, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($servicio, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($iva_servicio, 2); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($servicio + $iva_servicio, 2); ?></td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="12" style="text-align: right;">Total</td>
                                                 <td style="text-align: right;"><?php echo number_format($total + $servicio + $iva_servicio, 2); ?></td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                                 <td>&nbsp;</td>
                                             </tr>
                                         </tfoot>
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align: right;">Remision</th>
+                                                <th>Fecha inicial</th>
+                                                <th>Fecha final</th>
+                                                <th># Sucursal</th>
+                                                <th>Sucursal</th>
+                                                <th>Suministro</th>
+                                                <th>Requerimiento</th>
+                                                <th>Programa</th>
+                                                <th>Cantidad solicitada</th>
+                                                <th>Cantidad surtida</th>
+                                                <th>Importe</th>
+                                                <th>IVA</th>
+                                                <th>Subtotal</th>
+                                                <th>Servicio</th>
+                                                <th>IVA Servicio</th>
+                                                <th>Total Servicio</th>
+                                                <th>Total</th>
+                                                <th>Imprimir</th>
+                                                <th>Eliminar</th>
+                                                <th>Firmada</th>
+                                            </tr>
+                                        </thead>
                                     </table>

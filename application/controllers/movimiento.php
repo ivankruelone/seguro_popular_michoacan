@@ -159,10 +159,10 @@ class Movimiento extends CI_Controller
     function prepedido($movimientoID)
     {
         $data['subtitulo'] = "Pre-pedido";
-        $data['sucursales'] = $this->util->getSucursalesCombo();
-        $data['proveedores'] = $this->util->getProveedorCombo();
+        //$data['sucursales'] = $this->util->getSucursalesCombo();
+        //$data['proveedores'] = $this->util->getProveedorCombo();
         $data['query'] = $this->movimiento_model->getMovimientoByMovimientoID($movimientoID);
-        $data['json'] = json_encode($this->util->getDataOficina('laboratorio', array()));
+        //$data['json'] = json_encode($this->util->getDataOficina('laboratorio', array()));
         $data['js'] = "movimiento/prepedido_js";
         $this->load->view('main', $data);
     }
@@ -591,13 +591,9 @@ group by id, lote, i.ubicacion;";
 
     function pruebaTraspaso()
     {
-        $sql = "SELECT movimientoID FROM movimiento m where subtipoMovimiento = 2 and clvsucursal = 12000 and statusMovimiento = 1;";
-        $query = $this->db->query($sql);
-
-        foreach ($query->result() as $row) {
-            //$json = $this->movimiento_model->getJSONByMovimientoID($row->movimientoID);
-            //$res = $this->util->postDataOficina('traspaso', $json);
-        }
+        $json = $this->movimiento_model->getJSONByMovimientoID(704);
+        echo $json;
+        $res = $this->util->postDataOficina('traspaso', $json);
     }
 
     function imprime($movimientoID, $tipoMovimiento, $subtipoMovimiento)

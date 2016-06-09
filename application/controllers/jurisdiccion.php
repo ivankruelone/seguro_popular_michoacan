@@ -49,6 +49,8 @@ class Jurisdiccion extends CI_Controller
         $clvsucursal = $this->input->post('clvsucursal');
         $idprograma = $this->input->post('idprograma');
         $observaciones = strtoupper($this->input->post('observaciones'));
+        $cvemedico = strtoupper($this->input->post('cvemedico'));
+        $nombremedico = strtoupper($this->input->post('nombremedico'));
         $usuario = $this->session->userdata('usuario');
 
         $data = array(
@@ -57,7 +59,9 @@ class Jurisdiccion extends CI_Controller
             'clvsucursal'   => $clvsucursal,
             'usuario'       => $usuario,
             'idprograma'    => $idprograma,
-            'observaciones' => $observaciones
+            'observaciones' => $observaciones,
+            'cvemedico'     => $cvemedico,
+            'nombremedico'  => $nombremedico
         );
 
         $colectivoID = $this->movimiento_model->insertColectivo($data);
@@ -82,6 +86,8 @@ class Jurisdiccion extends CI_Controller
         $idprograma = $this->input->post('idprograma');
         $observaciones = strtoupper($this->input->post('observaciones'));
         $usuario = $this->session->userdata('usuario');
+        $cvemedico = strtoupper($this->input->post('cvemedico'));
+        $nombremedico = strtoupper($this->input->post('nombremedico'));
 
         $colectivoID = $this->input->post('colectivoID');
 
@@ -91,7 +97,9 @@ class Jurisdiccion extends CI_Controller
             'clvsucursal'   => $clvsucursal,
             'usuario'       => $usuario,
             'idprograma'    => $idprograma,
-            'observaciones' => $observaciones
+            'observaciones' => $observaciones,
+            'cvemedico'     => $cvemedico,
+            'nombremedico'  => $nombremedico
         );
 
         $colectivoID = $this->movimiento_model->updateColectivo($data, $colectivoID);
@@ -186,6 +194,51 @@ class Jurisdiccion extends CI_Controller
         $this->pagination->initialize($config); 
         $data['js'] = 'jurisdiccion/index_js';
         $this->load->view('main', $data);
+    }
+
+    function imagen($colectivoID)
+    {
+        $data['subtitulo'] = "Sube una imagen";
+        $data['colectivoID'] = $colectivoID;
+        $data['query'] = $this->movimiento_model->getColectivoImagen($colectivoID);
+        $data['colectivo'] = $this->movimiento_model->getColectivoByColectivoID($colectivoID);
+        $data['js'] = 'jurisdiccion/imagen_js';
+        $this->load->view('main', $data);
+    }
+
+    function imagen_submit()
+    {
+    	$this->load->helper('string');
+    	$colectivoID = $this->input->post('colectivoID');
+        $target_dir = "uploads/colectivo/";
+        $temp = explode(".", $_FILES["uploadFile"]["name"]);
+		$newfilename = random_string('unique') . '.' . end($temp);
+        $target_dir = $target_dir . $newfilename;
+        $uploadOk = 1;
+        
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            //echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["uploadFile"]["tmp_name"], $target_dir)) {
+                //echo "The file ". basename( $_FILES["uploadFile"]["name"]). " has been uploaded.";
+                $this->movimiento_model->uploadColectivo($colectivoID, $target_dir);
+            } else {
+                //echo "Sorry, there was an error uploading your file.";
+            }
+        }
+        
+        redirect('jurisdiccion/imagen/' . $colectivoID);
+    }
+
+    function eliminar_imagen($colectivo_imagenID, $colectivoID)
+    {
+        $query = $this->movimiento_model->getColectivoImagenByColectivo_imagenID($colectivo_imagenID);
+        $row = $query->row();
+        unlink($row->rutaImagen);
+        $this->movimiento_model->deleteColectivoImagen($colectivo_imagenID);
+        redirect('jurisdiccion/imagen/' . $colectivoID);
     }
 
 }

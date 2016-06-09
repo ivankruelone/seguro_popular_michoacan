@@ -3,20 +3,36 @@
 ?>
                             <div class="row-fluid">
                                 <div class="span12">
-                                
+
+
                                     <?php
-                                    
-                                    if($row->statusMovimiento == 0){
-                                    
+
+                                    if($row->statusMovimiento == 0 || $row->statusMovimiento == 3){
+
+                                        if(ALMACEN == $this->session->userdata('clvsucursal')){
+
                                     ?>
-                                
                                     <p style="text-align: left;"><?php echo anchor('movimiento/cierrePrepedido/'.$row->movimientoID.'/'.$row->tipoMovimiento.'/'.$row->subtipoMovimiento, 'Cerrar este pre-pedido', array('id' => 'cierre')); ?></p>
-                                    
+
                                     <?php
-                                    
-                                    }
-                                    
+
+
+                                        }else
+                                        {
+
                                     ?>
+
+                                    <p style="text-align: left;"><?php echo anchor('almacen/cierrePrepedido/'.$row->movimientoID.'/'.$row->tipoMovimiento.'/'.$row->subtipoMovimiento, 'Cerrar este pre-pedido', array('id' => 'cierre')); ?></p>
+
+                                    <?php
+
+                                        }
+
+                                    }
+
+
+                                    ?>
+                                
                                     
                                 
                                     <table class="table table-condensed">
@@ -59,7 +75,7 @@
                             
                             <?php
                                     
-                            if($row->statusMovimiento == 0){
+                            if($row->statusMovimiento == 0 || $row->statusMovimiento == 3){
                                 
                                 if($row->tipoMovimiento == 1)
                                 {

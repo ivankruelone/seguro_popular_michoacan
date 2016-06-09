@@ -290,21 +290,6 @@ function inicio(){
         }
     }
     
-    var availableTags = '<?php echo $json; ?>';
-    var arr = $.map(JSON.parse(availableTags), function(el) { return el; });
-
-    $( "#marca" ).autocomplete({
-    
-source: arr,
-minLength: 2,
-select: function( event, ui ) {
-    
-    $("#marca").val(ui.item.value);
-
-    return false;
-    
-    }
-});
 
 -->
 </script>

@@ -29,6 +29,7 @@
                                                 <th>Sucursal</th>
                                                 <th>Programa</th>
                                                 <th>Usuario</th>
+                                                <th>Médico</th>
                                                 <th>Status</th>
                                                 <th>Alta/Cierre</th>
                                                 <th>Observaciones</th>
@@ -43,6 +44,7 @@
                                                 <td><?php echo $row->descsucursal; ?></td>
                                                 <td><?php echo $row->programa; ?></td>
                                                 <td><?php echo $row->nombreusuario; ?></td>
+                                                <td><?php echo $row->cvemedico . ' - ' . $row->nombremedico; ?></td>
                                                 <td><span style="color: blue;"><?php echo $row->etapa; ?></span></td>
                                                 <td><?php echo $row->altaColectivo; ?></td>
                                                 <td><?php echo $row->observaciones; ?></td>

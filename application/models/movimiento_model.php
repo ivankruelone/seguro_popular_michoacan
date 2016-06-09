@@ -112,12 +112,39 @@ join sucursales s1 using(clvsucursal)
 join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
-where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ?;";
+where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ? and statusMovimiento not in(3, 4);";
         $query = $this->db->query($sql, array($tipoMovimiento, $subtipoMovimiento, $this->session->userdata('clvsucursal')));
         $row = $query->row();
         return $row->cuenta;
     }
     
+    function getMovimientosSucursalCuenta($tipoMovimiento, $subtipoMovimiento)
+    {
+        if(ALMACEN == $this->session->userdata('clvsucursal'))
+        {
+            $suc = 'm.clvsucursal';
+            $status = ' and statusMovimiento in(4)';
+        }else
+        {
+            $suc = 'm.clvsucursalReferencia';
+            $status = ' and statusMovimiento in(3, 4)';
+        }
+
+        $sql = "SELECT count(*) as cuenta
+FROM movimiento m
+join tipo_movimiento t using(tipoMovimiento)
+join subtipo_movimiento s using(subtipoMovimiento)
+join movimiento_status a using(statusMovimiento)
+join sucursales s1 using(clvsucursal)
+join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
+join proveedor p using(proveedorID)
+join usuarios u using(usuario)
+where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and $suc = ? $status;";
+        $query = $this->db->query($sql, array($tipoMovimiento, $subtipoMovimiento, $this->session->userdata('clvsucursal')));
+        $row = $query->row();
+        return $row->cuenta;
+    }
+
     function getMovimientos($tipoMovimiento, $subtipoMovimiento, $limit, $offset = 0)
     {
         $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml, IFNULL(o.programa, 'TODAS') as programa, colectivo, statusMovimientoDescripcion
@@ -130,7 +157,7 @@ join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
 left join programa o on m.cobertura = o.idprograma
-where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ?
+where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and m.clvsucursal = ? and statusMovimiento not in(3, 4)
 order by m.movimientoID desc
 limit ? offset ?
 ;";
@@ -139,10 +166,41 @@ limit ? offset ?
         return $query;
     }
     
+    function getMovimientosSucursal($tipoMovimiento, $subtipoMovimiento, $limit, $offset = 0)
+    {
+        if(ALMACEN == $this->session->userdata('clvsucursal'))
+        {
+            $suc = 'm.clvsucursal';
+            $status = ' and statusMovimiento in(4)';
+        }else
+        {
+            $suc = 'm.clvsucursalReferencia';
+            $status = ' and statusMovimiento in(3, 4)';
+        }
+
+        $sql = "SELECT movimientoID, statusMovimiento, statusPrepedido, asignaFactura, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, referencia, fecha, razon, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, idFactura, folioFactura, fechaFactura, urlpdf, urlxml, IFNULL(o.programa, 'TODAS') as programa, colectivo, statusMovimientoDescripcion
+        FROM movimiento m
+join tipo_movimiento t using(tipoMovimiento)
+join subtipo_movimiento s using(subtipoMovimiento)
+join movimiento_status a using(statusMovimiento)
+join sucursales s1 using(clvsucursal)
+join sucursales s2 on m.clvsucursalReferencia = s2.clvsucursal
+join proveedor p using(proveedorID)
+join usuarios u using(usuario)
+left join programa o on m.cobertura = o.idprograma
+where m.tipoMovimiento = ? and m.subtipoMovimiento = ? and $suc = ? $status
+order by m.movimientoID desc
+limit ? offset ?
+;";
+
+        $query = $this->db->query($sql, array($tipoMovimiento, $subtipoMovimiento, $this->session->userdata('clvsucursal'), (int)$limit, (int)$offset));
+        return $query;
+    }
 
     
     function getMovimientoByMovimientoID($movimientoID)
     {
+
         $sql = "SELECT m.tipoMovimiento, m.subtipoMovimiento, m.statusMovimiento, remision, movimientoID, statusMovimiento, observaciones, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, orden, nuevo_folio, referencia, fecha, razon, clvsucursalReferencia, s1.descsucursal as sucursal, s2.descsucursal as sucursal_referencia, clvsucursalReferencia, m.clvsucursal, nombreusuario, fechaAlta, fechaCierre, fechaCancelacion, upper(concat(s2.calle, ', ', s2.colonia, ', C. P. ', s2.cp, ', ', s2.municipio)) as domicilio, idFactura, folioFactura, urlxml, urlpdf, fechaFactura, year(fecha) as anio, month(fecha) as mes, s3.nombreSucursalPersonalizado, s3.domicilioSucursalPersonalizado, s2.numjurisd, j.jurisdiccion, IFNULL(o.programa, 'TODAS') as programa, m.cobertura, s2.nivelatencion as nivelatencionReferencia, colectivo
         FROM movimiento m
 join tipo_movimiento t using(tipoMovimiento)
@@ -155,9 +213,9 @@ left join jurisdiccion j on s2.numjurisd = j.numjurisd
 join proveedor p using(proveedorID)
 join usuarios u using(usuario)
 left join programa o on m.cobertura = o.idprograma
-where m.movimientoID = ? and m.clvsucursal = ?;";
+where m.movimientoID = ?;";
 
-        $query = $this->db->query($sql, array($movimientoID, $this->session->userdata('clvsucursal')));
+        $query = $this->db->query($sql, array($movimientoID));
         return $query;
     }
 
@@ -213,6 +271,51 @@ where m.movimientoID = ? and m.clvsucursal = ?;";
         return $movimientoID;
     }
     
+    function insertMovimientoSucursal($tipoMovimiento, $subtipoMovimiento, $fecha, $orden, $referencia, $sucursal_referencia, $proveedor, $observaciones, $remision, $idprograma, $colectivo)
+    {
+
+        if($subtipoMovimiento == 22 && $referencia == 'AUTO')
+        {
+            $referencia = $this->getFolioPaquete();
+        }
+
+        $data = array(
+            'tipoMovimiento'    => $tipoMovimiento,
+            'subtipoMovimiento' => $subtipoMovimiento,
+            'orden'             => $orden,
+            'referencia'        => $referencia,
+            'fecha'             => $fecha,
+            'statusMovimiento'  => 3,
+            'proveedorID'       => $proveedor,
+            'clvsucursal'       => ALMACEN,
+            'clvsucursalReferencia' => $sucursal_referencia,
+            'usuario'           => $this->session->userdata('usuario'),
+            'observaciones'     => $observaciones,
+            'remision'          => $remision,
+            'cobertura'         => $idprograma,
+            'colectivo'         => strtoupper($colectivo)
+            );
+        
+        $this->db->set('fechaAlta', 'now()', false);
+        $this->db->insert('movimiento', $data);
+        $movimientoID = $this->db->insert_id();
+        
+        if($movimientoID > 0 && $orden > 0)
+        {
+            $this->getProductosFolprv($orden);
+        }
+        
+        if($sucursal_referencia == 19000 && $tipoMovimiento == 1 && $subtipoMovimiento == 2)
+        {
+            //$this->cargaPedido($referencia, $movimientoID);
+        }elseif($sucursal_referencia <> 19000 && $tipoMovimiento == 1 && $subtipoMovimiento == 2)
+        {
+            //$this->cargaPedidoUnidades($referencia, $movimientoID);
+        }
+
+        return $movimientoID;
+    }
+
     function getLotes($cvearticulo)
     {
         $sql = "SELECT inventarioID, lote, caducidad, cantidad, area, pasillo
@@ -378,6 +481,15 @@ group by id;";
         }
     }
 
+    function validaCapturaDetallePrepedido($movimientoID, $id)
+    {
+        $this->db->where('movimientoID', $movimientoID);
+        $this->db->where('id', $id);
+        $query = $this->db->get('movimiento_prepedido');
+
+        return $query->num_rows();
+    }
+
     function insertDetalle3($movimientoID, $cveArticulo, $piezas)
     {
             
@@ -386,15 +498,19 @@ group by id;";
         if($query->num_rows() > 0)
         {
             
-            $row = $query->row();    
+            $row = $query->row();
+
+            if($this->validaCapturaDetallePrepedido($movimientoID, $row->id) == 0)
+            {
+                $data = array(
+                    'movimientoID'  => $movimientoID,
+                    'id'            => $row->id,
+                    'piezas'        => $piezas
+                    );
+                
+                $this->db->insert('movimiento_prepedido', $data);
+            }
             
-            $data = array(
-                'movimientoID'  => $movimientoID,
-                'id'            => $row->id,
-                'piezas'        => $piezas
-                );
-            
-            $this->db->insert('movimiento_prepedido', $data);
         }
     }
 
@@ -405,7 +521,7 @@ group by id;";
 join articulos a using(id)
 join movimiento o using(movimientoID)
 left join ubicacion u using(ubicacion)
-where movimientoID = ?
+where movimientoID = ? and piezas > 0
 order by a.tipoprod, a.cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $movimientoID);
         return $query;
@@ -1671,6 +1787,16 @@ group by areaID;";
         $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
     }
     
+    function cierrePrepedidoSucursal($movimientoID)
+    {
+        $data = array(
+            'statusPrepedido'   => 1,
+            'statusMovimiento'  => 4
+        );
+        
+        $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
+    }
+
     function getNuevoFolioFromReferencia($referencia)
     {
         $sql = "SELECT nuevo_folio FROM movimiento m where referencia = ? and nuevo_folio > 0 limit 1;";
@@ -2168,7 +2294,7 @@ where colectivoID = ?;";
         $tabla = '<table cellpadding="1">
             <tr>
                 <td rowspan="5" width="100px">'.img($logo).'</td>
-                <td rowspan="5" width="450px" align="center"><font size="8">'.COMPANIA.'<br />SUCURSAL: '.$row->clvsucursal.' - '.$row->descsucursal.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />COBERTURA: '.$row->programa.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->folio).'</td>
+                <td rowspan="5" width="450px" align="center"><font size="8">'.COMPANIA.'<br />SUCURSAL: '.$row->clvsucursal.' - '.$row->descsucursal.'<br />JURISDICCION: '.$row->numjurisd.' - '.$row->jurisdiccion.'<br />COBERTURA: '.$row->programa.'<br />Clave Médico: '.$row->cvemedico.'<br />Nombre de Médico: '.$row->nombremedico.'<br />Observaciones: '.$row->observaciones .'</font><br />Referencia: '.barras($row->folio).'</td>
                 <td width="75px">ID Movimiento: </td>
                 <td width="95px" align="right">'.$row->colectivoID.'</td>
             </tr>
@@ -2461,6 +2587,39 @@ where m.movimientoID = ?;";
         }
 
         $this->db->trans_complete();
+    }
+
+    function uploadColectivo($colectivoID, $target_dir)
+    {
+        $data = array('rutaImagen' => $target_dir, 'colectivoID' => $colectivoID, 'usuario' => $this->session->session('usuario'));
+        $this->db->insert('colectivo_imagen', $data);
+    }
+
+    function getColectivoImagen($colectivoID)
+    {
+        $this->db->where('colectivoID', $colectivoID);
+        $query = $this->db->get('colectivo_imagen');
+
+        return $query;
+    }
+
+    function getColectivoImagenByColectivo_imagenID($colectivo_imagenID)
+    {
+        $this->db->where('colectivo_imagenID', $colectivo_imagenID);
+        $query = $this->db->get('colectivo_imagen');
+
+        return $query;
+    }
+
+    function deleteColectivoImagen($colectivo_imagenID)
+    {
+        $this->db->delete('colectivo_imagen', array('colectivo_imagenID' => $colectivo_imagenID));
+    }
+
+    function aprobarPedido($movimientoID)
+    {
+        $data = array('statusMovimiento' => 0);
+        $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
     }
 
 }

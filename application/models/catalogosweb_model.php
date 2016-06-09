@@ -587,10 +587,10 @@ FROM articulos a
         foreach($query->result() as $row)
         {
             $clave = $this->limpia(trim($row->cvearticulo));
-            $sustancia = $this->limpia(trim($row->descripcion));
-            $descripcion = $this->limpia(trim($row->susa));
+            $sustancia = $this->limpia(trim($row->susa));
+            $descripcion = $this->limpia(trim($row->descripcion));
             $presentacion = $this->limpia(trim($row->pres));
-            $data .= "replace into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n";
+            $data .= utf8_decode("insert into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n");
         }
         
         return $data;
@@ -618,10 +618,10 @@ FROM articulos a
         foreach($query->result() as $row)
         {
             $clave = $this->limpia(trim($row->cvearticulo));
-            $sustancia = $this->limpia(trim($row->descripcion));
-            $descripcion = $this->limpia(trim($row->susa));
+            $sustancia = $this->limpia(trim($row->susa));
+            $descripcion = $this->limpia(trim($row->descripcion));
             $presentacion = $this->limpia(trim($row->pres));
-            $data .= "replace into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n";
+            $data .= utf8_decode("insert into articulo (clave, sustancia, descripcion, presentacion, precioUnitario, unidades, pa, sp, op, pp, bp, am, pq, sm, tipoArticulo, idArticulo) values('$clave', '$sustancia', '$descripcion', '$presentacion', $row->precioven, $row->numunidades, $row->pa, $row->sp, $row->op, $row->pp, $row->bp, $row->am, $row->pq, $row->sm, $row->tipoprod, $row->id);\r\n");
         }
         
         return $data;

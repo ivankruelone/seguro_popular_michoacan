@@ -96,7 +96,7 @@
                 
             }
             
-            if($row->statusMovimiento == 1 && $row->subtipoMovimiento == 13)
+            if($row->statusMovimiento == 1 && ($row->subtipoMovimiento == 13 || $row->subtipoMovimiento == 22))
             {
                 if($this->session->userdata('consulta') == 0)
                 {

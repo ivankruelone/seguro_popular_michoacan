@@ -123,7 +123,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 if(PATENTE == 0)
 {
-if($subtipoMovimiento == 4 || $subtipoMovimiento == 9 || $subtipoMovimiento == 13)
+if($subtipoMovimiento == 4 || $subtipoMovimiento == 9 || $subtipoMovimiento == 13 || $subtipoMovimiento == 22)
 {
 $pdf->AddPage();
 $html = <<<EOF
