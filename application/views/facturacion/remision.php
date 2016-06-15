@@ -119,7 +119,7 @@
                                             <tr style="background-color: <?php echo $color; ?>;">
                                                 <td><?php echo $facturar; ?></td>
                                                 <td colspan="15">
-                                                    <table class="table table-condensed">
+                                                    <table class="table table-condensed" style="width: 100%;">
                                                         <thead>
                                                             <tr>
                                                                 <th>Tipo</th>
@@ -132,6 +132,7 @@
                                                                 <th style="text-align: right;">Total Factura</th>
                                                                 <th style="text-align: right;">Iva Factura</th>
                                                                 <th style="text-align: center;">Status</th>
+                                                                <th style="text-align: center;">Fecha Factura</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -164,6 +165,7 @@
                                                                 <td style="text-align: right;"><?php echo number_format($r->totalFactura, 2); ?></td>
                                                                 <td style="text-align: right;"><?php echo number_format($r->ivaFactura, 2); ?></td>
                                                                 <td style="text-align: center;"><?php echo $statusFactura; ?></td>
+                                                                <td style="text-align: center;"><?php echo $r->fechaFactura; ?></td>
                                                             </tr>
 
                                                             <?php

@@ -1329,11 +1329,11 @@ order by fechaCierre, referencia;";
                 break;
             case 16:
                 $this->db->where('numjurisd', $this->session->userdata('numjurisd'));
-                $a = array();
+                $a = array('1000' => 'TODAS');
                 break;
             case 17:
             case 18:
-                $a = array('0' => 'TODAS');
+                $a = array('1000' => 'TODAS');
                 break;
             default:
                
@@ -1396,7 +1396,7 @@ order by fechaCierre, referencia;";
                 break;
             case 17:
             case 18:
-                $a = array('0' => 'TODAS');
+                $a = array('1000' => 'TODAS');
                 break;
             default:
                
@@ -1448,69 +1448,142 @@ order by fechaCierre, referencia;";
     */
     
     
-     function getProgramaByAll($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal)
+     function getProgramaByAll($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal, $nivel_atencion)
     {
         $suministro = (int) $suministro;
         if($suministro == 1000)
         {
             $tipo = null;
         }else{
-            $tipo = "and a.tipoprod = $suministro";
-        }
-        
-        if($sucursal== 0)
-        {
-            if((int)$juris == 0)
-            {
-                $filtro = null;
-            }else{
-                $filtro = "and s.numjurisd = $juris";
-            }
-        }else{
-            
-            $filtro = "and r.clvsucursal = '$sucursal'";
-            
-        }
-        
-        if($tipo_sucursal == 0)
-        {
-            $nivel_sucursal = null;
-        }else{
-            $nivel_sucursal = "and s.tiposucursal = $tipo_sucursal";
+            $tipo = " and tipoprod = $suministro";
         }
 
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+
         $sql = "
-       select a.cvearticulo, concat(a.susa,' ',a.descripcion, ' ',a.pres) as completo,a.tipoprod
-, (select sum(case when r.idprograma = '0' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pa
-, (select sum(case when r.idprograma = '1' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as sp
-, (select sum(case when r.idprograma = '2' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as op
-, (select sum(case when r.idprograma = '3' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pp
-, (select sum(case when r.idprograma = '4' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as bp
-, (select sum(case when r.idprograma = '5' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as am
-, (select sum(case when r.idprograma = '6' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as pq
-, (select sum(case when r.idprograma = '7' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as sm
-, (select sum(case when r.idprograma = '8' then cansur else 0 end) from receta_detalle p where r.consecutivo = p.consecutivo) as ch
-, (select sum(p.cansur) from receta_detalle p where p.consecutivo = x.consecutivo) as todo,
-(select sum(x.precio) from receta_detalle p where p.consecutivo = x.consecutivo group by p.consecutivo) as subtotal,
-preciosinser,a.servicio,cansur
-from articulos a
-join receta_detalle x on x.id = a.id
-join receta r on x.consecutivo = r.consecutivo
-join sucursales s on r.clvsucursal = s.clvsucursal $nivel_sucursal
-join temporal_suministro tt on a.tipoprod = tt.cvesuministro $tipo
-where r.fecha between ? and ? $filtro 
-group by a.cvearticulo,r.idprograma";
+       SELECT id, cvearticulo, clave, concat(susa, ' ', descripcion, ' ', pres) as completo, precioven, iva,
+sum(case when idprograma = 0 then cansur else 0 end) as pa,
+sum(case when idprograma = 1 then cansur else 0 end) as sp,
+sum(case when idprograma = 2 then cansur else 0 end) as pr,
+sum(case when idprograma = 7 then cansur else 0 end) as sm,
+sum(cansur) as total,
+sum(cansur * precio) as importe, sum(case when iva = 1 then cansur * precio * 0.16 else 0 end) as iva_producto, sum(cansur * d.servicio) as servicio, sum(cansur * d.servicio * 0.16) as iva_servicio
+FROM receta r
+join receta_detalle d using(consecutivo)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales
+group by id
+order by tipoprod, cvearticulo * 1
+;";
 
 
         $query = $this->db->query($sql, array($fecha1, $fecha2));
         //echo $this->db->last_query();
-        $this->insertaQuery($this->db->last_query());
+        $this->insertaQuery($this->db->last_query(), 'CONCENTRADO POR PROGRAMA, PERIODO: ' . $fecha1 . ' AL ' . $fecha2);
         
         //echo $this->db->last_query();
         return $query;
     }
     
     
+    function getProgramaByAllCliente($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal, $nivel_atencion)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+
+        $sql = "
+       SELECT id, cvearticulo, clave, concat(susa, ' ', descripcion, ' ', pres) as completo, precioven, iva,
+sum(case when idprograma = 0 then cansur else 0 end) as pa,
+sum(case when idprograma = 1 then cansur else 0 end) as sp,
+sum(case when idprograma = 2 then cansur else 0 end) as pr,
+sum(case when idprograma = 7 then cansur else 0 end) as sm,
+sum(cansur) as total,
+sum(cansur * precio) as importe, sum(case when iva = 1 then cansur * precio * 0.16 else 0 end) as iva_producto, sum(cansur * d.servicio) as servicio, sum(cansur * d.servicio * 0.16) as iva_servicio
+FROM receta r
+join receta_detalle d using(consecutivo)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales
+group by id
+order by tipoprod, cvearticulo * 1
+;";
+
+
+        $query = $this->db->query($sql, array($fecha1, $fecha2));
+        //echo $this->db->last_query();
+        $this->insertaQuery($this->db->last_query(), 'CONCENTRADO POR PROGRAMA, PERIODO: ' . $fecha1 . ' AL ' . $fecha2);
+        
+        //echo $this->db->last_query();
+        return $query;
+    }
+
      function getProgramaByAll_farmacia($fecha1, $fecha2, $suministro)
     {
         $suministro = (int) $suministro;
@@ -1615,7 +1688,7 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
          
          
         $aa = $this->getTitulos($fecha1,$fecha2,$suministro,$idprograma);        
-        $sql = "SELECT a.cvearticulo, concat(a.susa,'-',a.descripcion, '',a.pres)
+        $sql = "SELECT a.cvearticulo, concat(a.susa,' ',a.descripcion, ' ',a.pres)
         as completo, a.tipoprod, sum(canreq)
         as requerida, sum(cansur) as surtida, precioven
         from articulos a join receta_detalle d on a.id = d.id
@@ -1623,8 +1696,7 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         join sucursales s on r.clvsucursal = s.clvsucursal
         where fecha between ? and ? $tipo $filtro $programa
         group by a.cvearticulo, a.tipoprod, completo,
-        precioven order by tipoprod, a.cvearticulo,
-        replace(a.cvearticulo, 'S/C', '');";
+        precioven order by tipoprod, a.cvearticulo * 1;";
 
         
         $query = $this->db->query($sql, array($fecha1, $fecha2));
@@ -1634,6 +1706,74 @@ function getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, 
         return $query;
     }
 
+    function getProgramaByProgramaByAllCliente($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal, $nivel_atencion)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+        if((int)$idprograma == 1000)
+        {
+            $programa = null;
+        }else{
+            $programa = " and idprograma = $idprograma";
+        }
+         
+         
+        $aa = $this->getTitulos($fecha1,$fecha2,$suministro,$idprograma);
+
+        $sql = "SELECT a.cvearticulo, concat(a.susa,' ',a.descripcion, ' ',a.pres)
+        as completo, a.tipoprod, sum(canreq)
+        as requerida, sum(cansur) as surtida, precioven
+        from receta r 
+        join receta_detalle d using(consecutivo)
+        join articulos a using(id)
+        join sucursales s using(clvsucursal)
+        where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa
+        group by id 
+        order by tipoprod, cvearticulo * 1;";
+
+        
+        $query = $this->db->query($sql, array($fecha1, $fecha2));
+        
+        $this->insertaQuery($this->db->last_query(),$aa);
+        
+        return $query;
+    }
 
 function getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idprograma)
 
@@ -1878,7 +2018,7 @@ function getProgramaByProgramaByAll_farmacia($fecha1, $fecha2, $suministro, $idp
     
     
     
-    function getTitulos5($fecha1, $fecha2, $idprograma, $tiporequerimiento, $sucursal, $juris)
+    function getTitulos5($fecha1, $fecha2, $idprograma, $tiporequerimiento = 1000, $sucursal, $juris)
     {
         if($idprograma == 1000){
             $t1 = 'DEL PROGRAMA DE: TODO';
@@ -2030,6 +2170,68 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByClaveByAllCliente($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal, $nivel_atencion)
+    {
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+        if((int)$idprograma == 1000)
+        {
+            $programa = null;
+        }else{
+            $programa = " and idprograma = $idprograma";
+        }
+
+       $aa = $this->getTitulos22($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal);
+
+        $sql = "SELECT 
+            r.clvsucursal, descsucursal, programa, fecha, tipoprod, precioven, folioreceta, 
+            cvepaciente, concat(nombre,' ',apaterno,' ',amaterno) as paciente, cvemedico, 
+            nombremedico, r.clvsucursal, descsucursal, canreq, cansur 
+            from receta r 
+            join receta_detalle d using(consecutivo)
+            join sucursales s using(clvsucursal)
+            join programa p using(idprograma) 
+            join articulos a using(id)
+            where fecha between ? and ? and cvearticulo = ? $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa 
+            order by fecha";
+            
+        $query = $this->db->query($sql, array($fecha1, $fecha2, $clave));
+        
+        $this->insertaQuery($this->db->last_query(),$aa);
+        
+        return $query;
+    }
+
     function getByClaveByAll_farmacia($fecha1, $fecha2, $clave, $idprograma)
     {
 
@@ -2118,6 +2320,65 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByCvePacienteAllCliente($cvepaciente, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+        $aa = $this->getTitulos33($fecha1, $fecha2, $sucursal, $suministro, $juris);    
+        $sql = "SELECT programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
+        fecha, folioreceta, cvemedico, nombremedico, cvearticulo, concat(susa,' ',descripcion,' ',pres)
+        as completo, canreq, cansur 
+        from receta r 
+        join receta_detalle d using(consecutivo)
+        join articulos a using(id)
+        join sucursales s using(clvsucursal)
+        join programa p using(idprograma)
+        where fecha between ? and ? and cvepaciente = '$cvepaciente' $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales
+        order by fecha, folioreceta;";
+    
+        $query = $this->db->query($sql, array($fecha1, $fecha2));
+
+        $this->insertaQuery($this->db->last_query(),$aa);
+        
+        return $query;
+    }
+
     function getByCvePacienteAll_farmacia($cvepaciente, $fecha1, $fecha2, $suministro)
     {
         $suministro = (int) $suministro;
@@ -2201,6 +2462,65 @@ function getCompletoByCvearticulo($cveArticulo)
         return $query;
     }
     
+    function getByCveMedicoAllCliente($cvemedico, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+
+        $aa = $this->getTitulos33($fecha1,$fecha2,$sucursal, $suministro, $juris); 
+        $sql = "SELECT programa, tipoprod, precioven, r.clvsucursal, descsucursal, 
+        fecha, folioreceta, cvepaciente, concat(trim(apaterno),' ',trim(amaterno),' ',trim(nombre)) as paciente, 
+        cvearticulo, concat(susa,' ',descripcion,' ',pres)as completo, canreq, cansur
+    from receta r 
+    join receta_detalle d using(consecutivo) 
+    join articulos a using(id) 
+    join sucursales s using(clvsucursal)
+    join programa p using(idprograma)
+    where fecha between ? and ? and cvemedico = ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales
+    order by fecha, folioreceta;";
+    
+        $query = $this->db->query($sql, array($fecha1, $fecha2, $cvemedico));
+       
+        $this->insertaQuery($this->db->last_query(),$aa);
+        
+        return $query;
+    }
+
     function getByCveMedicoAll_farmacia($cvemedico, $fecha1, $fecha2, $suministro)
     {
         $suministro = (int) $suministro;
@@ -2279,6 +2599,71 @@ function getCompletoByCvearticulo($cveArticulo)
         
     }
     
+    function recetas_periodo_detalleAllCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma, $tiporequerimiento = 1000)
+    {
+        
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+        
+        if((int)$idprograma == 1000)
+        {
+            $programa = null;
+        }else{
+            $programa = " and idprograma = $idprograma";
+        }
+
+        $aa = $this->getTitulos5($fecha1, $fecha2, $idprograma, $tiporequerimiento, $sucursal, $juris);
+        $s = "SELECT descsucursal, precioven, tipoprod, programa, requerimiento, folioreceta, apaterno, amaterno, nombre, canreq,
+             cvepaciente, cie103, cie104, cveservicio, x.cvearticulo, concat(x.susa,' ',x.descripcion,' ', x.pres) as descripcion, cansur, nombremedico, cvemedico,
+            fecha, fechaexp
+            from receta r
+            join sucursales s using(clvsucursal)
+            join programa p using(idprograma)
+            join temporal_requerimiento q using(tiporequerimiento)
+            join receta_detalle d using(consecutivo)
+            join articulos x using(id)
+            where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa";
+        $query = $this->db->query($s, array($fecha1, $fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
+        return $query;
+        
+    }
+
     function recetas_periodo_detalleAll_farmacia($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro)
     {
         
@@ -2348,6 +2733,54 @@ function getCompletoByCvearticulo($cveArticulo)
         return $a;
     }
     
+    function getNivelAtencionCliente()
+    {
+        if($this->session->userdata('clvpuesto') == 15)
+        {
+            $this->db->where('nivelatencion', $this->session->userdata('nivelAtencion'));
+            $a = array();
+
+        }else
+        {
+            $a = array('1000' => 'TODOS');
+        }
+        $this->db->order_by('nivelatencion');
+        $query = $this->db->get('temporal_nivel_atencion');
+        
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->nivelatencion] = $row->nivelatencion. ' - ' . trim($row->tipo_sucursal) . '(' . $row->nivelatenciondescripcion . ')';
+        }
+        
+        return $a;
+    }
+
+    function getTipoSucursalCliente()
+    {
+        if($this->session->userdata('clvpuesto') == 15)
+        {
+            $this->db->where('tiposucursal', $this->session->userdata('tipoSucursal'));
+            $a = array();
+
+        }else
+        {
+            $a = array('1000' => 'TODOS');
+        }
+        $this->db->order_by('tiposucursal');
+        $this->db->where('tiposucursal <> 0', null);
+        $this->db->where('tiposucursal <> 4', null);
+        $query = $this->db->get('sucursales_tipo');
+        
+        
+        foreach($query->result() as $row)
+        {
+            $a[$row->tiposucursal] = $row->tiposucursal. ' - ' . trim($row->tiposucursalDescripcion);
+        }
+        
+        return $a;
+    }
+
     function getArticuloByCveArticulo($term)
     {
         
@@ -2554,6 +2987,66 @@ function getCompletoByCvearticulo($cveArticulo)
         return $q;
     }
 
+    function rsu_surtidasCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and consecutivo in(select consecutivo from receta_detalle where iva = $suministro)";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+
+        if($idprograma == 1000)
+        {
+            $programa = null;
+        }else
+        {
+            $programa = " and idprograma = $idprograma";
+        }
+
+        $aa = 'REPORTE DE RECETAS SURTIDAS POR UNIDAD EN EL PERIODO DE: '.$fecha1.' AL '.$fecha2;
+        $sql = "SELECT clvsucursal, descsucursal, count(*) as cuenta
+                FROM receta r
+                join sucursales s using(clvsucursal)
+                where fecha between ? and ? $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa $tipo
+                group by clvsucursal
+                order by cuenta desc;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(), $aa);
+        return $q;
+    }
+
     function rsu_surtidas_farmacia($fecha1,$fecha2)
     {
         
@@ -2583,6 +3076,60 @@ order by surtido desc;";
         return $q;
     }
     
+    function claves_causesCliente($fecha1, $fecha2, $causes, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+
+        $aa = $this->getTitulos6($fecha1, $fecha2, $causes);
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido 
+        FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+where fecha between ? and ? and cause = ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales
+group by id
+order by surtido desc;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2, $causes));
+        $this->insertaQuery($this->db->last_query(),$aa);
+        return $q;
+    }
+
     function claves_causes_farmacia($fecha1, $fecha2, $causes)
     {
         $aa = $this->getTitulos6($fecha1, $fecha2, $causes);
@@ -2612,6 +3159,69 @@ limit 20;";
         return $q;
     }
     
+    function claves_mayor_movimientoCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+
+        if($idprograma == 1000)
+        {
+            $programa = null;
+        }else
+        {
+            $programa = " and idprograma = $idprograma";
+        }
+
+        $aa = 'REPORTE DE CLAVES EN MAYOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido 
+        FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa
+group by id
+order by surtido desc
+limit 20;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
+        return $q;
+    }
+
     function claves_mayor_movimiento_farmacia($fecha1, $fecha2)
     {
         $aa = 'REPORTE DE CLAVES EN MAYOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
@@ -2649,6 +3259,69 @@ limit 20;";
 join receta r using(consecutivo)
 join articulos a using(id)
 where fecha between ? and ?
+group by id
+order by surtido asc
+limit 20;";
+        $q  = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
+        $this->insertaQuery($this->db->last_query(),$aa);
+        return $q;
+    }
+
+    function claves_menor_movimientoCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma)
+    {
+        if($suministro == 1000)
+        {
+            $tipo = null;
+        }else{
+            $tipo = " and tipoprod = $suministro";
+        }
+
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+        if($sucursal == 1000)
+        {
+            $sucursales = null;
+        }else{
+            
+            $sucursales = " and clvsucursal = $sucursal";
+            
+        }
+
+        if($idprograma == 1000)
+        {
+            $programa = null;
+        }else
+        {
+            $programa = " and idprograma = $idprograma";
+        }
+
+        $aa = 'REPORTE DE CLAVES EN MENOR MOVIMIENTO EN EL PERIODO DE : '.$fecha1.' AL '.$fecha2;
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, sum(cansur) as surtido 
+        FROM receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+join sucursales s using(clvsucursal)
+where fecha between ? and ? $tipo $jurisdiccion $tipoSucursal $nivelAtencion $sucursales $programa
 group by id
 order by surtido asc
 limit 20;";
@@ -3064,8 +3737,8 @@ order by tipoprod, cvearticulo * 1;";
         $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO TOTAL'.date('d/M/Y H:i:s'));
-        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVerticalHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->excel->getActiveSheet()->setCellValue('A2', 'INVENTARIO TOTAL '.date('d/M/Y H:i:s'));
+        $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
 
@@ -4924,7 +5597,46 @@ order by tipoprod, cvearticulo * 1;";
             $hoja++;
         }
     
-    
+    function getSucursalesClienteSelect($juris, $tipo_sucursal, $nivel_atencion)
+    {
+        if($juris == 1000)
+        {
+            $jurisdiccion = null;
+        }else
+        {
+            $jurisdiccion = " and numjurisd = $juris";
+        }
+        
+        if($tipo_sucursal == 1000)
+        {
+            $tipoSucursal = null;
+        }else{
+            $tipoSucursal = " and tiposucursal = $tipo_sucursal";
+        }
+
+        if($nivel_atencion == 1000)
+        {
+            $nivelAtencion = null;
+        }else{
+            $nivelAtencion = " and nivelAtencion = $nivel_atencion";
+        }
+
+
+        $sql = "SELECT * 
+        from sucursales 
+        where activa = 1 $jurisdiccion $tipoSucursal $nivelAtencion
+        order by clvsucursal;";
+
+        $query = $this->db->query($sql);
+
+        $suc = '<option value="1000">TODAS</option>';
+
+        foreach ($query->result() as $row) {
+            $suc .= '<option value="'.$row->clvsucursal.'">'.$row->descsucursal.' - '.$row->descsucursal.'</option>';
+        }
+
+        return $suc;
+    }
     
 
 }

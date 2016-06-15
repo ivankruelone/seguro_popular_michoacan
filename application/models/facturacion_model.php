@@ -603,4 +603,20 @@ group by clvsucursal;";
         return $data;
     }
 
+    function getReporte()
+    {
+    	$sql = "SELECT numfac, uuid, descsucursal, programa, perini, perfin, case when tipoFactura = 1 then suministro else tipoFacturaDescripcion end as concepto, totalfactura, ivaFactura, remision, case when statusFactura = 1 then 'ACTIVA' else 'CANCELADA' end as vigencia
+FROM remision_factura f
+join remision r using(remision)
+join sucursales s using(clvsucursal)
+join programa p using(idprograma)
+join remision_tipo_factura t using(tipoFactura)
+join temporal_suministro u on r.iva = u.cvesuministro
+;";
+		
+		$query = $this->db->query($sql);
+
+		return $query();
+    }
+
 }

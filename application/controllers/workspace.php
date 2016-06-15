@@ -28,4 +28,16 @@ class Workspace extends CI_Controller
     {
         $this->util->getMenuByUsuario();
     }
+
+    function pruebamatch()
+    {
+    	$string = '01234585A';
+    	if (preg_match('/[A-Z]/',$string))
+    	{
+    		echo "HAY COINCIDENCIA";
+    	}else 
+		{
+			echo "NO HAY COINCIDENCIA";
+		}
+    }
 }

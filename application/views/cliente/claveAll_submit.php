@@ -79,11 +79,11 @@
                                                 <td><?php echo $row->descsucursal; ?></td>
                                                 <td><?php echo $row->fecha; ?></td>
                                                 <td><?php echo $row->programa; ?></td>
-                                                <td><?php echo utf8_encode($row->folioreceta); ?></td>
-                                                <td><?php echo utf8_encode($row->cvepaciente); ?></td>
-                                                <td><?php echo utf8_encode($row->paciente); ?></td>
-                                                <td><?php echo utf8_encode($row->cvemedico); ?></td>
-                                                <td><?php echo utf8_encode($row->nombremedico); ?></td>
+                                                <td><?php echo ($row->folioreceta); ?></td>
+                                                <td><?php echo ($row->cvepaciente); ?></td>
+                                                <td><?php echo ($row->paciente); ?></td>
+                                                <td><?php echo ($row->cvemedico); ?></td>
+                                                <td><?php echo ($row->nombremedico); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->canreq, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->cansur, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>

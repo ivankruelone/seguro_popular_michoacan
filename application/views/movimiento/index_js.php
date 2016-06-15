@@ -29,6 +29,21 @@
 		}
 	}
 
+	$(".cerrar_sin_afectar").on("click", cerrar_sin_afectar);
+
+	function cerrar_sin_afectar(event)
+	{
+
+		var $movimientoID = event.currentTarget.attributes.movimientoID.value;
+		if(confirm("Estas seguro que deseas CERRAR SIN AFECTAR este Movimiento: " + $movimientoID + " ??"))
+		{
+			return true;
+		}else{
+			event.preventDefault();
+			return false;
+		}
+	}
+
 	$(".aprobar_pedido").on("click", aprobar_pedido);
 
 	function aprobar_pedido(event)

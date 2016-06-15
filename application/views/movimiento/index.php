@@ -65,6 +65,7 @@
                                                 $descargaPDF = null;
                                                 $folioFactura = null;
                                                 $fechaFactura = null;
+                                                $cerrarSinAfectar = null;
                                                 
                                                 if($row->statusMovimiento == 0)
                                                 {
@@ -80,6 +81,18 @@
                                                     $imprime = null;
                                                     $cancela = anchor('movimiento/cancela/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: red;">Cancelar</span>', array('class' => 'cancelar'));
                                                     $abrir = null;
+
+                                                    if($this->session->userdata('superuser') == 1)
+                                                    {
+                                                        $cerrarSinAfectar = anchor('movimiento/cerrar_sin_afectar/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: blue;"> Cerrar sin afectar </span>', array('class' => 'cerrar_sin_afectar', 'movimientoID' => $row->movimientoID));
+
+                                                    }else
+                                                    {
+                                                        $cerrarSinAfectar = null;
+                                                    }
+
+
+
                                                 }elseif($row->statusMovimiento == 1){
                                                     $status = '<span style="color: blue; ">'.$row->statusMovimientoDescripcion.'</span>';
                                                     $link_edita = null;
@@ -88,7 +101,7 @@
 
                                                     if($this->session->userdata('superuser') == 1)
                                                     {
-                                                        $abrir = anchor('movimiento/abrir/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: blue;">Abrir</span>', array('class' => 'abrir', 'movimientoID' => $row->movimientoID));
+                                                        $abrir = anchor('movimiento/abrir/' . $row->movimientoID . '/' . $tipoMovimiento . '/' . $subtipoMovimiento, '<span style="color: blue;"> Abrir </span>', array('class' => 'abrir', 'movimientoID' => $row->movimientoID));
                                                     }else
                                                     {
                                                         $abrir = null;
@@ -209,7 +222,7 @@
                                                 <td><?php echo $folioFactura; ?></td>
                                                 <td><?php echo $descargaXML; ?></td>
                                                 <td><?php echo $descargaPDF; ?></td>
-                                                <td><?php echo $fechaFactura . $cancela . $abrir; ?></td>
+                                                <td><?php echo $fechaFactura . $cancela . $abrir . $cerrarSinAfectar; ?></td>
                                             </tr>
                                             <?php }?>
                                         </tbody>

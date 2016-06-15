@@ -77,12 +77,12 @@
                                                 <td><?php echo $row->clvsucursal; ?></td>
                                                 <td><?php echo $row->descsucursal; ?></td>
                                                 <td><?php echo $row->fecha; ?></td>
-                                                <td><?php echo utf8_encode($row->folioreceta); ?></td>
-                                                <td><?php echo utf8_encode($row->programa); ?></td>
-                                                <td><?php echo utf8_encode($row->cvemedico); ?></td>
-                                                <td><?php echo utf8_encode($row->nombremedico); ?></td>
-                                                <td><?php echo utf8_encode($row->cvearticulo); ?></td>
-                                                <td><?php echo utf8_encode($row->completo); ?></td>
+                                                <td><?php echo ($row->folioreceta); ?></td>
+                                                <td><?php echo ($row->programa); ?></td>
+                                                <td><?php echo ($row->cvemedico); ?></td>
+                                                <td><?php echo ($row->nombremedico); ?></td>
+                                                <td><?php echo ($row->cvearticulo); ?></td>
+                                                <td><?php echo ($row->completo); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->canreq, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->cansur, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>

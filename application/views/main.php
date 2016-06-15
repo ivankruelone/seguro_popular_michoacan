@@ -1,6 +1,29 @@
 <?php
 	$controller = $this->uri->segment(1, null);
     $method = $this->uri->segment(2, "default");
+    $tipoMovimientoMain = $this->uri->segment(3, null);
+    $clvpuesto = $this->session->userdata('clvpuesto');
+    $bandera = 1;
+
+    if($clvpuesto == 15 || $clvpuesto == 16 || $clvpuesto == 17 || $clvpuesto == 18)
+    {
+    	$bandera = 0;
+    }
+
+    if($controller == 'movimiento')
+    {
+    	if($tipoMovimientoMain == 1)
+    	{
+    		$controllerMenu = 'entrada';
+    	}else
+    	{
+    		$controllerMenu = 'salida';
+    	}
+    }else
+    {
+    	$controllerMenu = $controller;
+    }
+
     $tittle = str_replace('_', ' ', $method);
     $nivel = $this->session->userdata('nivel');
     $usuario = $this->session->userdata('usuario');
@@ -205,11 +228,11 @@
         var $controller = '<?php echo $this->uri->segment(1, null); ?>';
         var $method = '<?php if ( $count > 1 ) { echo $check_submethod[0]; }else{ echo $this->uri->segment(2, "default"); } ?>';
         
-        $( "#navlist-" + $controller ).addClass( "active" );
-        $( "#navlist-" + $controller + "-" + $method ).addClass( "active" );
+        $( "#navlist-" + "<?php echo $controllerMenu; ?>" ).addClass( "active" );
+        $( "#navlist-" + "<?php echo $controllerMenu; ?>" + "-" + "<?php echo $method; ?>" ).addClass( "active" );
         
-        <?php if($caducidad > 0){ ?>
-        
+        <?php if($caducidad > 0 && $bandera == 1){ ?>
+
         $.gritter.add({
             title: 'Tienes productos Caducados',
             text: 'Ver reporte aqui: <?php echo anchor('inventario/caducidades', 'Reporte de caducidades'); ?>',

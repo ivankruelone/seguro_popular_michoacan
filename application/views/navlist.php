@@ -13,7 +13,12 @@
                     <?php
                     
                     foreach($arr as $a){
-                    
+
+                        if($a->controlador == 'movimiento')
+                        {
+                            $a->controlador = strtolower($a->menu);
+                        }
+
                     ?>
 
 					<li id="navlist-<?php echo $a->controlador; ?>">

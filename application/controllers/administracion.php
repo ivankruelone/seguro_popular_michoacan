@@ -46,6 +46,8 @@ class Administracion extends CI_Controller
 
     function usuario_nuevo()
     {
+        $this->load->helper('string');
+        $data['ps'] = random_string('alnum', 6);
         $data['subtitulo'] = "Usuarios del sistema";
         $data['clvpuesto'] = $this->admin_model->getPuestoCombo();
         $data['clvsucursal'] = $this->util->getSucursalesCombo();

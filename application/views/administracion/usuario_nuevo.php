@@ -5,7 +5,7 @@
                                     
         <?php echo MY_form_input('clvusuario', 'clvusuario', 'Usuario', 'text', 'Usuario:', 3, true); ?>
 
-        <?php echo MY_form_input('password', 'password', 'Password', 'password', 'Password', 3); ?>
+        <?php echo MY_form_input('password', 'password', 'Password', 'password', 'Password', 3, true, $ps); ?>
 
         <?php echo MY_form_input('nombreusuario', 'nombreusuario', 'Nombre Usuario', 'text', 'Nombre:', 6, true); ?>
 

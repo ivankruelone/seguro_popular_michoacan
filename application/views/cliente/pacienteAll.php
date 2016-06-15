@@ -11,6 +11,10 @@
                                     
                                     <?php echo MY_form_dropdown2('Jurisdiccion: ', 'juris', $juris, null, 6); ?>
 
+                                    <?php echo MY_form_dropdown2('Tipo de Sucursal: ', 'tipo_sucursal', $tipo_sucursal, null, 6); ?>
+                                    
+                                    <?php echo MY_form_dropdown2('Nivel de Atención: ', 'nivel_atencion', $nivel_atencion, null, 6); ?>
+
                                     <?php echo MY_form_dropdown2('Sucursal: ', 'sucursal', $sucursal, null, 6); ?>
 
                                     <?php echo MY_form_input('expedienteAll', 'expedienteAll', 'Numero de expediente', 'text', 'Numero de expediente:', 12); ?>

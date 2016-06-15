@@ -2148,7 +2148,7 @@ join subtipo_movimiento s using(tipoMovimiento) where tipoMovimiento = ? and sub
 
     function getJSONByMovimientoID($movimientoID)
     {
-        $sql = "SELECT movimientoID, movimientoDetalle, referencia, clvsucursal, clvsucursalReferencia, piezas, cvearticulo
+        $sql = "SELECT movimientoID, movimientoDetalle, referencia, clvsucursal, clvsucursalReferencia, piezas, cvearticulo, ean
 FROM movimiento m
 join movimiento_detalle d using(movimientoID)
 join articulos a using(id)
@@ -2591,7 +2591,7 @@ where m.movimientoID = ?;";
 
     function uploadColectivo($colectivoID, $target_dir)
     {
-        $data = array('rutaImagen' => $target_dir, 'colectivoID' => $colectivoID, 'usuario' => $this->session->session('usuario'));
+        $data = array('rutaImagen' => $target_dir, 'colectivoID' => $colectivoID, 'usuario' => $this->session->userdata('usuario'));
         $this->db->insert('colectivo_imagen', $data);
     }
 
@@ -2620,6 +2620,24 @@ where m.movimientoID = ?;";
     {
         $data = array('statusMovimiento' => 0);
         $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
+    }
+
+    function sendTraspaso($movimientoID)
+    {
+        $json = $this->getJSONByMovimientoID($movimientoID);
+        $res = $this->util->postDataOficina('traspaso', $json);
+    }
+
+    function cerrarSinAfectar($movimientoID, $tipoMovimiento, $subtipoMovimiento)
+    {
+        $data = array('statusMovimiento' => 1);
+        $this->db->set('fechaCierre', 'now()', false);
+        $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
+
+        if($subtipoMovimiento == 2)
+        {
+            $this->sendTraspaso($movimientoID);
+        }
     }
 
 }

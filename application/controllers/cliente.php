@@ -47,12 +47,13 @@ class Cliente extends CI_Controller
     function programaAll()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/fechasAll";
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
         $data['programas'] = $this->reportes_model->getProgramas();
         $data['juris'] = $this->reportes_model->getJurisCliente();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
     
@@ -64,12 +65,10 @@ class Cliente extends CI_Controller
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
         $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
         $suministro = $this->input->post('suministro');
-        $idprograma = $this->input->post('idprograma');
-        
-        $todo = $this->input->post('todo');
-        
-        $data['query'] = $this->reportes_model->getProgramaByAll($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal);
+                
+        $data['query'] = $this->reportes_model->getProgramaByAllCliente($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal, $nivel_atencion);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/graficaProgramas2";
@@ -80,12 +79,13 @@ class Cliente extends CI_Controller
     function programaAll2()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/programaAll2_js";
+        $data['js'] = "cliente/clientes_reportes_js";
         $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
         $data['programas'] = $this->reportes_model->getProgramas();
         $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
     
@@ -96,10 +96,12 @@ class Cliente extends CI_Controller
         $fecha2 = $this->input->post('fecha2');
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
         $suministro = $this->input->post('suministro');
         $idprograma = $this->input->post('idprograma');
         //$todo = $this->input->post('todo');
-        $data['query'] = $this->reportes_model->getProgramaByProgramaByAll($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal);
+        $data['query'] = $this->reportes_model->getProgramaByProgramaByAllCliente($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal, $nivel_atencion);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";
@@ -109,11 +111,13 @@ class Cliente extends CI_Controller
     function claveAll()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/programaAll2_js";
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
         $data['programas'] = $this->reportes_model->getProgramas();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['tipo_sucursal'] = $this->reportes_model->getTiposSucursal();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
     
@@ -125,12 +129,13 @@ class Cliente extends CI_Controller
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
         $tipo_sucursal = $this->input->post('tipo_sucursal');
-        $clave = $this->input->post('cveArticulo');
+        $nivel_atencion = $this->input->post('nivel_atencion');
         $idprograma = $this->input->post('idprograma');
+        $clave = $this->input->post('cveArticulo');
         
         $data['clave'] = $clave;
         $data['completo'] = $this->reportes_model->getCompletoByCvearticulo($clave);
-        $data['query'] = $this->reportes_model->getByClaveByAll($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal);
+        $data['query'] = $this->reportes_model->getByClaveByAllCliente($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal, $nivel_atencion);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -143,10 +148,13 @@ class Cliente extends CI_Controller
     function pacienteAll()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/programaAll2_js";
+        $data['js'] = "cliente/clientes_reportes_js";
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
     
@@ -159,10 +167,12 @@ class Cliente extends CI_Controller
         $sucursal = $this->input->post('sucursal');
         $expediente = $this->input->post('expedienteAll');
         $suministro = $this->input->post('suministro');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
         
         $data['expediente'] = $expediente;
         $data['paciente'] = $this->reportes_model->getPacienteByCvepacienteJur($expediente);
-        $data['query'] = $this->reportes_model->getByCvePacienteAll($expediente, $fecha1, $fecha2, $sucursal, $suministro, $juris);
+        $data['query'] = $this->reportes_model->getByCvePacienteAllCliente($expediente, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -172,10 +182,13 @@ class Cliente extends CI_Controller
 
     function medicoAll(){
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/medicoAll_js";
+        $data['js'] = "cliente/clientes_reportes_js";
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
 
@@ -186,10 +199,15 @@ class Cliente extends CI_Controller
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
         $cveMedico = $this->input->post('cveMedicoAll');
-        $suministro = $this->input->post('suministro');        
+        $suministro = $this->input->post('suministro');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+
+
+
         $data['cveMedico'] = $cveMedico;
         $data['medico'] = $this->reportes_model->getNombreMedicoByCveMedicoJur($cveMedico);
-        $data['query'] = $this->reportes_model->getByCveMedicoAll($cveMedico, $fecha1, $fecha2, $sucursal, $suministro, $juris);
+        $data['query'] = $this->reportes_model->getByCveMedicoAllCliente($cveMedico, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";
@@ -198,13 +216,13 @@ class Cliente extends CI_Controller
 
     function recetas_periodoAll(){
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/recetas_periodo_js";
-        $data['programa'] = $this->reportes_model->getProgramasCombo();
-        $data['requerimiento'] = $this->reportes_model->getRequerimientoCombo();
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
         $data['suministro'] = $this->reportes_model->getSuministroCombo();
-        $data['juris'] = $this->reportes_model->getJuris();
-        $data['sucursal'] = $this->reportes_model->getSucursalesByJur2();
-        $data['nivelDeAtencion'] = $this->reportes_model->getNivelAtencionCombo2();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);
     }
     
@@ -213,13 +231,15 @@ class Cliente extends CI_Controller
 
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
-        $idprograma = $this->input->post('idprograma');
-        $tiporequerimiento = $this->input->post('tiporequerimiento');
-        $cvesuministro = $this->input->post('cvesuministro');
-        $nivelatencion = $this->input->post('nivel');
+
         $juris = $this->input->post('juris');
         $sucursal = $this->input->post('sucursal');
-        $data['query'] = $this->reportes_model->recetas_periodo_detalleAll($fecha1, $fecha2, $idprograma, $tiporequerimiento, $cvesuministro, $nivelatencion, $sucursal, $juris);
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+        $suministro = $this->input->post('suministro');
+        $idprograma = $this->input->post('idprograma');
+
+        $data['query'] = $this->reportes_model->recetas_periodo_detalleAllCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -230,7 +250,13 @@ class Cliente extends CI_Controller
     public function rsu()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/rsu_js";
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);;
     }
     
@@ -238,9 +264,15 @@ class Cliente extends CI_Controller
     {
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
+        $juris = $this->input->post('juris');
+        $sucursal = $this->input->post('sucursal');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+        $suministro = $this->input->post('suministro');
+        $idprograma = $this->input->post('idprograma');
         
         
-        $data['query'] = $this->reportes_model->rsu_surtidas($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->rsu_surtidasCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -252,7 +284,13 @@ class Cliente extends CI_Controller
     function causes()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/causes_js";
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $data['causes'] = $this->reportes_model->getCausesCombo();
         $this->load->view('main', $data);;
     }
@@ -262,9 +300,14 @@ class Cliente extends CI_Controller
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
         $causes = $this->input->post('causes');
+        $juris = $this->input->post('juris');
+        $sucursal = $this->input->post('sucursal');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+        $suministro = $this->input->post('suministro');
         
         
-        $data['query'] = $this->reportes_model->claves_causes($fecha1, $fecha2, $causes);
+        $data['query'] = $this->reportes_model->claves_causesCliente($fecha1, $fecha2, $causes, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -276,7 +319,13 @@ class Cliente extends CI_Controller
     function mayor()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/causes_js";
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);;
     }
     
@@ -284,9 +333,15 @@ class Cliente extends CI_Controller
     {
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
+        $juris = $this->input->post('juris');
+        $sucursal = $this->input->post('sucursal');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+        $suministro = $this->input->post('suministro');
+        $idprograma = $this->input->post('idprograma');
         
         
-        $data['query'] = $this->reportes_model->claves_mayor_movimiento($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->claves_mayor_movimientoCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
@@ -297,7 +352,13 @@ class Cliente extends CI_Controller
     function menor()
     {
         $data['subtitulo'] = "";
-        $data['js'] = "reportes/causes_js";
+        $data['js'] = "cliente/clientes_reportes_js";
+        $data['sucursal'] = $this->reportes_model->getSucursalesCliente();
+        $data['programas'] = $this->reportes_model->getProgramas();
+        $data['juris'] = $this->reportes_model->getJurisCliente();
+        $data['tipo_sucursal'] = $this->reportes_model->getTipoSucursalCliente();
+        $data['suministro'] = $this->reportes_model->getSuministroCombo();
+        $data['nivel_atencion'] = $this->reportes_model->getNivelAtencionCliente();
         $this->load->view('main', $data);;
     }
     
@@ -305,14 +366,29 @@ class Cliente extends CI_Controller
     {
         $fecha1 = $this->input->post('fecha1');
         $fecha2 = $this->input->post('fecha2');
+        $juris = $this->input->post('juris');
+        $sucursal = $this->input->post('sucursal');
+        $tipo_sucursal = $this->input->post('tipo_sucursal');
+        $nivel_atencion = $this->input->post('nivel_atencion');
+        $suministro = $this->input->post('suministro');
+        $idprograma = $this->input->post('idprograma');
         
         
-        $data['query'] = $this->reportes_model->claves_menor_movimiento($fecha1, $fecha2);
+        $data['query'] = $this->reportes_model->claves_menor_movimientoCliente($fecha1, $fecha2, $juris, $sucursal, $tipo_sucursal, $nivel_atencion, $suministro, $idprograma);
         $data['fecha1'] = $fecha1;
         $data['fecha2'] = $fecha2;
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         //$data['js'] = "reportes/recetas_periodo_detalle_js";
         $this->load->view('main', $data);
+    }
+
+    function getSucursales()
+    {
+    	$juris = $this->input->post('juris');
+    	$tipo_sucursal = $this->input->post('tipo_sucursal');
+    	$nivel_atencion = $this->input->post('nivel_atencion');
+
+    	echo $this->reportes_model->getSucursalesClienteSelect($juris, $tipo_sucursal, $nivel_atencion);
     }
 
 }

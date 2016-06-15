@@ -626,14 +626,19 @@ function medicoAll_submit(){
         $this->excel->getActiveSheet()->setCellValue('C5', 'DESCRIPCION');
         $this->excel->getActiveSheet()->setCellValue('D5', 'POBLACION ABIERTA');
         $this->excel->getActiveSheet()->setCellValue('E5', 'SEGURO POPULAR');
-        $this->excel->getActiveSheet()->setCellValue('F5', 'OPORTUNIDADES');
-        $this->excel->getActiveSheet()->setCellValue('G5', 'PROGRAMAS PRIORITARIOS');
-        $this->excel->getActiveSheet()->setCellValue('H5', 'BENEFICENCIA PUBLICA');
-        $this->excel->getActiveSheet()->setCellValue('I5', 'ADULTO MAYOR');
-        $this->excel->getActiveSheet()->setCellValue('J5', 'PAQUETES');
-        $this->excel->getActiveSheet()->setCellValue('K5', 'SIGLO MEDICO SIGLO XXI');
-        $this->excel->getActiveSheet()->setCellValue('L5', 'CLINICA DE HERIDAS');
-        $this->excel->getActiveSheet()->setCellValue('M5', 'TOTAL');
+        $this->excel->getActiveSheet()->setCellValue('F5', 'PROSPERA');
+        $this->excel->getActiveSheet()->setCellValue('G5', 'SIGLO MEDICO SIGLO XXI');
+        $this->excel->getActiveSheet()->setCellValue('H5', 'TOTAL');
+
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->setCellValue('I5', 'PRECIO VENTA');
+            $this->excel->getActiveSheet()->setCellValue('J5', 'IMPORTE');
+            $this->excel->getActiveSheet()->setCellValue('K5', 'IVA PRODCUTO');
+            $this->excel->getActiveSheet()->setCellValue('L5', 'SERVICIO');
+            $this->excel->getActiveSheet()->setCellValue('M5', 'IVA SERVICIO');
+            $this->excel->getActiveSheet()->setCellValue('N5', 'TOTAL');
+        }
 
         $this->excel->getActiveSheet()->getStyle('A5')->getFont()->setBold(true);
         $this->excel->getActiveSheet()->getStyle('B5')->getFont()->setBold(true);
@@ -643,11 +648,16 @@ function medicoAll_submit(){
         $this->excel->getActiveSheet()->getStyle('F5')->getFont()->setBold(true);
         $this->excel->getActiveSheet()->getStyle('G5')->getFont()->setBold(true);
         $this->excel->getActiveSheet()->getStyle('H5')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->getStyle('I5')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->getStyle('J5')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->getStyle('K5')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->getStyle('L5')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->getStyle('M5')->getFont()->setBold(true);
+
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->getStyle('I5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('J5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('K5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('L5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('M5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('N5')->getFont()->setBold(true);
+        }
         
         $this->excel->getActiveSheet()->getStyle('A5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('B5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -657,11 +667,17 @@ function medicoAll_submit(){
         $this->excel->getActiveSheet()->getStyle('F5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('G5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('H5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->getStyle('I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->getStyle('J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->getStyle('K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->getStyle('L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->getStyle('M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->getStyle('I5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('J5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('K5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('L5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('M5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        }
+
         
         $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(8);
         $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(13);
@@ -671,58 +687,36 @@ function medicoAll_submit(){
         $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
         $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
         $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
-        $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-        $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
-        $this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
-        $this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
-        $this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+            $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+            $this->excel->getActiveSheet()->getColumnDimension('K')->setWidth(15);
+            $this->excel->getActiveSheet()->getColumnDimension('L')->setWidth(15);
+            $this->excel->getActiveSheet()->getColumnDimension('M')->setWidth(15);
+            $this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
+        }
+
         
         $this->excel->getActiveSheet()->getRowDimension('5')->setRowHeight(40);
 
-        $this->excel->getActiveSheet()->getStyle('A5:M5')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
-        $this->excel->getActiveSheet()->getStyle('A5:M5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-        
-        $this->excel->getActiveSheet()->getStyle('A5:M5')->getAlignment()->setWrapText(true);
-        
-        if($this->session->userdata('superuser') == 1){
-
-            $this->excel->getActiveSheet()->mergeCells('A1:S1');
-            $this->excel->getActiveSheet()->mergeCells('A2:S2');
-            $this->excel->getActiveSheet()->mergeCells('A3:S3');
-            $this->excel->getActiveSheet()->mergeCells('A4:S4');
-    
-            $this->excel->getActiveSheet()->setCellValue('N5', 'PRECIO UNITARIO');
-            $this->excel->getActiveSheet()->setCellValue('O5', 'IMPORTE');
-            $this->excel->getActiveSheet()->setCellValue('P5', 'IVA');
-            $this->excel->getActiveSheet()->setCellValue('Q5', 'SERVICIO');
-            $this->excel->getActiveSheet()->setCellValue('R5', 'IVA SERVICIO');
-            $this->excel->getActiveSheet()->setCellValue('S5', 'SUBTOTAL');
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->getStyle('A5:N5')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
+            $this->excel->getActiveSheet()->getStyle('A5:N5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
             
-            $this->excel->getActiveSheet()->getStyle('N5')->getFont()->setBold(true);
-            $this->excel->getActiveSheet()->getStyle('O5')->getFont()->setBold(true);
-            $this->excel->getActiveSheet()->getStyle('P5')->getFont()->setBold(true);
-            $this->excel->getActiveSheet()->getStyle('Q5')->getFont()->setBold(true);
-            $this->excel->getActiveSheet()->getStyle('R5')->getFont()->setBold(true);
-            $this->excel->getActiveSheet()->getStyle('S5')->getFont()->setBold(true);
+            $this->excel->getActiveSheet()->getStyle('A5:N5')->getAlignment()->setWrapText(true);
+        }else
+        {
+            $this->excel->getActiveSheet()->getStyle('A5:H5')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
+            $this->excel->getActiveSheet()->getStyle('A5:H5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
             
-            $this->excel->getActiveSheet()->getStyle('N5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('O5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('P5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('Q5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('R5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('S5')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-    
-            $this->excel->getActiveSheet()->getColumnDimension('N')->setWidth(15);
-            $this->excel->getActiveSheet()->getColumnDimension('O')->setWidth(15);
-            $this->excel->getActiveSheet()->getColumnDimension('P')->setWidth(15);
-            $this->excel->getActiveSheet()->getColumnDimension('Q')->setWidth(15);
-            $this->excel->getActiveSheet()->getColumnDimension('R')->setWidth(15);
-            $this->excel->getActiveSheet()->getColumnDimension('S')->setWidth(20);
-    
-            $this->excel->getActiveSheet()->getStyle('N5:S5')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB('FFCCCCCC');
-            $this->excel->getActiveSheet()->getStyle('N5:S5')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-            $this->excel->getActiveSheet()->getStyle('N5:S5')->getAlignment()->setWrapText(true);
+            $this->excel->getActiveSheet()->getStyle('A5:H5')->getAlignment()->setWrapText(true);
         }
+
+        
+
         $inicio = 6;
         $fila = $inicio;
         $no = 1;  
@@ -736,42 +730,25 @@ function medicoAll_submit(){
         if($query->num_rows() > 0){
         foreach($query->result() as $row)
         {
-              $piezas = $row->cansur;
-              $importe = $row->preciosinser * $piezas;
-              if((int)$row->tipoprod == 1){
-              $iva = $row->preciosinser * $piezas * .16;
-              }else{
-              $iva = 0;
-              }
-              $servicio = $piezas * SERVICIO;
-              $servicio_iva = $servicio * IVA;
-              $subtotal = $importe + $iva + $servicio + $servicio_iva;
-              $tImporte = $tImporte + $importe;
-              $tIVA = $tIVA + $iva;
-              $tServicio = $tServicio + $servicio;
-              $tServicioIVA = $tServicioIVA + $servicio_iva;
-              $total = $total + $subtotal;                                   
+
+            $subtotal = $row->importe + $row->iva_producto + $row->servicio + $row->iva_servicio;
+
             $this->excel->getActiveSheet()->setCellValue('A'.$fila, $no);
             $this->excel->getActiveSheet()->setCellValue('B'.$fila, $row->cvearticulo);
             $this->excel->getActiveSheet()->setCellValue('C'.$fila, $row->completo);
             $this->excel->getActiveSheet()->setCellValue('D'.$fila, $row->pa);
             $this->excel->getActiveSheet()->setCellValue('E'.$fila, $row->sp);
-            $this->excel->getActiveSheet()->setCellValue('F'.$fila, $row->op);
-            $this->excel->getActiveSheet()->setCellValue('G'.$fila, $row->pp);
-            $this->excel->getActiveSheet()->setCellValue('H'.$fila, $row->bp);
-            $this->excel->getActiveSheet()->setCellValue('I'.$fila, $row->am);
-            $this->excel->getActiveSheet()->setCellValue('J'.$fila, $row->pq);
-            $this->excel->getActiveSheet()->setCellValue('K'.$fila, $row->sm);
-            $this->excel->getActiveSheet()->setCellValue('L'.$fila, $row->ch);
-            $this->excel->getActiveSheet()->setCellValue('M'.$fila, $row->todo);
+            $this->excel->getActiveSheet()->setCellValue('F'.$fila, $row->pr);
+            $this->excel->getActiveSheet()->setCellValue('G'.$fila, $row->sm);
+            $this->excel->getActiveSheet()->setCellValue('H'.$fila, $row->total);
                 
-            if($this->session->userdata('superuser') == 1){
-                $this->excel->getActiveSheet()->setCellValue('N'.$fila, $row->preciosinser);
-                $this->excel->getActiveSheet()->setCellValue('O'.$fila, $tImporte);
-                $this->excel->getActiveSheet()->setCellValue('P'.$fila, $tIVA);
-                $this->excel->getActiveSheet()->setCellValue('Q'.$fila, $tServicio);
-                $this->excel->getActiveSheet()->setCellValue('R'.$fila, $tServicioIVA);
-                $this->excel->getActiveSheet()->setCellValue('S'.$fila, $total);
+            if($this->session->userdata('valuacion') == 1){
+                $this->excel->getActiveSheet()->setCellValue('I'.$fila, $row->precioven);
+                $this->excel->getActiveSheet()->setCellValue('J'.$fila, $row->importe);
+                $this->excel->getActiveSheet()->setCellValue('K'.$fila, $row->iva_producto);
+                $this->excel->getActiveSheet()->setCellValue('L'.$fila, $row->servicio);
+                $this->excel->getActiveSheet()->setCellValue('M'.$fila, $row->iva_servicio);
+                $this->excel->getActiveSheet()->setCellValue('N'.$fila, $subtotal);
                     
             }
                 $no++;
@@ -785,23 +762,18 @@ function medicoAll_submit(){
         $this->excel->getActiveSheet()->setCellValue('F'.$fila, '=SUM(F'.$inicio.':F'.($fila - 1).')');
         $this->excel->getActiveSheet()->setCellValue('G'.$fila, '=SUM(G'.$inicio.':G'.($fila - 1).')');
         $this->excel->getActiveSheet()->setCellValue('H'.$fila, '=SUM(H'.$inicio.':H'.($fila - 1).')');
-        $this->excel->getActiveSheet()->setCellValue('I'.$fila, '=SUM(I'.$inicio.':I'.($fila - 1).')');
-        $this->excel->getActiveSheet()->setCellValue('J'.$fila, '=SUM(J'.$inicio.':J'.($fila - 1).')');
-        $this->excel->getActiveSheet()->setCellValue('K'.$fila, '=SUM(K'.$inicio.':K'.($fila - 1).')');
-        $this->excel->getActiveSheet()->setCellValue('L'.$fila, '=SUM(L'.$inicio.':L'.($fila - 1).')');
-        $this->excel->getActiveSheet()->setCellValue('M'.$fila, '=SUM(M'.$inicio.':M'.($fila - 1).')');
         
-        if($this->session->userdata('superuser') == 1){
-            $this->excel->getActiveSheet()->setCellValue('O'.$fila, '=SUM(O'.$inicio.':O'.($fila - 1).')');
-            $this->excel->getActiveSheet()->setCellValue('P'.$fila, '=SUM(P'.$inicio.':P'.($fila - 1).')');
-            $this->excel->getActiveSheet()->setCellValue('Q'.$fila, '=SUM(Q'.$inicio.':Q'.($fila - 1).')');
-            $this->excel->getActiveSheet()->setCellValue('R'.$fila, '=SUM(R'.$inicio.':R'.($fila - 1).')');
-            $this->excel->getActiveSheet()->setCellValue('S'.$fila, '=SUM(S'.$inicio.':S'.($fila - 1).')');
+        if($this->session->userdata('valuacion') == 1){
+            $this->excel->getActiveSheet()->setCellValue('J'.$fila, '=SUM(J'.$inicio.':J'.($fila - 1).')');
+            $this->excel->getActiveSheet()->setCellValue('K'.$fila, '=SUM(K'.$inicio.':K'.($fila - 1).')');
+            $this->excel->getActiveSheet()->setCellValue('L'.$fila, '=SUM(L'.$inicio.':L'.($fila - 1).')');
+            $this->excel->getActiveSheet()->setCellValue('M'.$fila, '=SUM(M'.$inicio.':M'.($fila - 1).')');
+            $this->excel->getActiveSheet()->setCellValue('N'.$fila, '=SUM(N'.$inicio.':N'.($fila - 1).')');
         
         }
 
-        $this->excel->getActiveSheet()->getStyle('N'.$inicio.':S'.($fila))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-        $this->excel->getActiveSheet()->getStyle('D'.$inicio.':M'.($fila))->getNumberFormat()->setFormatCode('#,##0');
+        $this->excel->getActiveSheet()->getStyle('I'.$inicio.':N'.($fila))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $this->excel->getActiveSheet()->getStyle('D'.$inicio.':H'.($fila))->getNumberFormat()->setFormatCode('#,##0');
         $styleArray = array(
             'borders' => array(
                 'allborders' => array(

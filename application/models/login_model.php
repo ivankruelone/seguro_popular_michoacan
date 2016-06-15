@@ -334,7 +334,7 @@ class Login_model extends CI_Model
                 $this->__auditaMovimiento();
                 $this->__inventario();
             }else{
-                $this->util->actSucursales();
+                //$this->util->actSucursales();
                 if(PATENTE == 1)
                 {
                     $this->util->actArticulo();
@@ -404,6 +404,7 @@ where clvsucursal = ?;";
             $row2 = $query2->row();
             $sucursal = $row2->descsucursal;
             $tiposucursal = $row2->tiposucursal;
+            
 
             if($row->clvsucursal == 0)
             {

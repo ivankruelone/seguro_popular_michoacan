@@ -73,7 +73,7 @@
                                             <tr>
                                                 <td><?php echo $num; ?></td>
                                                 <td><?php echo $row->cvearticulo; ?></td>
-                                                <td><?php echo utf8_encode($row->completo); ?></td>
+                                                <td><?php echo ($row->completo); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->requerida, 0); ?></td>
                                                 <td style="text-align: right;"><?php echo number_format($row->surtida, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>

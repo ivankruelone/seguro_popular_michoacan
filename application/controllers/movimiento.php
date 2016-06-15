@@ -591,8 +591,7 @@ group by id, lote, i.ubicacion;";
 
     function pruebaTraspaso()
     {
-        $json = $this->movimiento_model->getJSONByMovimientoID(704);
-        echo $json;
+        $json = $this->movimiento_model->getJSONByMovimientoID(807);
         $res = $this->util->postDataOficina('traspaso', $json);
     }
 
@@ -1065,6 +1064,13 @@ where tipoMovimiento = 2 and referencia = ? and clvsucursalReferencia = ?;";
     {
     	$this->movimiento_model->abrirMovimiento($movimientoID);
     	redirect('movimiento/index/' . $tipoMovimiento . '/' . $subtipoMovimiento);
+    }
+
+    function cerrar_sin_afectar($movimientoID, $tipoMovimiento, $subtipoMovimiento)
+    {
+        $this->movimiento_model->cerrarSinAfectar($movimientoID, $tipoMovimiento, $subtipoMovimiento);
+        redirect('movimiento/index/' . $tipoMovimiento . '/' . $subtipoMovimiento);
+
     }
 
 }
