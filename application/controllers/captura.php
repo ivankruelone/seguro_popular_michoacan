@@ -186,9 +186,9 @@ class Captura extends CI_Controller
                 'usuario' => $this->session->userdata('usuario'),
                 'cie103' => $cie103,
                 'cie104' => $cie104,
+                'alta' => FECHAYHORA
                 );
                 
-                $this->db->set('alta', 'now()', false);
                 $this->db->insert('receta', $data);
                 
                 $consecutivo = $this->db->insert_id();
@@ -213,9 +213,9 @@ class Captura extends CI_Controller
                 'usuario' => $this->session->userdata('usuario'),
                 'cie103' => $cie103,
                 'cie104' => $cie104,
+                'cambio' => FECHAYHORA
                 );
                 
-                $this->db->set('cambio', 'now()', false);
                 $this->db->update('receta', $data, array('consecutivo' => $consecutivo_edicion));
                 
                 $sql_borra_audita = "delete from receta_audita where consecutivo = ?";
@@ -249,11 +249,11 @@ class Captura extends CI_Controller
                 'costo' => $row->ultimo_costo,
                 'servicio' => $row->servicio,
                 'iva' => $row->tipoprod,
+                'altaDetalle' => FECHAYHORA
                 );
             
             if($row->consecutivo_temporal == 0)
             {
-               $this->db->set('altaDetalle', "now()", false);
                $this->db->insert('receta_detalle', $data2);
                
                
@@ -270,10 +270,10 @@ class Captura extends CI_Controller
                         'receta' => $consecutivo,
                         'usuario' => $this->session->userdata('usuario'),
                         'movimientoID' => 0,
-                        'clvsucursal' => $this->session->userdata('clvsucursal')
+                        'clvsucursal' => $this->session->userdata('clvsucursal'),
+                        'ultimo_movimiento' => FECHAYHORA
                         );
                         
-                    $this->db->set('ultimo_movimiento', 'now()', false);
                     $this->db->insert('inventario', $data);
                }else{
                     $cantidad  = ((int)$row->cantidad - (int)$row->sur);
@@ -287,10 +287,10 @@ class Captura extends CI_Controller
                         'receta' => $consecutivo,
                         'usuario' => $this->session->userdata('usuario'),
                         'movimientoID' => 0,
-                        'clvsucursal' => $this->session->userdata('clvsucursal')
+                        'clvsucursal' => $this->session->userdata('clvsucursal'),
+                        'ultimo_movimiento' => FECHAYHORA
                         );
                         
-                    $this->db->set('ultimo_movimiento', 'now()', false);
                     $this->db->update('inventario', $data, array('inventarioID' => $row->inventarioID));
                     $this->captura_model->ajustaInventarioExcedenteSurtido($row->inventarioID, $consecutivo);
                }
@@ -876,8 +876,8 @@ class Captura extends CI_Controller
 
     function pruebai()
     {
-        $inventarioID = 14285;
-        $consecutivo = 40069;
+        $inventarioID = 3407;
+        $consecutivo = 50991;
         $this->captura_model->ajustaInventarioExcedenteSurtidoPrueba($inventarioID, $consecutivo);
     }
 

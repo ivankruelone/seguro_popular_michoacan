@@ -22,9 +22,9 @@ class Jurisdiccion extends CI_Controller
         $this->load->library('pagination');
         $data['subtitulo'] = "Paquetes";
         
-        $config['base_url'] = site_url('Jurisdiccion/index');
+        $config['base_url'] = site_url('jurisdiccion/index');
         $config['total_rows'] = $this->movimiento_model->getColectivosCuenta();
-        $config['per_page'] = 50;
+        $config['per_page'] = 100;
         $config['uri_segment'] = 3;
         
         $data['query'] = $this->movimiento_model->getColectivos($config['per_page'], $this->uri->rsegment(3));

@@ -289,4 +289,19 @@ order by numjurisd, clvsucursal, fecha, folioreceta, tipoprod, cvearticulo * 1;"
 
     }
 
+    function canceladas()
+    {
+        $data['subtitulo'] = "Ver remisiones canceladas";
+        $data['js'] = "facturacion/listado_remisiones_js";
+        $data['query'] = $this->facturacion_model->getRemisionesCanceladas();
+        $this->load->view('main', $data);
+    }
+
+    function reactivar_remision($remision)
+    {
+        $data['subtitulo'] = "Reactivar Remisión";
+        $data['remision'] = $remision;
+        $this->load->view('main', $data);
+    }
+
 }

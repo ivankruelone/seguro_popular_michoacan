@@ -1354,8 +1354,7 @@ where subida = ? and receta = ?;";
                 if($row2->cantidad >= ($row->cantidad * -1))
                 {
 
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     //echo "<h1>Cambio 1</h1>";
@@ -1364,8 +1363,7 @@ where subida = ? and receta = ?;";
                     //print_r($dataInv1);
                     //echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
 
                     //echo "<h1>Cambio 2</h1>";
@@ -1376,8 +1374,7 @@ where subida = ? and receta = ?;";
 
                 }else
                 {
-                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     //$this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     //echo "<h1>Cambio 1</h1>";
@@ -1386,8 +1383,7 @@ where subida = ? and receta = ?;";
                     //print_r($dataInv1);
                     //echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     //$this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
 
                     //echo "<h1>Cambio 2</h1>";
@@ -1404,8 +1400,7 @@ where subida = ? and receta = ?;";
                 {
                     $row3 = $query3->row();
 
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     //echo "<h1>Cambio 1</h1>";
@@ -1414,8 +1409,7 @@ where subida = ? and receta = ?;";
                     //print_r($dataInv1);
                     //echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv2, array('inventarioID' => $row3->inventarioID));
 
                     //echo "<h1>Cambio 2</h1>";
@@ -1425,8 +1419,7 @@ where subida = ? and receta = ?;";
                     //echo "</pre>";
                 }else
                 {
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     //echo "<h1>Cambio 1</h1>";
@@ -1435,8 +1428,7 @@ where subida = ? and receta = ?;";
                     //print_r($dataInv1);
                     //echo "</pre>";
 
-                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '');
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '', 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->insert('inventario', $dataInsert);
 
                     //echo "<h1>Cambio 2</h1>";
@@ -1470,8 +1462,7 @@ where subida = ? and receta = ?;";
                 if($row2->cantidad >= ($row->cantidad * -1))
                 {
 
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     echo "<h1>Cambio 1</h1>";
@@ -1480,8 +1471,7 @@ where subida = ? and receta = ?;";
                     print_r($dataInv1);
                     echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
 
                     echo "<h1>Cambio 2</h1>";
@@ -1492,8 +1482,7 @@ where subida = ? and receta = ?;";
 
                 }else
                 {
-                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     echo "<h1>Cambio 1</h1>";
@@ -1502,8 +1491,7 @@ where subida = ? and receta = ?;";
                     print_r($dataInv1);
                     echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
 
                     echo "<h1>Cambio 2</h1>";
@@ -1512,7 +1500,7 @@ where subida = ? and receta = ?;";
                     print_r($dataInv2);
                     echo "</pre>";
 
-                    $this->ajustaInventarioExcedenteSurtidoPrueba($inventarioID, $consecutivo);
+                    $this->ajustaInventarioExcedenteSurtidoPrueba($row2->inventarioID, $consecutivo);
                 }
             }else
             {
@@ -1522,8 +1510,7 @@ where subida = ? and receta = ?;";
                 {
                     $row3 = $query3->row();
 
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     echo "<h1>Cambio 1</h1>";
@@ -1532,8 +1519,7 @@ where subida = ? and receta = ?;";
                     print_r($dataInv1);
                     echo "</pre>";
 
-                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv2, array('inventarioID' => $row3->inventarioID));
 
                     echo "<h1>Cambio 2</h1>";
@@ -1543,8 +1529,7 @@ where subida = ? and receta = ?;";
                     echo "</pre>";
                 }else
                 {
-                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
 
                     echo "<h1>Cambio 1</h1>";
@@ -1553,8 +1538,7 @@ where subida = ? and receta = ?;";
                     print_r($dataInv1);
                     echo "</pre>";
 
-                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '');
-                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '', 'ultimo_movimiento' => FECHAYHORA);
                     $this->db->insert('inventario', $dataInsert);
 
                     echo "<h1>Cambio 2</h1>";

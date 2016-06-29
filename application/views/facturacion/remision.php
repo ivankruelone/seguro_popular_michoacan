@@ -54,9 +54,12 @@
                                                 if($row->firmada == 1)
                                                 {
                                                     $cancela = null;
+                                                    $firmada = $observacionesFirma;
                                                 }else
                                                 {
                                                     $cancela = anchor('facturacion/eliminar_remision/'.$row->remision.'/'.$row->clvsucursal, 'Cancelar <i class="icon-minus"></i>', array('class' => 'eliminarRemision'));
+
+                                                    $firmada = anchor('facturacion/valida_firma/' . $row->remision, 'Validar Firma');
                                                 }
                                                 $color = null;
                                             }else
@@ -64,15 +67,9 @@
                                                 $imprime = 'CANCELADA';
                                                 $cancela = 'CANCELADA';
                                                 $color = ROJO_PASTEL;
+                                                $firmada = anchor('facturacion/reactivar_remision/' . $row->remision, 'Reactivar', array('class' => 'reactivarRemision'));
                                             }
 
-                                            if($row->firmada == 0)
-                                            {
-                                                $firmada = anchor('facturacion/valida_firma/' . $row->remision, 'Validar Firma');
-                                            }else
-                                            {
-                                                $firmada = $observacionesFirma;
-                                            }
                                                 
                                             
                                             ?>

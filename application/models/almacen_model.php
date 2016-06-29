@@ -489,7 +489,12 @@ order by cvearticulo * 1;";
     
     function calculaPedidoAlmacen()
     {
-        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, ceil(ifnull((bufferFarmacias / 21) * 60, 0)) as bufferFarmacias, ifnull(sum(cantidad), 0) as inventario, ifnull((sum(cantidad) / ceil(ifnull((bufferFarmacias / 21) * 60, 0))) * 100, 0) as factor, case when ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) > 0 then ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) else 0 end as pedido, case when (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) < 0) and ifnull((sum(cantidad) / ceil(ifnull((bufferFarmacias / 21) * 60, 0))) * 100, 0) > 150 then (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0)) * -1 else 0 end as excedente, case when (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) = 0) and  ifnull(sum(cantidad), 0) > 0 then (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0)) * -1 else 0 end as sobrante
+        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, ceil(ifnull((bufferFarmacias / 21) * 60, 0)) as bufferFarmacias,
+ifnull(sum(cantidad), 0) as inventario,
+ifnull((sum(cantidad) / ceil(ifnull((bufferFarmacias / 21) * 60, 0))) * 100, 0) as factor,
+case when ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) > 0 and ifnull((sum(cantidad) / ceil(ifnull((bufferFarmacias / 21) * 60, 0))) * 100, 0) < 70 then ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) else 0 end as pedido,
+case when (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0) < 0) and ifnull((sum(cantidad) / ceil(ifnull((bufferFarmacias / 21) * 60, 0))) * 100, 0) > 150 then (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0)) * -1 else 0 end as excedente,
+case when (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) = 0) and  ifnull(sum(cantidad), 0) > 0 then (ceil(ifnull((bufferFarmacias / 21) * 60, 0)) - ifnull(sum(cantidad), 0)) * -1 else 0 end as sobrante
 FROM articulos a
 left join inventario i on a.id = i.id and i.clvsucursal = ?
 left join bufferFarmacias b on a.id = b.id

@@ -598,7 +598,7 @@ where movimientoDetalle = ?;";
                     {
                         
                     }
-                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|'.($datos->cans - $row->aplica).'|'.$datos->codigo.'|'.$datos->costo;
+                    return $row->id.'|'.$row->cvearticulo.'|'.$row->susa.'|'.$row->descripcion.'|'.$row->pres.'|'.($datos->cans - $datos->aplica).'|'.$datos->codigo.'|'.$datos->costo;
                 }
                 
                 
@@ -2220,6 +2220,7 @@ join programa p using(idprograma)
 join colectivo_status t using(statusColectivo)
 left join movimiento m using(movimientoID)
 where c.usuario = ?
+order by statusColectivo
 limit ? offset ?;";
         
         $query = $this->db->query($sql, array($this->session->userdata('usuario'), (int)$limit, (int)$offset));

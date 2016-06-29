@@ -292,6 +292,26 @@ $( "#id-btn-dialog1" ).on('click', function(e) {
         }
         
     }
+
+    $("#piezas").on('change', validaCans);
+
+    function validaCans(event)
+    {
+        var $subtipoMovimiento = parseInt($("input[name='subtipoMovimiento']").val());
+        if($subtipoMovimiento == 1)
+        {        
+
+            var $cans = $("#cans").html();
+            $cans = parseInt($cans);
+            var $piezas = parseInt(event.currentTarget.value);
+
+            if($piezas > $cans)
+            {
+                $("#piezas").val('');
+                alert("No puedes ingresar mas de " + $cans + " piezas, que son las que faltan por recibir.");
+            }
+        }
+    }
     
     function articuloValida3()
     {

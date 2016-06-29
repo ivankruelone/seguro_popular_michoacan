@@ -135,6 +135,23 @@ order by remision desc;";
         return $query;
     }
 
+    function getRemisionesCanceladas()
+    {
+        $sql = "SELECT r.*, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa
+FROM remision r
+join sucursales s using(clvsucursal)
+join temporal_nivel_atencion a using(nivelatencion)
+join programa p using(idprograma)
+join temporal_requerimiento q using(tiporequerimiento)
+join temporal_suministro u on r.iva = u.cvesuministro
+where remisionStatus = 0
+order by remision desc;";
+
+        $query = $this->db->query($sql);
+
+        return $query;
+    }
+
     function getRemisionesFirmadasAll()
     {
         $sql = "SELECT r.*, descsucursal, nivelatenciondescripcion, suministro, requerimiento, programa
@@ -823,6 +840,56 @@ group by tiporequerimiento;";
         $query = $this->db->query($sql);
 
         return $query;
+    }
+
+    function undoRemision($remision)
+    {
+        $query = $this->getRemisionByRemision($remision);
+        $row = $query->row();
+
+        echo "<pre>";
+        print_r($row);
+        echo "</pre>";
+
+        if($row->remisionStatus == 0)
+        {
+            $query2 = $this->getPosibleRemisionDatos($row->perini, $row->perfin, $row->clvsucursal, $row->iva, $row->tiporequerimiento, $row->idprograma);
+            $row2 = $query2->row();
+
+            echo "<pre>";
+            print_r($row2);
+            echo "</pre>";
+
+            if($row2->cansur == $row->cansur && $row2->importe == $row->importe && $row2->iva_producto == $row->iva_producto && $row2->servicio == $row->servicio && $row2->iva_servicio == $row->iva_servicio)
+            {
+                echo "ES igual<br />";
+                $this->db->trans_start();
+                $sql_update = "UPDATE receta r, receta_detalle d set remision = ? where r.consecutivo = d.consecutivo and fecha between ? and ? and clvsucursal = ? and iva = ? and tiporequerimiento = ? and idprograma = ?;";
+
+                $this->db->query($sql_update, array($remision, (string)$row->perini, (string)$row->perfin, (int)$row->clvsucursal, $row->iva, $row->tiporequerimiento, $row->idprograma));
+
+                $dataUpdateRemision = array('remisionStatus' => 1);
+                $this->db->update('remision', $dataUpdateRemision, array('remision' => $remision));
+                $this->db->trans_complete();
+
+                if ($this->db->trans_status() === FALSE)
+                {
+                    echo "Hubo algun error.";
+                }else
+                {
+                    echo "Remision reactivada.";
+                }
+
+
+            }
+            else
+            {
+                echo "No es igual";
+            }
+        }
+
+
+
     }
 
 }
