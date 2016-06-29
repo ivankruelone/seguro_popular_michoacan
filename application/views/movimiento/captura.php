@@ -110,7 +110,7 @@
                                                 <td><?php echo $row->tipoMovimientoDescripcion;  if(PATENTE == 1){ echo "<br />"; echo anchor_popup('movimiento/actualizaArticulo', 'Act. Cat.', $atts); }?></td>
                                                 <td><?php echo $row->subtipoMovimientoDescripcion; ?></td>
                                                 <td id="orden"><?php echo $row->orden; ?><a href="#" id="id-btn-dialog1" class="btn btn-purple btn-small">Orden</a></td>
-                                                <td><?php echo $row->referencia; if($row->subtipoMovimiento == 2){ ?><a href="#" id="llenadoAutomatico" class="btn btn-purple btn-small" value="<?php echo $row->referencia; ?>" movimientoID="<?php echo $row->movimientoID; ?>">Llenado automatico</a><?php } ?></td>
+                                                <td><?php echo '<span id="referencia">' . $row->referencia . "</span>"; if($row->subtipoMovimiento == 2){ ?><a href="#" id="llenadoAutomatico" class="btn btn-purple btn-small" value="<?php echo $row->referencia; ?>" movimientoID="<?php echo $row->movimientoID; ?>">Llenado automatico</a><?php } ?></td>
                                                 <td><?php echo $row->fecha; ?></td>
                                                 <td><?php echo $row->razon; ?></td>
                                                 <td><?php echo $row->sucursal; ?></td>

@@ -36,8 +36,9 @@ class Inventario extends CI_Controller
     {
     	$clave = $this->input->post('clave');
     	$susa = $this->input->post('susa');
+        $lote = $this->input->post('lote');
         $data['subtitulo'] = "Resultado de la busqueda";
-        $data['query'] = $this->Inventario_model->getBusqueda($clave, $susa);
+        $data['query'] = $this->Inventario_model->getBusqueda($clave, $susa, $lote);
         $data['js'] = "inventario/caducidades_js";
         $this->load->view('main', $data);
     }
@@ -372,10 +373,14 @@ where inventarioID = ?;";
     {
         $inventarioID = $this->input->post('inventarioID');
         $ubicacion = $this->input->post('ubicacion');
+        $ubicacionAnterior = $this->input->post('ubicacionAnterior');
         $cantidad = $this->input->post('cantidad');
         $origen = $this->input->post('origen');
-        
-        $this->Inventario_model->updateUbicacion($inventarioID, $ubicacion, $cantidad);
+
+        if($ubicacion != $ubicacionAnterior)
+        {
+            $this->Inventario_model->updateUbicacion($inventarioID, $ubicacion, $cantidad);
+        }
         redirect('inventario/'.$origen);
         
     }
@@ -427,5 +432,94 @@ where inventarioID = ?;";
         
         $this->load->view('main', $data);
     }
+
+    function fixInv()
+    {
+        $sql = "SELECT * FROM inventario i where cantidad < 0 and lote <> 'SL' and clvsucursal in(select clvsucursal from sucursales where tiposucursal = 1);";
+
+        $query = $this->db->query($sql);
+
+        foreach ($query->result() as $row) {
+            echo "<pre>";
+            print_r($row);
+            echo "</pre>";
+
+            $this->db->where('id', $row->id);
+            $this->db->where('clvsucursal', $row->clvsucursal);
+            $this->db->where('lote', 'SL');
+            $this->db->where('inventarioID <>', $row->inventarioID);
+            //$this->db->where('cantidad >', 0);
+            $this->db->limit(1);
+            $query2 = $this->db->get('inventario');
+
+            if($query2->num_rows() == 0)
+            {
+                $row2 = $query2->row();
+
+                $cantidad = ($row->cantidad * -1);
+                //$cantidad_nueva = $row2->cantidad - $cantidad;
+
+                if(0 == 0)
+                {
+                    echo "<h1>Encontrado</h1>";
+                    echo "<pre>";
+                    print_r($row2);
+                    echo "</pre>";
+                    //inventarioID, id, lote, caducidad, cantidad, ultimo_movimiento, tipoMovimiento, subtipoMovimiento, receta, usuario, movimientoID, ean, marca, costo, clvsucursal, ubicacion, comercial
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => 0, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    //$this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    echo "<h1>Cambio 1</h1>";
+                    echo "<pre>";
+                    print_r($dataInv1);
+                    echo "</pre>";
+
+                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => 0, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibre(), 'comercial' => '');
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    //$this->db->insert('inventario', $dataInsert);
+
+                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => 0, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    //$this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
+
+                    echo "<h1>Cambio 2</h1>";
+                    echo "<pre>";
+                    print_r($dataInsert);
+                    echo "</pre>";
+                }
+
+
+
+            }
+
+
+        }
+    }
+
+    function fixInv2()
+    {
+        $sql = "SELECT * FROM kardex k where usuario = 134 and tipoMovimiento = 3 and fechaKardex = '2016-06-17 03:31:40';";
+
+        $query = $this->db->query($sql);
+
+        foreach ($query->result() as $row) {
+            $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidadOld, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => 0, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibre(), 'comercial' => '');
+            $this->db->set('ultimo_movimiento', 'now()', false);
+            $this->db->insert('inventario', $dataInsert);
+            echo "<h1>Cambio 2</h1>";
+            echo "<pre>";
+            print_r($dataInsert);
+            echo "</pre>";
+        }
+    }
+
+    function buffer()
+    {
+        $data['titulo'] = "Buffer en farmacia";
+        $data['query'] = $this->Inventario_model->getBufferNuevo($this->session->userdata('clvsucursal'));
+        $data['js'] = 'inventario/buffer_js';
+        $this->load->view('main', $data);
+   }
 
 }

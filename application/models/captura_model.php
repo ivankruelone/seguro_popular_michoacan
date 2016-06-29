@@ -265,7 +265,7 @@ where r.consecutivo = ?;";
 
     function getLoteQuery($cveArticulo)
     {
-        $sql = "SELECT lote, caducidad, cantidad, case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end as valida
+        $sql = "SELECT inventarioID, lote, caducidad, cantidad, case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end as valida
         FROM inventario i
         join articulos a using(id)
         where cvearticulo = ? and i.clvsucursal = ? and cantidad > 0
@@ -280,7 +280,7 @@ where r.consecutivo = ?;";
         }
         else
         {
-            $sql2 = "SELECT lote, caducidad, cantidad, case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end as valida
+            $sql2 = "SELECT ifnull(inventarioID, 0) as inventarioID, lote, caducidad, cantidad, case when caducidad = '0000-00-00' then '9999-12-31' else caducidad end as valida
             FROM inventario i
             join articulos a using(id)
             where cvearticulo = ? and i.clvsucursal = ? and lote = 'SL'
@@ -328,10 +328,10 @@ where r.consecutivo = ?;";
         {
             foreach($query->result() as $row)
             {
-                $a .= '<option value="'.trim($row->lote).'">'.$row->lote.' - '.$row->caducidad.' ('.$row->cantidad.')</option>';
+                $a .= '<option value="'.trim($row->inventarioID).'">'.$row->lote.' - '.$row->caducidad.' ('.$row->cantidad.')</option>';
             }
         }else{
-            $a = '<option value="SL">SIN LOTE Y CADUCIDAD</option>';
+            $a = '<option value="0">SIN LOTE Y CADUCIDAD</option>';
         }
         
         
@@ -418,10 +418,10 @@ where r.consecutivo = ?;";
     {
         $sql = "SELECT cvearticulo, precioven, ifnull(lote, 'SL') as lote, ifnull(caducidad, '9999-12-31') as caducidad, a.id, ifnull(inventarioID, 0) as inventarioID
 FROM articulos a
-left join inventario i on a.id = i.id and clvsucursal = ? and lote = ?
+left join inventario i on a.id = i.id and clvsucursal = ? and inventarioID = ?
 where cvearticulo = ?;";
 
-        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), (string)$lote, (string)$cveArticulo));
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $lote, (string)$cveArticulo));
         
         if($query->num_rows() > 0)
         {
@@ -623,12 +623,21 @@ where p.usuario = ?;";
             return 0;
         }else{
             $row = $query->row();
-            $sql = "select 'hola' as resultado where ? between ? and ?;";
+            $sql = "select * FROM fecha where ? between ? and ?;";
             $query2 = $this->db->query($sql, array($fecha, $row->fecha_inicial, $row->fecha_final));
             return $query2->num_rows();
         }
         
         
+    }
+
+    function checkFechaRemision($fecha)
+    {
+        $sql = "SELECT * FROM remision r where clvsucursal = ? and remisionStatus = 1 and ? between perini and perfin;";
+
+        $query = $this->db->query($sql, array((int)$this->session->userdata('clvsucursal'), (string)$fecha));
+
+        return $query->num_rows();
     }
     
     
@@ -1255,12 +1264,12 @@ where subida = ? and receta = ?;";
                     $this->db->insert('inventario', $data);
                     
                     $dataReceta = array(
-                        'lote'          => $i->lote,
-                        'caducidad'     => $i->caducidad,
+                        'lote'          => 'SL',
+                        'caducidad'     => '9999-12-31',
                         'descontada'    => 1,
-                        'ubicacion'     => $i->ubicacion,
-                        'marca'         => $i->marca,
-                        'comercial'     => $i->comercial
+                        'ubicacion'     => 0,
+                        'marca'         => '',
+                        'comercial'     => ''
                     );
 
                     $this->db->update('receta_detalle', $dataReceta, array('consecutivoDetalle' => $row->consecutivoDetalle));
@@ -1309,6 +1318,268 @@ where subida = ? and receta = ?;";
             return 'Esta receta tiene productos remisionados';
         }
         
+    }
+
+    function getInventarioFix1($clvsucursal, $id, $inventarioID)
+    {
+        $sql = "SELECT * FROM inventario i where clvsucursal = ? and id = ? and inventarioID <> ?  and cantidad > 0 order by caducidad limit 1;";
+        $query = $this->db->query($sql, array($clvsucursal, $id, $inventarioID));
+        return $query;
+    }
+
+    function getInventarioFix2($clvsucursal, $id)
+    {
+        $sql = "SELECT * FROM inventario i where clvsucursal = ? and id = ? and lote = 'SL' limit 1;";
+        $query = $this->db->query($sql, array($clvsucursal, $id));
+        return $query;
+    }
+
+    function ajustaInventarioExcedenteSurtido($inventarioID, $consecutivo)
+    {
+        $this->load->model('Inventario_model');
+        $sql = "SELECT * FROM inventario i where inventarioID = ? and lote <> 'SL' and cantidad < 0;";
+
+        $query = $this->db->query($sql, array($inventarioID));
+
+        if($query->num_rows() > 0)
+        {
+            $row = $query->row();
+
+            $query2 = $this->getInventarioFix1($row->clvsucursal, $row->id, $row->inventarioID);
+
+            if($query2->num_rows() > 0)
+            {
+                $row2 = $query2->row();
+
+                if($row2->cantidad >= ($row->cantidad * -1))
+                {
+
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    //echo "<h1>Cambio 1</h1>";
+                    //echo "<pre>";
+                    //print_r($row);
+                    //print_r($dataInv1);
+                    //echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
+
+                    //echo "<h1>Cambio 2</h1>";
+                    //echo "<pre>";
+                    //print_r($row2);
+                    //print_r($dataInv2);
+                    //echo "</pre>";
+
+                }else
+                {
+                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    //$this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    //echo "<h1>Cambio 1</h1>";
+                    //echo "<pre>";
+                    //print_r($row);
+                    //print_r($dataInv1);
+                    //echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    //$this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
+
+                    //echo "<h1>Cambio 2</h1>";
+                    //echo "<pre>";
+                    //print_r($row2);
+                    //print_r($dataInv2);
+                    //echo "</pre>";
+                }
+            }else
+            {
+                $query3 = $this->getInventarioFix2($row->clvsucursal, $row->id);
+
+                if($query3->num_rows() > 0)
+                {
+                    $row3 = $query3->row();
+
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    //echo "<h1>Cambio 1</h1>";
+                    //echo "<pre>";
+                    //print_r($row);
+                    //print_r($dataInv1);
+                    //echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv2, array('inventarioID' => $row3->inventarioID));
+
+                    //echo "<h1>Cambio 2</h1>";
+                    //echo "<pre>";
+                    //print_r($row3);
+                    //print_r($dataInv2);
+                    //echo "</pre>";
+                }else
+                {
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    //echo "<h1>Cambio 1</h1>";
+                    //echo "<pre>";
+                    //print_r($row);
+                    //print_r($dataInv1);
+                    //echo "</pre>";
+
+                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '');
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->insert('inventario', $dataInsert);
+
+                    //echo "<h1>Cambio 2</h1>";
+                    //echo "<pre>";
+                    //print_r($dataInsert);
+                    //echo "</pre>";
+                }
+            }
+
+
+        }
+    }
+
+    function ajustaInventarioExcedenteSurtidoPrueba($inventarioID, $consecutivo)
+    {
+        $this->load->model('Inventario_model');
+        $sql = "SELECT * FROM inventario i where inventarioID = ? and lote <> 'SL' and cantidad < 0;";
+
+        $query = $this->db->query($sql, array($inventarioID));
+
+        if($query->num_rows() > 0)
+        {
+            $row = $query->row();
+
+            $query2 = $this->getInventarioFix1($row->clvsucursal, $row->id, $row->inventarioID);
+
+            if($query2->num_rows() > 0)
+            {
+                $row2 = $query2->row();
+
+                if($row2->cantidad >= ($row->cantidad * -1))
+                {
+
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    echo "<h1>Cambio 1</h1>";
+                    echo "<pre>";
+                    print_r($row);
+                    print_r($dataInv1);
+                    echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
+
+                    echo "<h1>Cambio 2</h1>";
+                    echo "<pre>";
+                    print_r($row2);
+                    print_r($dataInv2);
+                    echo "</pre>";
+
+                }else
+                {
+                    $dataInv1 = array('cantidad' => $row->cantidad + $row2->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    echo "<h1>Cambio 1</h1>";
+                    echo "<pre>";
+                    print_r($row);
+                    print_r($dataInv1);
+                    echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row2->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv2, array('inventarioID' => $row2->inventarioID));
+
+                    echo "<h1>Cambio 2</h1>";
+                    echo "<pre>";
+                    print_r($row2);
+                    print_r($dataInv2);
+                    echo "</pre>";
+
+                    $this->ajustaInventarioExcedenteSurtidoPrueba($inventarioID, $consecutivo);
+                }
+            }else
+            {
+                $query3 = $this->getInventarioFix2($row->clvsucursal, $row->id);
+
+                if($query3->num_rows() > 0)
+                {
+                    $row3 = $query3->row();
+
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    echo "<h1>Cambio 1</h1>";
+                    echo "<pre>";
+                    print_r($row);
+                    print_r($dataInv1);
+                    echo "</pre>";
+
+                    $dataInv2 = array('cantidad' => $row3->cantidad + $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv2, array('inventarioID' => $row3->inventarioID));
+
+                    echo "<h1>Cambio 2</h1>";
+                    echo "<pre>";
+                    print_r($row3);
+                    print_r($dataInv2);
+                    echo "</pre>";
+                }else
+                {
+                    $dataInv1 = array('cantidad' => 0, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0);
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->update('inventario', $dataInv1, array('inventarioID' => $row->inventarioID));
+
+                    echo "<h1>Cambio 1</h1>";
+                    echo "<pre>";
+                    print_r($row);
+                    print_r($dataInv1);
+                    echo "</pre>";
+
+                    $dataInsert = array('id' => $row->id, 'lote' => 'SL', 'caducidad' => '9999-12-31', 'cantidad' => $row->cantidad, 'tipoMovimiento' => 3, 'subtipoMovimiento' => 11, 'receta' => $consecutivo, 'usuario' => $this->session->userdata('usuario'), 'movimientoID' => 0, 'ean' => 0, 'marca' => '', 'costo' => 0, 'clvsucursal' => $row->clvsucursal, 'ubicacion' => $this->Inventario_model->getUbicacionLibreByClvsucursal($row->clvsucursal), 'comercial' => '');
+                    $this->db->set('ultimo_movimiento', 'now()', false);
+                    $this->db->insert('inventario', $dataInsert);
+
+                    echo "<h1>Cambio 2</h1>";
+                    echo "<pre>";
+                    print_r($dataInsert);
+                    echo "</pre>";
+                }
+            }
+
+
+        }else
+        {
+            //echo "aqui";
+        }
+    }
+
+    function getColectivosValidadosValuados()
+    {
+    	$sql = "SELECT colectivoID, movimientoID, c.clvsucursal, descsucursal, folio, programa, sum(subtotal) as subtotal
+FROM movimiento_prepedido_valuado p
+join movimiento m using(movimientoID)
+join colectivo c using(movimientoID)
+join sucursales s on c.clvsucursal = s.clvsucursal
+join programa o using(idprograma)
+group by movimientoID;";
     }
 
 }

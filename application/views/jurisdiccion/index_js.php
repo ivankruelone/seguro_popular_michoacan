@@ -13,4 +13,17 @@ function aprobar(event)
 	}
 }
 
+$(".rechazar").on("click", rechazar);
+
+function rechazar(event)
+{
+	if(confirm("Seguro que deseas RECHAZAR este paquete, con esto podras mandarlo a correcciones ??"))
+	{
+		return true;
+	}else{
+		event.preventDefault();
+		return false;
+	}
+}
+
 </script>

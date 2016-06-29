@@ -1156,7 +1156,11 @@ join articulos a using(id) where movimientoID = ?;";
     function actSucursales()
     {
         $arreglo = json_decode(json_encode($this->getDataOficina('sucursal', array())), TRUE);
-        $this->db->insert_batch('sucursales', $arreglo, 'IGNORE');
+        if(count($arreglo) > 0)
+        {
+            $this->db->insert_batch('sucursales', $arreglo, 'IGNORE');
+        }
+        
         $this->actNombreSucursal();
     }
     
@@ -1360,6 +1364,41 @@ order by menuID, s.submenuID
         }
 
         return $retorno;
+    }
+
+    function getArticuloCambioPresentacion()
+    {
+        $sql = "SELECT id, cvearticulo, clave, susa, descripcion, pres 
+        FROM articulos a 
+        where clave in (select clave from borrar_cambio_pres) and id not in(48, 60, 1141);";
+
+        $query = $this->db->query($sql);
+
+        return $query;
+    }
+
+    function getInventarioCambioPresentacion()
+    {
+        $sql = "SELECT id, cvearticulo, clave, susa, descripcion, pres, lote, caducidad, cantidad from inventario i
+join articulos a using(id)
+where id in(SELECT id FROM articulos a where clave in (select clave from borrar_cambio_pres) and id not in(48, 60, 1141))
+and cantidad > 0 and clvsucursal = ?;";
+        
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal')));
+        return $query;
+    }
+
+    function getRecetaCambioPresentacion()
+    {
+        $sql = "SELECT folioreceta, fecha, id, cvearticulo, clave, susa, descripcion, pres, canreq, cansur
+from receta_detalle d
+join receta r using(consecutivo)
+join articulos a using(id)
+where id in(SELECT id FROM articulos a where clave in (select clave from borrar_cambio_pres) and id not in(48, 60, 1141))
+and cansur > 0 and clvsucursal = ?;";
+        
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal')));
+        return $query;
     }
 
 }

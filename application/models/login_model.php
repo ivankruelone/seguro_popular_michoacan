@@ -315,11 +315,7 @@ class Login_model extends CI_Model
         $query = $this->db->query($sql, array($usuario, $password));
 
         if ($query->num_rows() > 0) {
-            $this->__asignSessionParameters($query);
-            $this->__actualizaTablas();
-            
-            
-            
+
             if($this->tengoCentral == 1)
             {
                 
@@ -334,12 +330,18 @@ class Login_model extends CI_Model
                 $this->__auditaMovimiento();
                 $this->__inventario();
             }else{
-                //$this->util->actSucursales();
+                $this->util->actSucursales();
                 if(PATENTE == 1)
                 {
                     $this->util->actArticulo();
                 }
             }
+
+            $this->__asignSessionParameters($query);
+            $this->__actualizaTablas();
+            
+            
+            
             return true;
         } else {
             return false;

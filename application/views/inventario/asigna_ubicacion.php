@@ -49,6 +49,8 @@
 
                                     <?php echo form_hidden('origen', $origen); ?>
 
+                                    <?php echo form_hidden('ubicacionAnterior', $ubica); ?>
+
                                     <?php echo MY_form_submit(); ?>
                                     
                                     <?php echo form_close(); ?>

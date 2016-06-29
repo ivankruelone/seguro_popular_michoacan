@@ -384,10 +384,14 @@ where a.activo = 1 and tipoprod = ?;";
 
     function getArticulosLimitBuffer($tipoprod, $clvsucursal, $limit, $offset = 0)
     {
-        $sql = "SELECT a.id, cvearticulo, susa, descripcion, pres, buffer
+        $sql = "SELECT clvsucursal, id, cvearticulo, susa, descripcion, pres, ifnull(buffer, 0) as buffer, ifnull(cantidad, 0) as inv, ifnull(demanda, 0) as demanda, case when c.nivelatencion is null then 0 else 1 end as cobertura
 FROM articulos a
-join buffer b on a.id = b.id and b.clvsucursal = ?
-where a.activo = 1 and tipoprod = ?
+left join buffer b using(id)
+left join sucursales s using(clvsucursal)
+left join cobertura c using(id, nivelatencion)
+left join inv i using(id, clvsucursal)
+left join demandaCalculada d using(id, clvsucursal)
+where clvsucursal = ? and tipoprod = ?
 order by tipoprod, cvearticulo * 1
 limit ? offset ?;";
         

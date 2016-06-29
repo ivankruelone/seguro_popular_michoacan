@@ -425,7 +425,7 @@ where pasilloTipo = 1 and id = ?;";
     {
         $pasilloTipo = $this->getPasilloTipoByUbicacion($ubicacion);
         
-        if($id == 0)
+        if(($id == 0 && $pasilloTipo != 3) || $pasilloTipo == 2)
         {
             $this->db->update('posicion', array('id' => $id, 'minimo' => $minimo, 'maximo' => $maximo), array('ubicacion' => $ubicacion));
             echo $this->db->affected_rows();
@@ -540,5 +540,22 @@ where pasilloID = ? and cantidad > 0;";
         return $query;
     }
 
+    function getMovimientos()
+    {
+        $sql = "SELECT movimientoID, fechaCierre, referencia, tipoMovimientoDescripcion, subtipoMovimientoDescripcion, statusMovimiento, statusMovimientoDescripcion, nombreusuario, ifnull(sum(piezas), 0) as piezas
+FROM movimiento m
+left join movimiento_detalle d using(movimientoID)
+join tipo_movimiento t using(tipoMovimiento)
+join subtipo_movimiento b using(subtipoMovimiento)
+join movimiento_status a using(statusMovimiento)
+join usuarios u using(usuario)
+where m.clvsucursal = ?
+group by movimientoID
+order by movimientoID desc;";
+
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal')));
+
+        return $query;
+    }
 }
     

@@ -590,6 +590,7 @@ function medicoAll_submit(){
     function programaExcel($reporte){
         ini_set("memory_limit","2048M");
         $query = $this->reportes_model->executeQuery($reporte);
+        $titulo = $this->reportes_model->executeTitulo($reporte);
         $this->load->library('excel');
         $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
         $cacheSettings = array( 'memoryCacheSize' => '512MB');
@@ -597,30 +598,48 @@ function medicoAll_submit(){
 
         $this->excel->setActiveSheetIndex(0);
         $this->excel->getActiveSheet()->setTitle($reporte);
+
+        if($this->session->userdata('valuacion') == 1)
+        {
+            $this->excel->getActiveSheet()->mergeCells('A1:N1');
+            $this->excel->getActiveSheet()->mergeCells('A2:N2');
+            $this->excel->getActiveSheet()->mergeCells('A3:N3');
+            $this->excel->getActiveSheet()->mergeCells('A4:N4');
+        }else
+        {
+            $this->excel->getActiveSheet()->mergeCells('A1:H1');
+            $this->excel->getActiveSheet()->mergeCells('A2:H2');
+            $this->excel->getActiveSheet()->mergeCells('A3:H3');
+            $this->excel->getActiveSheet()->mergeCells('A4:H4');
+        }
+
         $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
         $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
         $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->mergeCells('A1:M1');
         $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->setCellValue('A2', 'REPORTE DE MEDICAMENTO Y MATERIAL DE CURACIÓN ENTREGADO A LOS');
+
+
+        $this->excel->getActiveSheet()->setCellValue('A2', REMISION_LINEA1);
         $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->mergeCells('A2:M2');
         $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->setCellValue('A3', 'SERVICIO DE SALUD DE MICHOACÁN, CORRESPONDIENTES AL PERIODO DEL');
+
+        $this->excel->getActiveSheet()->setCellValue('A3', REMISION_LINEA2);
         $this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->mergeCells('A3:M3');
         $this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $this->excel->getActiveSheet()->setCellValue('A4', "" . ' AL ' . "" );
+
+
+        $this->excel->getActiveSheet()->setCellValue('A4', $titulo);
         $this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
         $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(12);
         $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
-        $this->excel->getActiveSheet()->mergeCells('A4:M4');
         $this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+
         $this->excel->getActiveSheet()->setCellValue('A5', '#');
         $this->excel->getActiveSheet()->setCellValue('B5', 'CLAVE');
         $this->excel->getActiveSheet()->setCellValue('C5', 'DESCRIPCION');
@@ -774,17 +793,28 @@ function medicoAll_submit(){
 
         $this->excel->getActiveSheet()->getStyle('I'.$inicio.':N'.($fila))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
         $this->excel->getActiveSheet()->getStyle('D'.$inicio.':H'.($fila))->getNumberFormat()->setFormatCode('#,##0');
-        $styleArray = array(
-            'borders' => array(
-                'allborders' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => 'FF000000'),
-                ),
-            ),
-        );
-        
+
         $this->excel->getActiveSheet()->getStyle('A'.($inicio).':O'.($fila - 1))->getAlignment()->setWrapText(true);
         
+                $styleArray = array(
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => 'FFFF0000'),
+                        ),
+                    ),
+                );
+                
+                if($this->session->userdata('valuacion') == 1){
+                $this->excel->getActiveSheet()->getStyle('A'.($inicio - 1).':N'.($fila + 1))->applyFromArray($styleArray);
+                $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $inicio);
+                $this->excel->getActiveSheet()->setAutoFilter('A'.($inicio - 1).':N'.($fila + 1));
+                }else{
+                 $this->excel->getActiveSheet()->getStyle('A'.($inicio - 1).':H'.($fila + 1))->applyFromArray($styleArray);
+                 $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $inicio);
+                 $this->excel->getActiveSheet()->setAutoFilter('A'.($inicio - 1).':H'.($fila + 1));  
+                }
+
         $this->excel->createSheet();
 
         $this->excel->setActiveSheetIndex(1);

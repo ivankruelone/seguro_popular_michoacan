@@ -19,6 +19,20 @@ class Movimiento_model extends CI_Model {
         $this->url = "http://189.203.201.184/oaxacacentral/index.php/catalogos/";
     }
 
+    function getMarcas()
+    {
+        $arr = $this->util->getDataOficina('laboratorio', array());
+        if(count($arr) > 0)
+        {
+            return json_encode($arr);
+        }else
+        {
+            $sql = "SELECT trim(marca) as value FROM movimiento_detalle m where marca is not null  and marca <> '' group by value;";
+            $query = $this->db->query($sql);
+            return json_encode($query->result_array());
+        }
+    }
+
     
     function __get_data($url, $referencia)
     {
@@ -1715,16 +1729,30 @@ where movimientoDetalle = ?;";
     {
         $this->db->update('movimiento_detalle', $data, array('movimientoDetalle' => $movimientoDetalle));
     }
+
+    function getGuia($movimientoID)
+    {
+        $sql = "SELECT cvearticulo, susa, descripcion, pres, piezas, concat(area, '-',pasillo, '-', moduloID, '-', nivelID, '-', posicionID) as ubicacion
+FROM movimiento_prepedido m
+join articulos a using(id)
+left join ubicacion u on m.ubicacionPropuesta = u.ubicacion and u.clvsucursal = ?
+where movimientoID = ?
+order by pasilloTipo, area, pasillo, moduloID, nivelID, posicionID;";
+
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
+
+        return $query;
+    }
     
     function getAreasGuia($movimientoID)
     {
-        $sql = "SELECT areaID, area FROM movimiento_prepedido m
+        $sql = "SELECT areaID, ifnull(area, 'SIN INVENTARIO') as area FROM movimiento_prepedido m
 join articulos a using(id)
-left join inventario i using(id)
-left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and pasilloTipo <> 2 and i.clvsucursal = ?
+left join inventario i on m.id = i.id  and i.clvsucursal = ?
+left join ubicacion u on u.ubicacion = i.ubicacion and pasilloTipo <> 2
+where m.movimientoID = ?
 group by areaID;";
-        $query = $this->db->query($sql, array((int)$movimientoID, $this->session->userdata('clvsucursal')));
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), (int)$movimientoID));
 
         return $query;
     }
@@ -1828,6 +1856,14 @@ group by areaID;";
         $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
     }
     
+    function asignaCXP($movimientoID)
+    {
+        
+        $folio = $this->util->getDataOficina('folio', array('foliador' => $this->session->userdata('cxp')));
+        $data = array('nuevo_folio' => $folio->folio);
+        $this->db->update('movimiento', $data, array('movimientoID' => $movimientoID));
+    }
+
     function getClientesBySucursal($clvsucursal)
     {
         $sql = "SELECT * FROM receptores_sucursal r
@@ -2490,7 +2526,24 @@ join sucursales s using(clvsucursal)
 join usuarios u using(usuario)
 join programa p using(idprograma)
 join colectivo_status t using(statusColectivo)
-where statusColectivo = 2;";
+left join movimiento m using(movimientoID)
+where statusColectivo = 2 and statusMovimiento <> 1;";
+        
+        $query = $this->db->query($sql);
+        $row = $query->row();
+
+        return $row->cuenta;
+    }
+
+    function getColectivosFirmaCuenta()
+    {
+        $sql = "SELECT count(*) as cuenta FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where statusColectivo = 3 and statusMovimiento = 1;";
         
         $query = $this->db->query($sql);
         $row = $query->row();
@@ -2507,7 +2560,24 @@ join usuarios u using(usuario)
 join programa p using(idprograma)
 join colectivo_status t using(statusColectivo)
 left join movimiento m using(movimientoID)
-where statusColectivo = 2
+where statusColectivo = 2 and statusMovimiento <> 1
+limit ? offset ?;";
+        
+        $query = $this->db->query($sql, array((int)$limit, (int)$offset));
+
+        return $query;
+    }
+
+    function getColectivosFirma($limit, $offset = 0)
+    {
+        $sql = "SELECT c.*, descsucursal, nombreusuario, programa, etapa, nivelatencion as nivelatencionReferencia, referencia
+FROM colectivo c
+join sucursales s using(clvsucursal)
+join usuarios u using(usuario)
+join programa p using(idprograma)
+join colectivo_status t using(statusColectivo)
+left join movimiento m using(movimientoID)
+where statusColectivo = 3 and statusMovimiento = 1
 limit ? offset ?;";
         
         $query = $this->db->query($sql, array((int)$limit, (int)$offset));
@@ -2638,6 +2708,249 @@ where m.movimientoID = ?;";
         {
             $this->sendTraspaso($movimientoID);
         }
+    }
+
+    function rechazarColectivo($colectivoID)
+    {
+        $data = array('statusColectivo' => 0);
+        $this->db->update('colectivo', $data, array('colectivoID' => $colectivoID));
+    }
+
+    function fillPrepedidoUbicacion($movimientoID)
+    {
+        $data = array('ubicacionPropuesta' => 0);
+        $this->db->update('movimiento_prepedido', $data, array('movimientoID' => $movimientoID));
+
+        $sql = "SELECT movimientoPrepedido, i.ubicacion FROM movimiento_prepedido m, inventario i, ubicacion u
+where m.id = i.id and i.ubicacion = u.ubicacion and i.clvsucursal = ? and cantidad >= piezas and pasilloTipo = 1 and m.movimientoID = ? and ubicacionPropuesta = 0
+group by movimientoPrepedido
+order by movimientoPrepedido, caducidad
+;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
+
+        foreach ($query->result() as $row) {
+            $data = array('ubicacionPropuesta' => $row->ubicacion);
+            $this->db->update('movimiento_prepedido', $data, array('movimientoPrepedido' => $row->movimientoPrepedido));
+        }
+
+        $sql = "SELECT movimientoPrepedido, i.ubicacion FROM movimiento_prepedido m, inventario i, ubicacion u
+where m.id = i.id and i.ubicacion = u.ubicacion and i.clvsucursal = ? and cantidad >= piezas and pasilloTipo = 3 and m.movimientoID = ? and ubicacionPropuesta = 0
+group by movimientoPrepedido
+order by movimientoPrepedido, caducidad
+;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
+
+        foreach ($query->result() as $row) {
+            $data = array('ubicacionPropuesta' => $row->ubicacion);
+            $this->db->update('movimiento_prepedido', $data, array('movimientoPrepedido' => $row->movimientoPrepedido));
+        }
+
+        $sql = "SELECT movimientoPrepedido, i.ubicacion FROM movimiento_prepedido m, inventario i, ubicacion u
+where m.id = i.id and i.ubicacion = u.ubicacion and i.clvsucursal = ? and cantidad >= piezas and pasilloTipo = 2 and m.movimientoID = ? and ubicacionPropuesta = 0
+group by movimientoPrepedido
+order by movimientoPrepedido, caducidad
+;";
+        $query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
+
+        foreach ($query->result() as $row) {
+            $data = array('ubicacionPropuesta' => $row->ubicacion);
+            $this->db->update('movimiento_prepedido', $data, array('movimientoPrepedido' => $row->movimientoPrepedido));
+        }
+
+    }
+
+
+    function getReportePaquetesEntregadoConcentrado()
+    {
+        $sql = "SELECT movimientoID, colectivo, referencia, fecha, numjurisd, jurisdiccion, clvsucursalReferencia, descsucursal, programa, piezas, importe, iva_producto, servicio, iva_servicio, subtotal
+FROM movimiento m
+join movimiento_detalle_concentrado c using(movimientoID)
+join sucursales s on clvsucursalReferencia = s.clvsucursal
+left join programa p on m.cobertura = p.idprograma
+join jurisdiccion j using(numjurisd)
+where m.clvsucursal = ? and subtipoMovimiento = 22 and statusMovimiento = 1
+order by numjurisd, clvsucursalReferencia, referencia;";
+        
+        $query = $this->db->query($sql, array((int)ALMACEN));
+
+        return $query;
+    }
+
+    function getReportePaquetesEntregadoConcentradoByMovimientoID($movimientoID)
+    {
+        $sql = "SELECT movimientoID, colectivo, referencia, fecha, numjurisd, jurisdiccion, clvsucursalReferencia, descsucursal, programa, piezas, importe, iva_producto, servicio, iva_servicio, subtotal
+FROM movimiento m
+join movimiento_detalle_concentrado c using(movimientoID)
+join sucursales s on clvsucursalReferencia = s.clvsucursal
+left join programa p on m.cobertura = p.idprograma
+join jurisdiccion j using(numjurisd)
+where movimientoID = ?;";
+        
+        $query = $this->db->query($sql, array((int)$movimientoID));
+
+        return $query;
+    }
+
+    function getReportePaqueteEntregadoDetalle($movimientoID)
+    {
+        $sql = "SELECT movimientoID, colectivo, referencia, fecha, numjurisd, jurisdiccion, clvsucursalReferencia, descsucursal, id, cvearticulo, susa, descripcion, pres, programa, piezas, importe, iva_producto, servicio, iva_servicio, subtotal
+FROM movimiento m
+join movimiento_detalle_valuado c using(movimientoID)
+join sucursales s on clvsucursalReferencia = s.clvsucursal
+left join programa p on m.cobertura = p.idprograma
+join jurisdiccion j using(numjurisd)
+where movimientoID = ?
+order by numjurisd, clvsucursalReferencia, referencia, cvearticulo * 1;";
+
+        $query = $this->db->query($sql, array($movimientoID));
+
+        return $query;
+    }
+
+    function getReporteColectivosExcel()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+            die($cacheMethod . " caching method is not available" . EOL);
+        }
+        $query = $this->getReportePaquetesEntregadoConcentrado();
+        
+            $hoja = 0;
+            $this->excel->createSheet($hoja);
+            $this->excel->setActiveSheetIndex($hoja);
+            $this->excel->getActiveSheet()->getTabColor()->setRGB('EAAC1C');
+            $this->excel->getActiveSheet()->setTitle('REPORTE DE COLECTIVOS');
+                            
+            $this->excel->getActiveSheet()->mergeCells('A1:L1');
+            $this->excel->getActiveSheet()->mergeCells('A2:L2');
+            $this->excel->getActiveSheet()->mergeCells('A3:L3');
+            $this->excel->getActiveSheet()->mergeCells('A4:L4');
+
+            $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+            $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+
+            $this->excel->getActiveSheet()->setCellValue('A2', REMISION_LINEA1);
+            $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+            
+            $this->excel->getActiveSheet()->setCellValue('A3', REMISION_LINEA2);
+            $this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+
+            $this->excel->getActiveSheet()->setCellValue('A4', "REPORTE DE FACTURAS");
+            $this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
+
+            $num = 5;
+            $data_empieza = $num + 1;
+            
+            $this->excel->getActiveSheet()->setCellValue('A'.$num, 'MOVIMIENTO ID');
+            $this->excel->getActiveSheet()->setCellValue('B'.$num, 'FOLIO');
+            $this->excel->getActiveSheet()->setCellValue('C'.$num, 'COLECTIVO');
+            $this->excel->getActiveSheet()->setCellValue('D'.$num, 'FECHA');
+            $this->excel->getActiveSheet()->setCellValue('E'.$num, '# JURISDICCION');
+            $this->excel->getActiveSheet()->setCellValue('F'.$num, 'JURISDICCION');
+            $this->excel->getActiveSheet()->setCellValue('G'.$num, '# SUCURSAL');
+            $this->excel->getActiveSheet()->setCellValue('H'.$num, 'SUCURSAL');
+            $this->excel->getActiveSheet()->setCellValue('I'.$num, 'COBERTURA');
+            $this->excel->getActiveSheet()->setCellValue('J'.$num, 'PIEZAS');
+            $this->excel->getActiveSheet()->setCellValue('K'.$num, 'IMPORTE');
+            $this->excel->getActiveSheet()->setCellValue('L'.$num, 'IVA PRODUCTO');
+            $this->excel->getActiveSheet()->setCellValue('M'.$num, 'SERVICIO');
+            $this->excel->getActiveSheet()->setCellValue('N'.$num, 'IVA SERVICIO');
+            $this->excel->getActiveSheet()->setCellValue('O'.$num, 'SUBTOTAL');
+            
+            $i = 1;
+            
+            if($query->num_rows() > 0)
+            {
+            
+                
+            foreach($query->result()  as $row)
+            {                
+                $num++;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, $row->movimientoID);
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, $row->referencia);
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, $row->colectivo);
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->fecha);
+                $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->numjurisd);
+                $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->jurisdiccion);
+                $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->clvsucursalReferencia);
+                $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->descsucursal);
+                $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->programa);
+                $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->piezas);
+                $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->importe);
+                $this->excel->getActiveSheet()->setCellValue('L'.$num, $row->iva_producto);
+                $this->excel->getActiveSheet()->setCellValue('M'.$num, $row->servicio);
+                $this->excel->getActiveSheet()->setCellValue('N'.$num, $row->iva_servicio);
+                $this->excel->getActiveSheet()->setCellValue('O'.$num, $row->subtotal);
+                //
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setRowHeight(20);
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setVisible(true);
+                //$this->excel->getActiveSheet()->setCellValue('m'.$num, '=H'.$num.'*L'.$num);
+                
+                
+                $i++;
+                
+            }
+            
+            $data_termina = $num;
+            
+            $this->excel->getActiveSheet()->setCellValue('J'.($data_termina + 1), '=sum(J'.$data_empieza.':J'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('K'.($data_termina + 1), '=sum(K'.$data_empieza.':K'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('L'.($data_termina + 1), '=sum(L'.$data_empieza.':L'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('M'.($data_termina + 1), '=sum(M'.$data_empieza.':M'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('N'.($data_termina + 1), '=sum(N'.$data_empieza.':N'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('O'.($data_termina + 1), '=sum(O'.$data_empieza.':O'.$data_termina.')');
+            
+            $this->excel->getActiveSheet()->getStyle('J'.$data_empieza.':J'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+
+            $this->excel->getActiveSheet()->getStyle('K'.$data_empieza.':O'.($data_termina + 1))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED2);
+            
+            $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('O')->setAutoSize(true);
+            
+            $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':O'.$data_termina)->getAlignment()->setWrapText(true);
+            
+            $styleArray = array(
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FFFF0000'),
+                    ),
+                ),
+            );
+            
+            $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':O'.($data_termina + 1))->applyFromArray($styleArray);
+            
+            $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+            $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':O'.($data_termina));
+            
+            
+            }
+            $hoja++;
     }
 
 }

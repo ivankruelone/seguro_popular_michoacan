@@ -1,5 +1,6 @@
                                     <p style="text-align: center;"><?php echo $this->pagination->create_links(); ?></p>
                                     <table class="table table-condensed">
+                                        <caption>Registros: <?php echo $query->num_rows(); ?></caption>
                                         <thead>
                                             <tr>
                                                 <th>Colectivo ID</th>
@@ -32,16 +33,19 @@
                                                         $link_edita = anchor('jurisdiccion/edita/'.$row->colectivoID, 'Edita <i class="icon-pencil bigger-130"> </i>');                                                   
                                                         $imprime = null;
                                                         $aprobar = null;
+                                                        $rechaza = null;
                                                         break;
                                                     case 1:
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
-                                                        if($this->session->userdata('clvpuesto') == 4 || $this->session->userdata('superuser') == 1)
+                                                        if($this->session->userdata('clvpuesto') == 4 || $this->session->userdata('clvpuesto') == 22 || $this->session->userdata('superuser') == 1)
                                                         {
                                                             $aprobar = anchor('jurisdiccion/aprobar/'.$row->colectivoID, 'Aprobar <i class="icon-check bigger-130"> </i>', array('class' => 'aprobar'));
+                                                            $rechaza = anchor('jurisdiccion/rechazar/'.$row->colectivoID, 'Rechazar <i class="icon-backward bigger-130"> </i>', array('class' => 'rechazar'));
                                                         }else
                                                         {
                                                             $aprobar = null;
+                                                            $rechaza = null;
                                                         }
                                                         
                                                         break;
@@ -49,21 +53,25 @@
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                         $aprobar = null;
+                                                        $rechaza = null;
                                                         break;
                                                     case 3:
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                         $aprobar = null;
+                                                        $rechaza = null;
                                                         break;
                                                     case 4:
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                         $aprobar = null;
+                                                        $rechaza = null;
                                                         break;
                                                     case 5:
                                                         $link_edita = null;
                                                         $imprime = anchor('jurisdiccion/imprime/'.$row->colectivoID, 'Imprime <i class="icon-print bigger-130"> </i>', array('target' => '_blank'));
                                                         $aprobar = null;
+                                                        $rechaza = null;
                                                         break;
                                                 }
                                                 
@@ -84,11 +92,11 @@
                                                 <td><?php echo anchor('jurisdiccion/imagen/'.$row->colectivoID, 'Imagen <i class="icon-camera bigger-130"> </i>'); ?></td>
                                             </tr>
                                             <tr>
-                                                <td><?php echo $link_edita; ?></td>
-                                                <td><?php echo $imprime; ?></td>
-                                                <td><?php echo anchor('jurisdiccion/captura/'.$row->colectivoID, 'Captura <i class="icon-barcode bigger-130"> </i>'); ?></td>
-                                                <td><?php echo $aprobar; ?></td>
-                                                <td><?php echo $folioFactura; ?></td>
+                                                <td style="text-align: center; "><?php echo $link_edita; ?></td>
+                                                <td style="text-align: center; "><?php echo $imprime; ?></td>
+                                                <td style="text-align: center; "><?php echo anchor('jurisdiccion/captura/'.$row->colectivoID, 'Captura <i class="icon-barcode bigger-130"> </i>'); ?></td>
+                                                <td style="text-align: center; "><?php echo $aprobar; ?></td>
+                                                <td style="text-align: center; "><?php echo $rechaza; ?></td>
                                                 <td><?php echo $descargaXML; ?></td>
                                                 <td><?php echo $descargaPDF; ?></td>
                                                 <td><?php echo $fechaFactura; ?></td>

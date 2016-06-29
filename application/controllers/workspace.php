@@ -21,6 +21,9 @@ class Workspace extends CI_Controller
         $data['query2'] = $this->Catalogosweb_model->getDomicilio();
         $data['query3'] = $this->util->getRecetasIncorrectas();
         $data['fhmysql'] = $this->util->getFHMysql();
+        $data['badpres'] = $this->util->getArticuloCambioPresentacion();
+        $data['badinv'] = $this->util->getInventarioCambioPresentacion();
+        $data['badrec'] = $this->util->getRecetaCambioPresentacion();
         $this->load->view('main', $data);
     }
     

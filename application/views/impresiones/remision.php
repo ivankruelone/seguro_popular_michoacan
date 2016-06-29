@@ -1,7 +1,9 @@
 <?php
 global $cabezota;
+global $piezote;
 
-$cabezota=$cabeza;
+$cabezota = $cabeza;
+$piezote = $pie;
 
 require_once('tcpdf/config/tcpdf_config.php');
 require_once('tcpdf/tcpdf.php');
@@ -14,24 +16,31 @@ class MYPDF extends TCPDF {
     
     public function Header() { 
 
-/////////////////////////////////////////////////////////////////
-global $cabezota;
+        /////////////////////////////////////////////////////////////////
+        global $cabezota;
 
-$this->SetFont('helvetica', '', 8	);
+        $this->SetFont('helvetica', '', 8	);
 $tbl = <<<EOD
 $cabezota
 EOD;
-$this->writeHTML($tbl, true, false, false, false, '');
+        $this->writeHTML($tbl, true, false, false, false, '');
     } 
      
     // Page footer 
-    public function Footer() { 
+    public function Footer() {
+
+        global $piezote;
         // Position at 1.5 cm from bottom 
-        $this->SetY(-15); 
+        $this->SetY(-45); 
         // Set font 
-        $this->SetFont('helvetica', 'I', 9); 
+        $this->SetFont('helvetica', 'I', 8); 
         // Page number 
-        $this->Cell(0, 10, 'Pagina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, 0, 'C'); 
+        //$this->Cell(0, 10, 'Pagina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, 0, 'C');
+$tbl = <<<EOD
+$piezote
+EOD;
+        $this->writeHTML($tbl, true, false, false, false, '');
+        $this->Cell(0, 10, 'Pagina '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, 0, 'C');
     } 
 } 
 
@@ -41,7 +50,7 @@ $pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 // set document information 
 $pdf->SetCreator(PDF_CREATOR); 
 $pdf->SetAuthor('Ivan Zuñiga Perez'); 
-$pdf->SetTitle(''); 
+$pdf->SetTitle('REMISION'); 
 $pdf->SetSubject(''); 
 $pdf->SetKeywords(''); 
 
@@ -61,7 +70,7 @@ $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER); 
 
 //set auto page breaks 
-$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM); 
+$pdf->SetAutoPageBreak(TRUE, 50); 
 
 //set image scale factor 
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);  
@@ -117,46 +126,6 @@ $tabla ="
             <td colspan=\"9\" style=\"text-align: right; width: 89%; \">TOTAL</td>
             <td style=\"text-align: right; width: 6%; \"><b>".number_format($totReq, 0)."</b></td>
             <td style=\"text-align: right; width: 6%; \"><b>".number_format($totSur, 0)."</b></td>
-        </tr>
-        </tfoot>
-        </table>";
-
-// set font
-
-//echo $tabla;        
-$tbl= <<<EOD
-$tabla
-EOD;
-
-$pdf->writeHTML($tbl, true, false, false, false, '');
-
-
-//Firmas
-
-$director = null;
-$administrador = null;
-
-if($ext->num_rows()  > 0)
-{
-    $e = $ext->row();
-    $director = $e->director;
-    $administrador = $e->administrador;
-}
-
-$tabla ="
-<table>
-</tfoot>
-        <tr>
-            <td style=\"text-align: center; \">DIRECTOR</td>
-            <td style=\"text-align: center; \">ADMINISTRADOR</td>
-        </tr>
-        <tr>
-            <td style=\"text-align: center; \">".$director."</td>
-            <td style=\"text-align: center; \">".$administrador."</td>
-        </tr>
-        <tr>
-            <td style=\"text-align: center; \"><br /><br /><br /><br /><br /><br />______________________________________________</td>
-            <td style=\"text-align: center; \"><br /><br /><br /><br /><br /><br />______________________________________________</td>
         </tr>
         </tfoot>
         </table>";

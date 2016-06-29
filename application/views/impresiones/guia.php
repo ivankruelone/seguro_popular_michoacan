@@ -65,11 +65,12 @@ $pdf->setLanguageArray($l);
 
 // set font
 $pdf->SetFont('times', '', 8);
+$pdf->AddPage();
 
 foreach($detalle->result() as $det)
 {
 // add a page
-$pdf->AddPage();
+
 
 $html = <<<EOF
 <h1 style="text-align: center; ">AREA: $det->area</h1>
@@ -78,15 +79,23 @@ EOF;
         // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
 
+if($det->areaID == null)
+{
+    $_areaID = 'null';
+}else
+{
+    $_areaID = $det->areaID;
+}
 
-$sql = "SELECT pasilloID, pasillo, pasilloTipo FROM movimiento_prepedido m
+
+$sql = "SELECT pasilloID, ifnull(pasillo, 'SIN INVENTARIO') as pasillo, pasilloTipo FROM movimiento_prepedido m
 join articulos a using(id)
-left join inventario i using(id)
-left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and pasilloTipo <> 2 and u.clvsucursal = ?
+left join inventario i on m.id = i.id  and i.clvsucursal = ?
+left join ubicacion u on u.ubicacion = i.ubicacion and areaID = $_areaID and pasilloTipo <> 2
+where m.movimientoID = ?
 group by pasilloID;";
 
-$query = $this->db->query($sql, array($movimientoID, $det->areaID, $this->session->userdata('clvsucursal')));
+$query = $this->db->query($sql, array($this->session->userdata('clvsucursal'), $movimientoID));
 
 foreach($query->result() as $row)
 {
@@ -98,30 +107,44 @@ EOF;
         // output the HTML content
 $pdf->writeHTML($html, true, false, true, false, '');
 
-if($row->pasilloTipo == 3)
-{
-    $sql2 = "SELECT * FROM movimiento_prepedido m
-join articulos a using(id)
-left join inventario i using(id)
-left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ? and m.id not in (SELECT a.id FROM movimiento_prepedido m
-join articulos a using(id)
-left join inventario i using(id)
-left join ubicacion u using(ubicacion)
-where m.movimientoID = ? and pasilloTipo in(1, 2) and i.clvsucursal = ?
-group BY m.movimientoPrepedido)
-group BY m.movimientoPrepedido;";
-    $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal'), $movimientoID, $this->session->userdata('clvsucursal')));
-}else
+if($det->areaID == null && $row->pasilloID == null)
 {
     $sql2 = "SELECT * FROM movimiento_prepedido m
     join articulos a using(id)
+    left join inventario i on m.id = i.id  and clvsucursal = ?
+    left join ubicacion u on u.ubicacion = i.ubicacion and i.clvsucursal = u.clvsucursal
+    where m.movimientoID = ? and u.areaID is null and pasilloID is null
+    group BY m.movimientoPrepedido;";
+
+    $query2 = $this->db->query($sql2, array($this->session->userdata('clvsucursal'), $movimientoID));
+}else
+{
+    if($row->pasilloTipo == 3)
+    {
+        $sql2 = "SELECT * FROM movimiento_prepedido m
+    join articulos a using(id)
     left join inventario i using(id)
     left join ubicacion u using(ubicacion)
-    where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ?
+    where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ? and m.id not in (SELECT a.id FROM movimiento_prepedido m
+    join articulos a using(id)
+    left join inventario i using(id)
+    left join ubicacion u using(ubicacion)
+    where m.movimientoID = ? and pasilloTipo in(1, 2) and i.clvsucursal = ?
+    group BY m.movimientoPrepedido)
     group BY m.movimientoPrepedido;";
-    $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal')));
+        $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal'), $movimientoID, $this->session->userdata('clvsucursal')));
+    }else
+    {
+        $sql2 = "SELECT * FROM movimiento_prepedido m
+        join articulos a using(id)
+        left join inventario i using(id)
+        left join ubicacion u using(ubicacion)
+        where m.movimientoID = ? and areaID = ? and pasilloID = ? and i.clvsucursal = ?
+        group BY m.movimientoPrepedido;";
+        $query2 = $this->db->query($sql2, array($movimientoID, $det->areaID, $row->pasilloID, $this->session->userdata('clvsucursal')));
+    }
 }
+
 
 
 

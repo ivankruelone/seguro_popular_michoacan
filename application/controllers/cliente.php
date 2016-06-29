@@ -71,8 +71,7 @@ class Cliente extends CI_Controller
         $data['query'] = $this->reportes_model->getProgramaByAllCliente($fecha1, $fecha2, $suministro, $juris, $sucursal, $tipo_sucursal, $nivel_atencion);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
-        $data['js'] = "reportes/graficaProgramas2";
-        //$data['js'] = "metro/remision_concentrado_js";
+        $data['js'] = "reportes/programaAll_submit_js";
         $this->load->view('main', $data);
     }
 
@@ -104,7 +103,6 @@ class Cliente extends CI_Controller
         $data['query'] = $this->reportes_model->getProgramaByProgramaByAllCliente($fecha1, $fecha2, $suministro, $idprograma, $juris, $sucursal, $tipo_sucursal, $nivel_atencion);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
-        //$data['js'] = "metro/remision_concentrado_js";
         $this->load->view('main', $data);
     }
 
@@ -135,7 +133,7 @@ class Cliente extends CI_Controller
         
         $data['clave'] = $clave;
         $data['completo'] = $this->reportes_model->getCompletoByCvearticulo($clave);
-        $data['query'] = $this->reportes_model->getByClaveByAllCliente($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal, $nivel_atencion);
+        $data['query'] = $this->reportes_model->getByClaveByAllCliente($fecha1, $fecha2, $sucursal, $clave, $idprograma, $juris, $tipo_sucursal, $nivel_atencion, $clave, $data['completo']);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -172,7 +170,7 @@ class Cliente extends CI_Controller
         
         $data['expediente'] = $expediente;
         $data['paciente'] = $this->reportes_model->getPacienteByCvepacienteJur($expediente);
-        $data['query'] = $this->reportes_model->getByCvePacienteAllCliente($expediente, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion);
+        $data['query'] = $this->reportes_model->getByCvePacienteAllCliente($expediente, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion, $expediente, $data['paciente']);
         
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
@@ -207,7 +205,7 @@ class Cliente extends CI_Controller
 
         $data['cveMedico'] = $cveMedico;
         $data['medico'] = $this->reportes_model->getNombreMedicoByCveMedicoJur($cveMedico);
-        $data['query'] = $this->reportes_model->getByCveMedicoAllCliente($cveMedico, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion);
+        $data['query'] = $this->reportes_model->getByCveMedicoAllCliente($cveMedico, $fecha1, $fecha2, $sucursal, $suministro, $juris, $tipo_sucursal, $nivel_atencion, $cveMedico, $data['medico']);
         $data['subtitulo'] = "Periodo " .$fecha1 . " al " . $fecha2;
         $data['js'] = "reportes/grafica";
         //$data['js'] = "metro/remision_concentrado_js";

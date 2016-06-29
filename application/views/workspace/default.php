@@ -7,6 +7,15 @@
     }else{
         $domicilio = anchor('catalogosweb/domicilio', 'Establece el domicilio');
     }
+
+    $clvpuesto = $this->session->userdata('clvpuesto');
+
+    $bandera = 1;
+
+    if($clvpuesto == 15 || $clvpuesto == 16 || $clvpuesto == 17 || $clvpuesto == 18)
+    {
+        $bandera = 0;
+    }
 ?>
 <div class="row-fluid">
     <div class="span12">
@@ -62,6 +71,8 @@
         </table>
         
         <?php } ?>
+
+        <!--
         
         <table class="table">
             <thead>
@@ -79,8 +90,131 @@
                 <?php } ?>
             </tbody>
         </table>
+
+        -->
+
+        <?php if($bandera == 1)
+        {
+
+        ?>
+        <h2 style="color: red; ">ATENCIÓN: Las siguientes claves cambiaron de presentación, favor de ajustar sus inventarios a la nueva presentación, asi como las recetas y colectivos que tengan capturados.</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CLAVE</th>
+                    <th>SUSTANCIA</th>
+                    <th>DESCRIPCION</th>
+                    <th>PRESENTACION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($badpres->result() as $b){?>
+                <tr>
+                    <td><?php echo $b->id; ?></td>
+                    <td><?php echo $b->cvearticulo; ?></td>
+                    <td><?php echo $b->susa; ?></td>
+                    <td><?php echo $b->descripcion; ?></td>
+                    <td><?php echo $b->pres; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+
+        <?php
+
+            if($badinv->num_rows > 0)
+            {
+
+        ?>
+
+        <h3 style="color: green; ">Revisa los siguientes renglones de tu inventario y ajustalos de ser necesario.</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CLAVE</th>
+                    <th>SUSTANCIA</th>
+                    <th>DESCRIPCION</th>
+                    <th>PRESENTACION</th>
+                    <th>LOTE</th>
+                    <th>CADUCIDAD</th>
+                    <th>INVENTARIO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($badinv->result() as $i){?>
+                <tr>
+                    <td><?php echo $i->id; ?></td>
+                    <td><?php echo $i->cvearticulo; ?></td>
+                    <td><?php echo $i->susa; ?></td>
+                    <td><?php echo $i->descripcion; ?></td>
+                    <td><?php echo $i->pres; ?></td>
+                    <td><?php echo $i->lote; ?></td>
+                    <td><?php echo $i->caducidad; ?></td>
+                    <td><?php echo $i->cantidad; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+
+        <?php
+
+            }
+
+            if($badrec->num_rows() > 0)
+            {
+
+        ?>
+        <h3 style="color: blue; ">Revisa los siguientes folios de tu captura de recetas y ajustalos de ser necesario.</h3>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>FOLIO</th>
+                    <th>FECHA</th>
+                    <th>ID</th>
+                    <th>CLAVE</th>
+                    <th>SUSTANCIA</th>
+                    <th>DESCRIPCION</th>
+                    <th>PRESENTACION</th>
+                    <th>CANTIDAD SURTIDA</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($badrec->result() as $c){?>
+                <tr>
+                    <td><?php echo $c->folioreceta; ?></td>
+                    <td><?php echo $c->fecha; ?></td>
+                    <td><?php echo $c->id; ?></td>
+                    <td><?php echo $c->cvearticulo; ?></td>
+                    <td><?php echo $c->susa; ?></td>
+                    <td><?php echo $c->descripcion; ?></td>
+                    <td><?php echo $c->pres; ?></td>
+                    <td><?php echo $c->cansur; ?></td>
+                </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+
+        <?php
+
+
+
+            }
+
+
+
+        }
+
+        ?>
+
+
         
         <h2>Changelog</h2>
+
+        <!--
         
         <h3>Version: 1.0.5 (01/05/2015)</h3>
 <pre>
@@ -122,6 +256,8 @@
 * Proxima actualizacion: Manejo de antibioticos, Semaforos, Importar transpasos del almacen central.
     Atte. Ing. Iv&aacute;n Zu&ntilde;iga P&eacute;rez
 </pre>
+
+    -->
 
     </div>
 </div>

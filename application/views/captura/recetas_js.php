@@ -34,6 +34,7 @@ function inicio()
     
 }
 
+
 $('#noexistelote').on('change', cambiaNoExisteLote);
 
 function cambiaNoExisteLote(data)
@@ -141,13 +142,26 @@ function checkFecha(event)
 {
     var $fecha = event.currentTarget.value;
     var $url = '<?php echo site_url('captura/verifica_fecha_rango'); ?>';
+    var $url2 = '<?php echo site_url('captura/verifica_fecha_remision'); ?>';
     var $variables = { fecha : $fecha };
     var posting = $.post( $url, $variables );
+    var posting2 = $.post( $url2, $variables );
         
          posting.done(function( data ) {
             if ( data == 0)
             {
                 alert('Fecha invalida, fuera de rango de captura.');
+                $('#' + event.currentTarget.attributes.id.value).val('').focus();
+            }else{
+                
+            }
+            
+         });
+
+         posting2.done(function( data2 ) {
+            if ( parseInt(data2) > 0)
+            {
+                alert('Fecha invalida, Ya esta remisionado este periodo, comunicate a facturacion para que te indiquen como proceder.');
                 $('#' + event.currentTarget.attributes.id.value).val('').focus();
             }else{
                 

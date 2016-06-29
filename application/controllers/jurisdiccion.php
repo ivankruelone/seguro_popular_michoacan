@@ -161,9 +161,9 @@ class Jurisdiccion extends CI_Controller
         $this->load->library('pagination');
         $data['subtitulo'] = "Paquetes por aprobar";
         
-        $config['base_url'] = site_url('Jurisdiccion/aprobacion');
+        $config['base_url'] = site_url('jurisdiccion/aprobacion');
         $config['total_rows'] = $this->movimiento_model->getColectivosAprobarCuenta();
-        $config['per_page'] = 50;
+        $config['per_page'] = 100;
         $config['uri_segment'] = 3;
         
         $data['query'] = $this->movimiento_model->getColectivosAprobar($config['per_page'], $this->uri->rsegment(3));
@@ -184,9 +184,9 @@ class Jurisdiccion extends CI_Controller
         $this->load->library('pagination');
         $data['subtitulo'] = "Paquetes por surtir";
         
-        $config['base_url'] = site_url('Jurisdiccion/surtido');
+        $config['base_url'] = site_url('jurisdiccion/surtido');
         $config['total_rows'] = $this->movimiento_model->getColectivosSurtirCuenta();
-        $config['per_page'] = 50;
+        $config['per_page'] = 100;
         $config['uri_segment'] = 3;
         
         $data['query'] = $this->movimiento_model->getColectivosSurtir($config['per_page'], $this->uri->rsegment(3));
@@ -239,6 +239,55 @@ class Jurisdiccion extends CI_Controller
         unlink($row->rutaImagen);
         $this->movimiento_model->deleteColectivoImagen($colectivo_imagenID);
         redirect('jurisdiccion/imagen/' . $colectivoID);
+    }
+
+    function rechazar($colectivoID)
+    {
+        $this->movimiento_model->rechazarColectivo($colectivoID);
+        redirect('jurisdiccion/aprobacion');
+    }
+
+    function reporte()
+    {
+        $data['subtitulo'] = "Paquetes surtidos por el almacen.";
+        $data['query'] = $this->movimiento_model->getReportePaquetesEntregadoConcentrado();
+        $this->load->view('main', $data);
+    }
+
+    function reporte_detalle($movimientoID)
+    {
+        $data['subtitulo'] = "Detalle de paquete surtido por el almacen.";
+        $data['query'] = $this->movimiento_model->getReportePaqueteEntregadoDetalle($movimientoID);
+        $data['query2'] = $this->movimiento_model->getReportePaquetesEntregadoConcentradoByMovimientoID($movimientoID);
+        $this->load->view('main', $data);
+    }
+
+    function reporteExcel()
+    {
+        $this->movimiento_model->getReporteColectivosExcel();
+        $filename = 'Reporte_de_colectivos_'.date('Ymd_his').'.xls'; //save our workbook as this file name
+        header('Content-Type: application/vnd.ms-excel'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
+        $objWriter->save('php://output');
+    }
+
+    function firma()
+    {
+        $this->load->library('pagination');
+        $data['subtitulo'] = "Paquetes en espera de firma";
+        
+        $config['base_url'] = site_url('jurisdiccion/surtido');
+        $config['total_rows'] = $this->movimiento_model->getColectivosFirmaCuenta();
+        $config['per_page'] = 100;
+        $config['uri_segment'] = 3;
+        
+        $data['query'] = $this->movimiento_model->getColectivosFirma($config['per_page'], $this->uri->rsegment(3));
+
+        $this->pagination->initialize($config); 
+        $data['js'] = 'jurisdiccion/index_js';
+        $this->load->view('main', $data);
     }
 
 }

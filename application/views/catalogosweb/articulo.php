@@ -3,7 +3,7 @@
                                                                         
                                     <?php echo $this->pagination->create_links(); ?>
                                     
-                                    <table class="table table-condensed">
+                                    <table class="table table-condensed table-hover">
                                         <caption>Registros: <?php echo $query->num_rows(); ?></caption>
                                         <thead>
                                             <tr>

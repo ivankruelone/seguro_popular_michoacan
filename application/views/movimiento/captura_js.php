@@ -425,10 +425,10 @@ select: function( event, ui ) {
 
 $("#llenadoAutomatico").on('click', llena);
 
-function llena(event)
+function llena()
 {
-    var $referencia = event.currentTarget.attributes.value.value;
-    var $movimientoID = event.currentTarget.attributes.movimientoID.value;
+    var $referencia = $("#referencia").html();
+    var $movimientoID = $("#movimientoID").html();
     var $url = '<?php echo site_url('movimiento/getSalidaRemota'); ?>';
     var $variables = { referencia: $referencia, movimientoID: $movimientoID };
     var posting = $.post( $url, $variables );

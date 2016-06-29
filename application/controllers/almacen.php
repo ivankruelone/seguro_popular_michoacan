@@ -517,4 +517,10 @@ class Almacen extends CI_Controller
         redirect('almacen/pedido_sucursal');
     }
 
+    function movimientos()
+    {
+        $data['subtitulo'] = "Movimientos";
+        $data['query'] = $this->almacen_model->getMovimientos();
+        $this->load->view('main', $data);
+    }
 }

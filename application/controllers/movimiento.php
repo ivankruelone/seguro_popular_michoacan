@@ -118,7 +118,7 @@ class Movimiento extends CI_Controller
         $data['sucursales'] = $this->util->getSucursalesCombo();
         $data['proveedores'] = $this->util->getProveedorCombo();
         $data['query'] = $this->movimiento_model->getMovimientoByMovimientoID($movimientoID);
-        $data['json'] = json_encode($this->util->getDataOficina('laboratorio', array()));
+        $data['json'] = $this->movimiento_model->getMarcas();
         $data['js'] = "movimiento/captura_js";
         $this->load->view('main', $data);
     }
@@ -629,18 +629,18 @@ group by id, lote, i.ubicacion;";
 
     function guia($movimientoID, $tipoMovimiento, $subtipoMovimiento)
     {
-        set_time_limit(0);
-        ini_set('memory_limit','-1');
-
+        //set_time_limit(0);
+        //ini_set('memory_limit','-1');
+        $this->movimiento_model->fillPrepedidoUbicacion($movimientoID);
         $data['header'] = $this->movimiento_model->header($movimientoID);
         //$data['detalle1'] = $this->pedidos_model->pedido_embarque($id);
         //$data['detalle'] = $this->movimiento_model->detalle($movimientoID);/*HOJA DE PEDIDO */
-        $data['detalle'] = $this->movimiento_model->getAreasGuia($movimientoID);
+        $data['detalle'] = $this->movimiento_model->getGuia($movimientoID);
         $data['tipoMovimiento'] = $tipoMovimiento;
         $data['movimientoID'] = $movimientoID;
         $data['subtipoMovimiento'] = $subtipoMovimiento;
       
-        $this->load->view('impresiones/guia', $data);
+        $this->load->view('impresiones/guia2', $data);
     }
 
     function embarque($movimientoID, $tipoMovimiento, $subtipoMovimiento)
@@ -946,7 +946,7 @@ where tipoMovimiento = 2 and referencia = ? and clvsucursalReferencia = ?;";
 
         $datos = $this->util->getDataOficina('transitoDetalle', array('referencia' => $referencia));
 
-        if(isset($datos->error))
+        if(isset($datos->error) || count($datos) == 0)
         {
             $this->getSalidaLocal($referencia, $movimientoID);
         }else
@@ -1071,6 +1071,42 @@ where tipoMovimiento = 2 and referencia = ? and clvsucursalReferencia = ?;";
         $this->movimiento_model->cerrarSinAfectar($movimientoID, $tipoMovimiento, $subtipoMovimiento);
         redirect('movimiento/index/' . $tipoMovimiento . '/' . $subtipoMovimiento);
 
+    }
+
+    function corrigeInv()
+    {
+        $sql = "SELECT * FROM kardex k where date(fechaKardex) = '2016-06-21' and subtipoMovimiento = 19 and clvsucursal = 12000 and cantidadOld > 0 and lote not in('B16M289', '147138', 'DH06415', '62214MC', '134372', 'V00616', 'VP00516', '130909', '128909', '76990', '131670', '135216', '604491', '129069', 'I16Y378', '360095', '1507391', 'Q016035', '5SM14', '124585', '180515', '9150093') group by id, lote;";
+
+        $query = $this->db->query($sql);
+
+        $cuenta = 1;
+
+        foreach ($query->result() as $row) {
+            
+            $sql2 = "SELECT * FROM kardex k where date(fechaKardex) = '2016-06-21' and subtipoMovimiento = 19 and clvsucursal = 12000 and id = ? and lote = ? and cantidadOld > 0;";
+            $query2 = $this->db->query($sql2, array($row->id, $row->lote));
+
+            $sql3 = "SELECT * from inventario where clvsucursal = 12000 and id = ? and lote = ? and cantidad > 0 and ultimo_movimiento = ?;";
+            $query3 = $this->db->query($sql3, array($row->id, $row->lote, $row->fechaKardex));
+
+            if($query3->num_rows() == 0)
+            {
+                echo "<h1>$cuenta</h1>";
+                echo "<pre>";
+                print_r($query2->result());
+                echo "</pre>";
+
+                echo "<h3>Inventario</h3>";
+                echo "<pre>";
+                print_r($query3->result());
+                echo "</pre>";
+
+                $cuenta++;
+            }
+
+
+
+        }
     }
 
 }

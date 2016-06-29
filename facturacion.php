@@ -81,7 +81,7 @@ class Facturacion extends CI_Controller
         ini_set("memory_limit","1024M");
         $data['cabeza'] = $this->facturacion_model->getRemisionCabeza($remision);
         $data['query'] = $this->facturacion_model->getRemisionDetalle($remision);
-        $data['pie'] = $this->facturacion_model->getRemisionFirmas($clvsucursal);
+        $data['ext'] = $this->facturacion_model->getSucursalesExt($clvsucursal);
         $this->load->view('impresiones/remision', $data);
     }
 
@@ -211,82 +211,6 @@ class Facturacion extends CI_Controller
         $data['js'] = "facturacion/listado_remisiones_js";
         $data['query'] = $this->facturacion_model->getRemisionesFacturadasAll();
         $this->load->view('main', $data);
-    }
-
-    function reporte_mensual()
-    {
-        $data['subtitulo'] = "Generar reporte de recetas para SSA";
-        $data['js'] = "facturacion/generar_remision_js";
-        $this->load->view('main', $data);
-    }
-
-    function obtener_reporte_mensual()
-    {
-        set_time_limit(0);
-        ini_set("memory_limit","-1");
-
-        $fecha1 = $this->input->post('fecha1');
-        $fecha2 = $this->input->post('fecha2');
-        
-        // output headers so that the file is downloaded rather than displayed
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=dataReceta_'.$fecha1.'_'.$fecha2.'_'.date('YmdHis').'.csv');
-        
-        // create a file pointer connected to the output stream
-        $output = fopen('php://output', 'w');
-        
-        // output the column headings
-        //descsucursal, domicilio, paciente, cvepaciente, fecha, folioreceta, programa, nombremedico, cvemedico, desservicios, cvearticulo, clave, susa, descripcion, pres, canreq, cansur, precio
-        fputcsv($output, array('SUCURSAL','DOMICILIO','PACIENTE','AFILIACION','FECHA','FOLIO DE RECETA','COBERTURA','NOMBRE DE MEDICO','CLAVE DE MEDICO','SERVICIO','CLAVE FENIX','CLAVE SSA','SUSTANCIA ACTIVA','DESCRIPCION', 'PRESENTACION', 'CANTIDAD REQUERIDA', 'CANTIDAD SURTIDA', 'PRECIO'));
-        
-            
-            $sql = "SELECT descsucursal, concat(calle, ' ', colonia, ' ', municipio, ' ', cp) as domicilio, concat(nombre, ' ', apaterno, ' ', amaterno) as paciente, cvepaciente, fecha, folioreceta, programa, nombremedico, cvemedico, desservicios, cvearticulo, clave, susa, descripcion, pres, canreq, cansur, precio
-FROM receta r
-join receta_detalle d using(consecutivo)
-join articulos a using(id)
-join sucursales s using(clvsucursal)
-join programa p using(idprograma)
-join fservicios f on r.cveservicio = f.cveservicios
-where fecha between ? and ?
-order by numjurisd, clvsucursal, fecha, folioreceta, tipoprod, cvearticulo * 1;";
-            $query = $this->db->query($sql, array((string)$fecha1, (string)$fecha2));
-
-        
-        // fetch the data
-        
-        foreach($query->result() as $row)
-        {
-        	//descsucursal, domicilio, paciente, cvepaciente, fecha, folioreceta, programa, nombremedico, cvemedico, desservicios, cvearticulo, clave, susa, descripcion, pres, canreq, cansur, precio
-            fputcsv($output, array($row->descsucursal, $row->domicilio, $row->paciente, $row->cvepaciente, $row->fecha, $row->folioreceta, $row->programa, $row->nombremedico, $row->cvemedico, $row->desservicios, $row->cvearticulo, $row->clave, $row->susa, $row->descripcion, $row->pres, $row->canreq, $row->cansur, $row->precio)); 
-        }
-
-    }
-
-    function reporte_facturas()
-    {
-        $data['subtitulo'] = "Reporte de facturas";
-        $data['query'] = $this->facturacion_model->getReporteFacturas();
-        $this->load->view('main', $data);
-    }
-
-    function getFacturasExcel()
-    {
-        $this->facturacion_model->getReporteFacturasExcel();
-        $filename = 'Reporte_de_facturas_'.date('Ymd_his').'.xls'; //save our workbook as this file name
-        header('Content-Type: application/vnd.ms-excel'); //mime type
-        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
-        header('Cache-Control: max-age=0'); //no cache
-        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel5');
-        $objWriter->save('php://output');
-    }
-
-    function dashboard()
-    {
-        $data['subtitulo'] = "Dashboard";;
-        $data['query'] = $this->facturacion_model->getTotalesByRequerimiento();
-        $data['js'] = 'facturacion/dashboard_js';
-        $this->load->view('main', $data);
-
     }
 
 }

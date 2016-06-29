@@ -7,6 +7,8 @@
 
                                     <?php echo MY_form_input('susa', 'susa', 'Sustancia', 'text', 'Sustancia', 6, false); ?>
 
+                                    <?php echo MY_form_input('lote', 'lote', 'Lote', 'text', 'Lote', 6, false); ?>
+
                                     <?php echo MY_form_submit(); ?>
                                     
                                     <?php echo form_close(); ?>

@@ -251,11 +251,46 @@ where remision = ?;";
         FROM receta_detalle d
 join receta r using(consecutivo)
 join articulos a using(id)
-where remision = ?;";
+where remision = ?
+order by fecha, folioreceta, cvearticulo * 1;";
 
 		$query = $this->db->query($sql, array($remision));
         
         return $query;
+    }
+
+    function getRemisionFirmas($clvsucursal)
+    {
+        $ext = $this->getSucursalesExt($clvsucursal);
+        $director = null;
+        $administrador = null;
+
+        if($ext->num_rows()  > 0)
+        {
+            $e = $ext->row();
+            $director = $e->director;
+            $administrador = $e->administrador;
+        }
+
+        $tabla ="
+        <table>
+        </tfoot>
+                <tr>
+                    <td style=\"text-align: center; \">DIRECTOR</td>
+                    <td style=\"text-align: center; \">ADMINISTRADOR</td>
+                </tr>
+                <tr>
+                    <td style=\"text-align: center; \">".$director."</td>
+                    <td style=\"text-align: center; \">".$administrador."</td>
+                </tr>
+                <tr>
+                    <td style=\"text-align: center; \"><br /><br /><br /><br />______________________________________________</td>
+                    <td style=\"text-align: center; \"><br /><br /><br /><br />______________________________________________</td>
+                </tr>
+                </tfoot>
+                </table>";
+
+        return $tabla;
     }
 
     function getSucursalesExt($clvsucursal)
@@ -603,9 +638,9 @@ group by clvsucursal;";
         return $data;
     }
 
-    function getReporte()
+    function getReporteFacturas()
     {
-    	$sql = "SELECT numfac, uuid, descsucursal, programa, perini, perfin, case when tipoFactura = 1 then suministro else tipoFacturaDescripcion end as concepto, totalfactura, ivaFactura, remision, case when statusFactura = 1 then 'ACTIVA' else 'CANCELADA' end as vigencia
+    	$sql = "SELECT remision_facturaID, numfac, uuid, clvsucursal, descsucursal, programa, perini, perfin, case when tipoFactura = 1 then suministro else tipoFacturaDescripcion end as concepto, totalFactura, ivaFactura, remision, case when statusFactura = 1 then 'ACTIVA' else 'CANCELADA' end as vigencia, DATEDIFF(perini, '1899-12-30') as fecha1, DATEDIFF(perfin, '1899-12-30') as fecha2
 FROM remision_factura f
 join remision r using(remision)
 join sucursales s using(clvsucursal)
@@ -616,7 +651,178 @@ join temporal_suministro u on r.iva = u.cvesuministro
 		
 		$query = $this->db->query($sql);
 
-		return $query();
+		return $query;
+    }
+
+    function getReporteFacturasExcel()
+    {
+        set_time_limit(0);
+        ini_set("memory_limit","-1");
+        $this->load->library('excel');
+        $cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_in_memory_gzip;
+        if (!PHPExcel_Settings::setCacheStorageMethod($cacheMethod)) {
+            die($cacheMethod . " caching method is not available" . EOL);
+        }
+        $this->load->model('almacen_model');
+        $query = $this->getReporteFacturas();
+        
+            $hoja = 0;
+            $this->excel->createSheet($hoja);
+            $this->excel->setActiveSheetIndex($hoja);
+            $this->excel->getActiveSheet()->getTabColor()->setRGB('EAAC1C');
+            $this->excel->getActiveSheet()->setTitle('REPORTE DE FACTURAS');
+                            
+            $this->excel->getActiveSheet()->mergeCells('A1:L1');
+            $this->excel->getActiveSheet()->mergeCells('A2:L2');
+            $this->excel->getActiveSheet()->mergeCells('A3:L3');
+            $this->excel->getActiveSheet()->mergeCells('A4:L4');
+
+            $this->excel->getActiveSheet()->setCellValue('A1', COMPANIA);
+            $this->excel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+
+            $this->excel->getActiveSheet()->setCellValue('A2', REMISION_LINEA1);
+            $this->excel->getActiveSheet()->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A2')->getFont()->setBold(true);
+            
+            $this->excel->getActiveSheet()->setCellValue('A3', REMISION_LINEA2);
+            $this->excel->getActiveSheet()->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
+
+            $this->excel->getActiveSheet()->setCellValue('A4', "REPORTE DE FACTURAS");
+            $this->excel->getActiveSheet()->getStyle('A4')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setSize(15);
+            $this->excel->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
+
+            $num = 5;
+            $data_empieza = $num + 1;
+            
+            $this->excel->getActiveSheet()->setCellValue('A'.$num, '#');
+            $this->excel->getActiveSheet()->setCellValue('B'.$num, 'SERIE');
+            $this->excel->getActiveSheet()->setCellValue('C'.$num, 'FOLIO');
+            $this->excel->getActiveSheet()->setCellValue('D'.$num, 'FOLIO FISCAL');
+            $this->excel->getActiveSheet()->setCellValue('E'.$num, '# SUCURSAL');
+            $this->excel->getActiveSheet()->setCellValue('F'.$num, 'SUCURSAL');
+            $this->excel->getActiveSheet()->setCellValue('G'.$num, 'COBERTURA');
+            $this->excel->getActiveSheet()->setCellValue('H'.$num, 'FECHA INICIAL');
+            $this->excel->getActiveSheet()->setCellValue('I'.$num, 'FECHA FINAL');
+            $this->excel->getActiveSheet()->setCellValue('J'.$num, 'CONCEPTO');
+            $this->excel->getActiveSheet()->setCellValue('K'.$num, 'TOTAL');
+            $this->excel->getActiveSheet()->setCellValue('L'.$num, 'IVA');
+            $this->excel->getActiveSheet()->setCellValue('M'.$num, 'REMISION');
+            $this->excel->getActiveSheet()->setCellValue('N'.$num, 'VIGENCIA');
+            
+            $i = 1;
+            
+            if($query->num_rows() > 0)
+            {
+            
+                
+            foreach($query->result()  as $row)
+            {                
+                $num++;
+                
+                $this->excel->getActiveSheet()->setCellValue('A'.$num, $row->remision_facturaID);
+                $this->excel->getActiveSheet()->setCellValue('B'.$num, preg_replace('/[0-9]/', '', $row->numfac));
+                $this->excel->getActiveSheet()->setCellValue('C'.$num, preg_replace('/[A-Z]/', '', $row->numfac));
+                $this->excel->getActiveSheet()->setCellValue('D'.$num, $row->uuid);
+                $this->excel->getActiveSheet()->setCellValue('E'.$num, $row->clvsucursal);
+                $this->excel->getActiveSheet()->setCellValue('F'.$num, $row->descsucursal);
+                $this->excel->getActiveSheet()->setCellValue('G'.$num, $row->programa);
+                $this->excel->getActiveSheet()->setCellValue('H'.$num, $row->fecha1);
+                $this->excel->getActiveSheet()->setCellValue('I'.$num, $row->fecha2);
+                $this->excel->getActiveSheet()->setCellValue('J'.$num, $row->concepto);
+                $this->excel->getActiveSheet()->setCellValue('K'.$num, $row->totalFactura);
+                $this->excel->getActiveSheet()->setCellValue('L'.$num, $row->ivaFactura);
+                $this->excel->getActiveSheet()->setCellValue('M'.$num, $row->remision);
+                $this->excel->getActiveSheet()->setCellValue('N'.$num, $row->vigencia);
+                //
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setRowHeight(20);
+                //$this->excel->getActiveSheet()->getRowDimension($num)->setVisible(true);
+                //$this->excel->getActiveSheet()->setCellValue('m'.$num, '=H'.$num.'*L'.$num);
+                
+                if($row->vigencia == 'ACTIVA')
+                {
+                    $this->excel->getActiveSheet()->getStyle('A' . $num . ':N' . $num)->getFill()->applyFromArray(array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'startcolor' => array(
+                             'rgb' => '5BD244'
+                        )
+                    ));
+                }else{
+                    $this->excel->getActiveSheet()->getStyle('A' . $num . ':N' . $num)->getFill()->applyFromArray(array(
+                        'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                        'startcolor' => array(
+                             'rgb' => 'FF6961'
+                        )
+                    ));
+                }
+                
+                $i++;
+                
+            }
+            
+            $data_termina = $num;
+            
+            $this->excel->getActiveSheet()->setCellValue('K'.($data_termina + 1), '=sum(K'.$data_empieza.':K'.$data_termina.')');
+            $this->excel->getActiveSheet()->setCellValue('L'.($data_termina + 1), '=sum(L'.$data_empieza.':L'.$data_termina.')');
+            
+            $this->excel->getActiveSheet()->getStyle('K'.$data_empieza.':K'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+            $this->excel->getActiveSheet()->getStyle('L'.$data_empieza.':L'.($data_termina + 1))->getNumberFormat()->setFormatCode('#,##0');
+
+            $this->excel->getActiveSheet()->getStyle('H'.$data_empieza.':H'.($data_termina + 1))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+            $this->excel->getActiveSheet()->getStyle('I'.$data_empieza.':I'.($data_termina + 1))->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_DATE_YYYYMMDD2);
+            
+            $this->excel->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+            $this->excel->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+            
+            $this->excel->getActiveSheet()->getStyle('A'.$data_empieza.':N'.$data_termina)->getAlignment()->setWrapText(true);
+            
+            $styleArray = array(
+                'borders' => array(
+                    'allborders' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => 'FFFF0000'),
+                    ),
+                ),
+            );
+            
+            $this->excel->getActiveSheet()->getStyle('A'.($data_empieza - 1).':N'.($data_termina + 1))->applyFromArray($styleArray);
+            
+            $this->excel->getActiveSheet()->freezePaneByColumnAndRow(0, $data_empieza);
+            $this->excel->getActiveSheet()->setAutoFilter('A'.($data_empieza - 1).':N'.($data_termina));
+            
+            
+            }
+            $hoja++;
+    }
+
+    function getTotalesByRequerimiento()
+    {
+        $sql = "SELECT tiporequerimiento, requerimiento, count(*) as cuenta, sum(canreq) as canreq, sum(cansur) as cansur, sum(subtotal) as total, (sum(cansur) / sum(canreq)) * 100 as abasto
+        FROM receta r
+join receta_detalle_concentrado d using(consecutivo)
+join temporal_requerimiento q using(tiporequerimiento)
+group by tiporequerimiento;";
+        
+        $query = $this->db->query($sql);
+
+        return $query;
     }
 
 }

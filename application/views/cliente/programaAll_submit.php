@@ -106,7 +106,7 @@
                                                 <td style="text-align: right;" colspan="3">Totales</td>
                                                 <td style="text-align: right;" id="pa"><?php echo number_format ($pa, 0); ?></td>
                                                 <td style="text-align: right;" id="sp"><?php echo number_format ($sp, 0); ?></td>
-                                                <td style="text-align: right;" id="op"><?php echo number_format ($pr, 0); ?></td>
+                                                <td style="text-align: right;" id="pr"><?php echo number_format ($pr, 0); ?></td>
                                                 <td style="text-align: right;" id="sm"><?php echo number_format ($sm, 0); ?></td>
                                                 <td style="text-align: right;" id="to"><?php echo number_format ($to, 0); ?></td>
                                                 <?php if($this->session->userdata('valuacion') == 1){?>
@@ -127,7 +127,7 @@
                                                 <th>PROSPERA</th>
                                                 <th>SEGURO MEDICO SIGLO XXI</th>
                                                 <th>TOTAL</th>
-                                                <?php if($this->session->userdata('valuacion') == 14){?>
+                                                <?php if($this->session->userdata('valuacion') == 1){?>
                                                 <th>Precio Unitario</th>
                                                 <th>Importe</th>
                                                 <th>IVA</th>

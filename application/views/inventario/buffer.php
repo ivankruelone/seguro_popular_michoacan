@@ -1,8 +1,6 @@
 							<div class="row-fluid">
                                 <div class="span12">
-                                    
-                                    <?php echo $this->pagination->create_links(); ?>
-                                    
+
 <table cellpadding="2" cellspacing="2">
     <tr>
         <td style="background-color: #F08080; width: 50px;"></td>
@@ -49,6 +47,14 @@
                                                     $color = '#F08080';
                                                 }
 
+                                                if(ALMACEN == $this->session->userdata('clvsucursal'))
+                                                {
+                                                    $input = number_format($row->buffer, 0);
+                                                }else
+                                                {
+                                                    $input = form_input($data);
+                                                }
+
                                             
                                             ?>
                                             <tr style="background-color: <?php echo $color; ?>; vertical-align: middle;">
@@ -56,9 +62,9 @@
                                                 <td style=" vertical-align: middle;"><?php echo $row->susa; ?></td>
                                                 <td style=" vertical-align: middle;"><?php echo $row->descripcion; ?></td>
                                                 <td style=" vertical-align: middle;"><?php echo $row->pres; ?></td>
-                                                <td style="text-align: right; font-size: large; color: #8B0000; font-weight: bolder; vertical-align: middle; "><?php echo $row->inv; ?></td>
-                                                <td style="text-align: right; font-size: large; vertical-align: middle;"><?php echo $row->demanda; ?></td>
-                                                <td style=" vertical-align: middle;"><?php echo form_input($data); ?></td>
+                                                <td style="text-align: right; font-size: large; color: #8B0000; font-weight: bolder; vertical-align: middle; "><?php echo number_format($row->inv, 0); ?></td>
+                                                <td style="text-align: right; font-size: large; vertical-align: middle;"><?php echo number_format($row->demanda, 0); ?></td>
+                                                <td style=" vertical-align: middle;"><?php echo $input; ?></td>
                                             </tr>
                                             <?php 
                                             

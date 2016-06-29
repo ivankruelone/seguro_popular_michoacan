@@ -292,6 +292,7 @@ class Captura extends CI_Controller
                         
                     $this->db->set('ultimo_movimiento', 'now()', false);
                     $this->db->update('inventario', $data, array('inventarioID' => $row->inventarioID));
+                    $this->captura_model->ajustaInventarioExcedenteSurtido($row->inventarioID, $consecutivo);
                }
                
                
@@ -312,8 +313,8 @@ class Captura extends CI_Controller
         
         if ($this->db->trans_status() === TRUE)
         {
-            $this->util->postReceta($consecutivo);
-            $this->util->postInventarioReceta($consecutivo);// generate an error... or use the log_message() function to log your error
+            //$this->util->postReceta($consecutivo);
+            //$this->util->postInventarioReceta($consecutivo);// generate an error... or use the log_message() function to log your error
         } 
         
         echo $consecutivo;
@@ -346,7 +347,13 @@ class Captura extends CI_Controller
         echo $this->captura_model->checkFechaRango($fecha);
     }
 
-function valida_fecha()
+    function verifica_fecha_remision()
+    {
+        $fecha = $this->input->post('fecha');
+        echo $this->captura_model->checkFechaRemision($fecha);
+    }
+
+    function valida_fecha()
     {
         $fecha = $this->input->post('fechacad');
         $fechacap = $this->input->post('fechacap');
@@ -865,6 +872,62 @@ function valida_fecha()
         $mensaje = $this->captura_model->deleteRecetaCompleta($consecutivo);
         $this->session->set_flashdata('mensaje', $mensaje);
         redirect('captura/edicion');
+    }
+
+    function pruebai()
+    {
+        $inventarioID = 14285;
+        $consecutivo = 40069;
+        $this->captura_model->ajustaInventarioExcedenteSurtidoPrueba($inventarioID, $consecutivo);
+    }
+
+    function prueba2()
+    {
+        $sql = "SELECT * FROM inventario i where cantidad < 0 and lote <> 'SL' and clvsucursal in(select clvsucursal from sucursales where activa = 1 and tiposucursal = 1);";
+
+        $query = $this->db->query($sql);
+
+        foreach ($query->result() as $row) {
+            $this->captura_model->ajustaInventarioExcedenteSurtido($row->inventarioID, $row->receta);
+        }
+    }
+
+    function clasificacion()
+    {
+        $sql = "SELECT id, cvearticulo, clave, susa, descripcion, pres, sum(canreq) as canreq, sum(cansur) as cansur
+,sum(case when iva = 1 then (canreq * precio * 1.16) + (canreq * d.servicio * 1.16) else (canreq * precio) + (canreq * d.servicio * 1.16) end) as importer
+,sum(case when iva = 1 then (cansur * precio * 1.16) + (cansur * d.servicio * 1.16) else (cansur * precio) + (cansur * d.servicio * 1.16) end) as importes
+,sum(case when iva = 1 then (cansur * precio * 1.16) + (cansur * d.servicio * 1.16) else (cansur * precio) + (cansur * d.servicio * 1.16) end) / (SELECT sum(case when iva = 1 then (cansur * precio * 1.16) + (cansur * d.servicio * 1.16) else (cansur * precio) + (cansur * d.servicio * 1.16) end)
+FROM receta_detalle d
+join articulos a using(id)) as rate
+FROM receta_detalle d
+join articulos a using(id)
+group by id
+order by importes desc;";
+        
+        $query = $this->db->query($sql);
+
+        $rate = 0;
+
+        foreach ($query->result() as $row) {
+            
+            $rate = $rate + $row->rate;
+
+            if($rate <= 0.8)
+            {
+                $data = array('semaforo' => 3);
+                $this->db->update('articulos', $data, array('id' => $row->id));
+            }elseif($rate > 0.8 && $rate <= 0.9)
+            {
+                $data = array('semaforo' => 2);
+                $this->db->update('articulos', $data, array('id' => $row->id));
+            }elseif($rate > 0.9)
+            {
+                $data = array('semaforo' => 1);
+                $this->db->update('articulos', $data, array('id' => $row->id));
+            }
+
+        }
     }
 
 }

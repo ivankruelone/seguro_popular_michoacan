@@ -148,7 +148,7 @@ order by tipoprod, cvearticulo * 1 asc;";
         return $query;
     }
 
-    function getBusqueda($clave, $susa)
+    function getBusqueda($clave, $susa, $lote)
     {
         if(strlen(trim($clave)) > 0)
         {
@@ -164,12 +164,19 @@ order by tipoprod, cvearticulo * 1 asc;";
             $filtro2 = null;
         }
 
-        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+        if(strlen(trim($lote)) > 0)
+        {
+            $filtro3 = " and lote like '%$lote%'";
+        }else{
+            $filtro3 = null;
+        }
+
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion, area, pasillo
 FROM inventario i
 join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
-left join posicion p using(ubicacion)
-where i.clvsucursal = ? and cantidad > 0 $filtro1 $filtro2
+left join ubicacion p using(ubicacion)
+where i.clvsucursal = ? and cantidad > 0 $filtro1 $filtro2 $filtro3
 order by tipoprod, cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
         return $query;
@@ -220,8 +227,7 @@ order by tipoprod, cvearticulo * 1 asc;";
 FROM inventario i
 join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
-left join posicion p using(ubicacion)
-left join pasillo o using(pasilloID)
+left join ubicacion p using(ubicacion)
 where cantidad <> 0 and i.clvsucursal = ? and pasilloTipo = 3
 order by tipoprod, cvearticulo * 1 asc;";
         $query = $this->db->query($sql, $this->session->userdata('clvsucursal'));
@@ -230,12 +236,11 @@ order by tipoprod, cvearticulo * 1 asc;";
 
     function getInventarioRecibaLimitOffset($limit, $offset = 0)
     {
-        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion
+        $sql = "SELECT inventarioID, cvearticulo, comercial, susa, descripcion, pres, lote, caducidad, cantidad, ean, marca, suministro, tipoprod, ventaxuni, numunidades, posicionID, nivelID, moduloID, pasilloID, ubicacion, area, pasillo
 FROM inventario i
 join articulos a using(id)
 join temporal_suministro s on a.tipoprod = s.cvesuministro
-left join posicion p using(ubicacion)
-left join pasillo o using(pasilloID)
+left join ubicacion p using(ubicacion)
 where cantidad <> 0 and i.clvsucursal = ? and pasilloTipo = 3
 order by tipoprod, cvearticulo * 1 asc
 limit ? offset ?;";
@@ -853,6 +858,21 @@ where inventarioID = ?;";
         }
     }
 
+    function getUbicacionLibreByClvsucursal($clvsucursal)
+    {
+        $sql = "SELECT ubicacion from ubicacion where clvsucursal = ? and id = 0 order by pasilloTipo desc limit 1;";
+        $query = $this->db->query($sql, array($clvsucursal));
+
+        if($query->num_rows() == 0)
+        {
+            return 0;
+        }else
+        {
+            $row = $query->row();
+            return $row->ubicacion;
+        }
+    }
+
     function bulkUpdateUbicacion()
     {
         $ubicacion = $this->getUbicacionLibre();
@@ -939,6 +959,23 @@ where inventarioID = ?;";
             $this->db->update('inventario', $actualizaRestante, array('inventarioID' => $inv->inventarioID));
             
             $this->db->trans_complete();
+    }
+
+    function getBufferNuevo($clvsucursal)
+    {
+        $sql = "SELECT clvsucursal, id, cvearticulo, susa, descripcion, pres, ifnull(buffer, 0) as buffer, ifnull(cantidad, 0) as inv, ifnull(demanda, 0) as demanda, case when c.nivelatencion is null then 0 else 1 end as cobertura
+FROM articulos a
+left join buffer b using(id)
+left join sucursales s using(clvsucursal)
+left join cobertura c using(id, nivelatencion)
+left join inv i using(id, clvsucursal)
+left join demandaCalculada d using(id, clvsucursal)
+where clvsucursal = ?
+order by tipoprod, cvearticulo * 1;";
+
+        $query = $this->db->query($sql, array($clvsucursal));
+
+        return $query;
     }
 
 }
